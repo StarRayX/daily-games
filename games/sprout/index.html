@@ -35,6 +35,7 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
 :is(.pt,.fcell,.slot,.cell,.sc,.seed,.chip,.plot):nth-child(3n)::before{filter:url(#rough3)}
 .card::before,.rep::before{background:var(--card)}
 .fcell,.cell,.sc,.seed,.plot{--bg:var(--tile)}
+.fcell,.cell,.sc{--rd:10px}
 .cell.off::before{display:none}
 /* ---------- wordmark ---------- */
 .out{filter:drop-shadow(.045em 0 0 var(--ink)) drop-shadow(-.045em 0 0 var(--ink)) drop-shadow(0 .045em 0 var(--ink)) drop-shadow(0 -.045em 0 var(--ink)) drop-shadow(0 .09em 0 var(--ink))}
@@ -61,7 +62,8 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
 .pt.on{transform:scale(1.15)}
 .gr{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;align-items:center}
 .fcl{font-size:14px;line-height:1.1;font-weight:800}
-.fcell{display:flex;flex-direction:column;align-items:center;padding:4px 0 3px}
+.fcell{display:flex;flex-direction:column;align-items:center;padding:5px 0 4px}
+.fcell .wi{width:36px;height:36px}
 .fcell span{font-size:14px;line-height:1.15;font-weight:800;white-space:nowrap}
 .fcell.now{--bg:var(--lime2)}
 #rows{display:flex;flex-direction:column;gap:6px}
@@ -70,8 +72,8 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
 .slot.pend .spr{opacity:.5}
 .slot.today{--bg:#e2c68f}
 .slot .pn{font-size:18px;font-weight:900;color:#7a5a30}
-.cell{aspect-ratio:1;display:flex;justify-content:center;padding-top:4px}
-.cell .wi{width:24px;height:24px}
+.cell{aspect-ratio:1;display:flex;justify-content:center;align-items:center;padding:0}
+.cell .wi{width:66%;height:66%}
 .cell.up{--bg:#d4f5a3}
 .cell.down{--bg:#ffd2c7}
 .cell b{position:absolute;right:5px;bottom:1px;font-size:14px;line-height:15px;font-weight:900}
@@ -84,11 +86,11 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
 .seed{--rd:14px;min-width:0;border:0;padding:8px 0 8px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;font:inherit;color:inherit;transition:transform .12s;background:none}
 .seed.gold{--bg:var(--sun)}
 .seed .pw{display:block;width:min(var(--sw),100%);margin:-3px 0 -4px}.seed .pw .spr{width:100%;height:auto}
-.chips{display:flex;gap:6px;width:100%;justify-content:center;padding:0 3px}
-.chip{--bg:#d4f5a3;--rd:9px;flex:1;max-width:32px;height:30px;display:flex;align-items:center;justify-content:center}
-.chip.hate{--bg:#ffd2c7}
-.chip .wi{width:72%;height:auto}
-.chip::after{content:"+";position:absolute;left:-9px;top:-11px;width:24px;height:24px;border-radius:50%;background:#3fbf4f;color:var(--cream);font-size:19px;line-height:24px;font-weight:900;text-align:center}
+.chips{display:flex;flex-direction:column;gap:5px;width:100%;padding:0 5px}
+.chip{--bg:#fffdf6;--rd:8px;width:100%;height:30px;display:flex;align-items:center;gap:7px;padding:0 4px}
+.chip.hate{--bg:#fffdf6}
+.chip .wi{width:22px;height:auto;flex:none}
+.chip::after{content:"+";order:-1;flex:none;width:22px;height:22px;border-radius:7px 6px 8px 6px;background:#3fbf4f;color:#fff;font-size:18px;line-height:22px;font-weight:900;text-align:center}
 .chip.hate::after{content:"\2212";background:var(--tom)}
 .rb{position:absolute;right:-4px;top:-9px;background:var(--tom);color:var(--cream);font-size:13px;font-weight:900;padding:0 6px;line-height:18px;border-radius:9px}
 .seed.sel{--bg:var(--lime2);transform:translateY(-5px)}
@@ -96,8 +98,9 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
 .seed.used{opacity:.3}
 #key{display:flex;gap:20px;justify-content:flex-start;flex-wrap:nowrap;white-space:nowrap;font-size:14px;font-weight:700;align-items:center;padding-left:5px}
 #key span{display:inline-flex;align-items:center;gap:8px}
-#key .chip{flex:none;width:28px;height:26px;margin-left:10px}
-#key .chip .wi{width:16px}
+#key .chip{flex:none;width:56px;height:28px;margin-right:8px}
+#key .chip .wi{width:20px}
+@media (max-width:400px){.chips{padding:0 3px;gap:4px}.chip{gap:3px;padding:0 2px;height:26px}.chip::after{width:18px;height:18px;line-height:18px;font-size:15px}.chip .wi{width:18px}}
 #say{min-height:58px;text-align:left;display:flex;flex-direction:column;justify-content:flex-start;gap:4px;padding-top:2px}
 #say .st{display:flex;align-items:baseline;justify-content:space-between;gap:10px;font-size:20px;line-height:1.2;font-weight:900}
 #say .st em{font-style:normal;font-size:16px;font-weight:900;font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -128,7 +131,7 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
 .rep .btn{align-self:center}
 #end .tail{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:6px}
 #cfine{text-align:center;font-size:14px;font-weight:800}
-@media (max-width:400px){.fcell span i{display:none}.cell .wi{width:22px;height:22px}.slot .pn{font-size:16px}.sn b{font-size:24px}}
+@media (max-width:400px){.fcell span i{display:none}.cell .wi{width:64%;height:64%}.slot .pn{font-size:16px}.sn b{font-size:24px}}
 @media (max-height:700px){#game .card{gap:8px;padding:10px 12px}#say{min-height:56px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>

@@ -79,6 +79,7 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 .chips{position:absolute;left:2px;right:2px;bottom:2px;display:flex;flex-direction:column;align-items:flex-start;gap:0;z-index:3}
 .gho{display:flex;align-items:center;gap:1px;background:var(--cream);border-radius:7px 9px 6px 9px;padding:1px 3px 1px 1px;line-height:1}
 .gho img{width:var(--gs,18px);height:var(--gs,18px);flex:none}
+.gho .ar{display:block;width:18px;height:18px;border-radius:5px 6px 5px 6px;background:#7a4dff;color:#fff;font-size:15px;font-weight:900;line-height:18px;text-align:center;flex:none;margin-right:2px}
 .gho i{font-style:normal;font-size:14px;font-weight:900;color:var(--ink);line-height:var(--gs,18px);white-space:nowrap;letter-spacing:-.08em}
 #ctl{display:grid;grid-template-columns:1fr 1fr 2fr;gap:8px}
 #ctl .btn{padding:0 8px}
@@ -310,7 +311,7 @@ function wordmark(){
     +'<div class="ln">'+L('G',go,goS,4,.0)+L('U',cr,crS,-4,.03)+L('A',pk,pkS,3,-.03)+L('R',mt,mtS,-5,.03)+L('D',go,goS,5,-.02)+'</div>';
 }
 $('wm1').innerHTML=wordmark();$('wm2').innerHTML=wordmark();
-$('legend').innerHTML='<div class="k">'+IMG('thief')+'You</div><div class="k">'+IMG('guard')+'Guard</div><div class="k"><i class="sw"></i>Sees</div><div class="k">'+IMG('guard-ghost')+'Was here</div><div class="k">'+IMG('door')+'Exit</div>';
+$('legend').innerHTML='<div class="k">'+IMG('thief')+'You</div><div class="k">'+IMG('guard')+'Guard</div><div class="k"><i class="sw"></i>Sees</div><div class="k">'+'<span class="gho" style="position:static"><b class="ar">→</b></span>'+'Faced, at steps</div><div class="k">'+IMG('door')+'Exit</div>';
 
 // ---------- game ----------
 let seed,practice,day,att=[],plan=[],locked=false,pb=null,pbRow=null,fx=null;
@@ -353,7 +354,7 @@ function render(){
   const S=known(),gs=day.gs;
   const hits={},chips={},bds={};
   att.forEach(a=>{if(!a.win)(hits[a.tile]=hits[a.tile]||[]).push(a.at)});
-  gs.forEach((g,gi)=>{S.forEach(s=>{const o=g.sl[s];(chips[o.p]=chips[o.p]||[]).push('<span class="gho">'+IMG('guard-ghost','transform:rotate('+DEG[o.dir]+'deg)')+'<i>'+LAB[s]+'</i></span>')})});
+  gs.forEach((g,gi)=>{S.forEach(s=>{const o=g.sl[s];(chips[o.p]=chips[o.p]||[]).push('<span class="gho"><b class="ar">'+'↑→↓←'[o.dir]+'</b><i>'+LAB[s]+'</i></span>')})});
   plan.forEach((t,k)=>{(bds[t]=bds[t]||[]).push('<i class="'+(blocked(gs,S,k+1,t)?'warn':'')+'">'+(k+1)+'</i>')});
   let h='';
   for(let i=0;i<CELLS;i++){

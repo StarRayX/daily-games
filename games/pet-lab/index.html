@@ -70,8 +70,9 @@ button:focus-visible{outline:4px solid var(--sky);outline-offset:3px}
 .lab{font-size:15px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
 #hist,#rtab{--ts:52px;--hg:8px}
 #hist{width:100%;display:flex;flex-direction:column;gap:6px}
-.hrow{display:grid;grid-template-columns:20px repeat(3,minmax(0,1fr)) 104px;column-gap:var(--hg);align-items:center;min-height:var(--ts)}
+.hrow{display:grid;grid-template-columns:20px repeat(3,minmax(0,1fr)) 92px;column-gap:var(--hg);align-items:center;min-height:var(--ts)}
 .hrow .t{width:auto;height:var(--ts)}
+.hrow>:last-child{white-space:normal;text-align:right;font-size:13px;line-height:1.15;overflow-wrap:break-word}
 .hrow.em{min-height:0}
 .hrow.em .t{height:26px}
 .hrow.em .rn{font-size:14px}
@@ -204,27 +205,68 @@ function eggWhole(){
  return '<g filter="url(#rough)"><path d="M50 6C72 6 89 34 88 60C87 84 72 96 50 96C28 96 12 84 12 60C12 34 28 6 50 6Z" fill="#fff6ea"/>'
  +'<circle cx="36" cy="40" r="6" fill="#4cb6ff"/><circle cx="62" cy="34" r="4.5" fill="#ff6fbf"/><circle cx="58" cy="64" r="7" fill="#4cb6ff"/><circle cx="34" cy="72" r="4" fill="#ff6fbf"/></g>';
 }
-// pet bodies: a body, b belly, c extras (ears, feet, tail). Flat fills, two dot eyes, no mouth.
-var PET_NAMES=['kitty','bean','puff','bunny'];
-var PET_BODY=[
- function(a,b,c){return '<path d="M80 76C97 76 97 56 91 47" fill="none" stroke="'+c+'" stroke-width="9" stroke-linecap="round"/>'
-  +'<path d="M22 48L25 15L47 35ZM78 48L76 14L54 34Z" fill="'+c+'"/>'
-  +'<path d="M15 62C14 40 30 33 50 34C72 33 86 42 85 63C85 84 68 90 50 90C30 90 16 82 15 62Z" fill="'+a+'"/><path d="M34 75C34 69 42 65 50 65C59 65 67 69 66 75C65 82 58 85 50 85C42 85 34 82 34 75Z" fill="'+b+'"/>'
-  +'<circle cx="38" cy="56" r="3.8" fill="#5a0036"/><circle cx="62" cy="57" r="3.8" fill="#5a0036"/>'},
- function(a,b,c){return '<path d="M50 18L51 8" fill="none" stroke="'+c+'" stroke-width="4.5" stroke-linecap="round"/><path d="M45 7C45 2 56 2 56 7C56 12 45 12 45 7Z" fill="'+c+'"/>'
-  +'<path d="M28 91C28 86 36 84 39 85C42 86 44 90 42 94C38 96 30 96 28 91ZM58 94C56 90 58 86 62 85C66 84 73 87 72 91C71 96 62 97 58 94Z" fill="'+c+'"/>'
-  +'<path d="M30 88Q20 64 26 40Q32 16 50 16Q68 16 74 40Q80 64 70 88Q50 94 30 88Z" fill="'+a+'"/><path d="M36 73C36 64 43 60 50 60C58 60 64 65 64 73C64 80 58 85 50 85C42 85 36 80 36 73Z" fill="'+b+'"/>'
-  +'<circle cx="41" cy="40" r="3.8" fill="#5a0036"/><circle cx="59" cy="41" r="3.8" fill="#5a0036"/>'},
- function(a,b,c){return '<path d="M24 41L30 14L44 36ZM42 34L50 6L58 34ZM56 36L70 14L76 41Z" fill="'+c+'"/>'
-  +'<path d="M8 62C8 40 28 30 50 30C74 30 93 42 92 63C91 84 72 94 50 94C26 94 8 84 8 62Z" fill="'+a+'"/><path d="M30 77C30 70 40 66 50 66C60 66 70 70 70 77C70 84 60 87 50 87C40 87 30 84 30 77Z" fill="'+b+'"/>'
-  +'<path d="M21 92C21 88 28 87 32 88C38 89 40 93 36 96C30 97 22 96 21 92ZM62 96C58 93 60 89 66 88C71 87 79 89 79 92C78 96 69 97 62 96Z" fill="'+c+'"/>'
-  +'<circle cx="37" cy="58" r="3.8" fill="#5a0036"/><circle cx="63" cy="59" r="3.8" fill="#5a0036"/>'},
- function(a,b,c){return '<path d="M34 34Q24 6 36 6Q46 10 44 34ZM66 34Q76 6 64 6Q54 10 56 34Z" fill="'+c+'"/>'
-  +'<path d="M24 92C24 87 32 86 36 87C42 88 44 92 41 95C36 97 25 97 24 92ZM59 95C56 92 58 88 64 87C69 86 77 88 76 92C75 97 64 97 59 95Z" fill="'+c+'"/>'
-  +'<path d="M22 72C22 58 34 50 50 50C66 50 78 58 78 72C78 85 66 94 50 94C34 94 22 85 22 72Z" fill="'+a+'"/><circle cx="50" cy="48" r="26" fill="'+a+'"/><path d="M36 78C36 72 42 68 50 68C58 68 64 72 64 78C64 84 58 88 50 88C42 88 36 84 36 78Z" fill="'+b+'"/>'
-  +'<circle cx="41" cy="44" r="3.8" fill="#5a0036"/><circle cx="59" cy="45" r="3.8" fill="#5a0036"/><circle cx="50" cy="53" r="3.6" fill="'+c+'"/>'}
+// pets: built from the recipe. Ingredient 1 = body, 2 = head feature, 3 = tail or pattern. Colours arrive as COL hexes, so the recipe is recovered with COL.indexOf.
+var PET_NAMES=['bean','pear','dumpling','noodle','puff','frog'];
+var P_INK='#5a0036',P_PLUM='#7a1d52';
+var P_SOFT=['#f2646b','#a583f5','#ffb4dc','#ff8c3f','#5db6f2','#a6dc4a'];
+function pMix(a,b,t){var x=parseInt(a.slice(1),16),y=parseInt(b.slice(1),16),r=[16,8,0].map(function(s){var u=(x>>s)&255,v=(y>>s)&255;return Math.round(u+(v-u)*t)});return '#'+((1<<24)|(r[0]<<16)|(r[1]<<8)|r[2]).toString(16).slice(1)}
+function pPuff(){var n=10,cx=50,cy=62,r=29,jit=[0,3,-2,2,-3,1,3,-2,2,-1],pts=[],ctl=[],i,a;
+ for(i=0;i<n;i++){a=i*2*Math.PI/n-1.35;pts.push([cx+(r+jit[i]*.5)*Math.cos(a),cy+(r+jit[i]*.5)*Math.sin(a)]);a+=Math.PI/n;ctl.push([cx+(r+9+jit[(i+3)%n]*.4)*Math.cos(a),cy+(r+9+jit[(i+3)%n]*.4)*Math.sin(a)])}
+ var d='M'+pts[0][0].toFixed(1)+' '+pts[0][1].toFixed(1);
+ for(i=0;i<n;i++){var q=pts[(i+1)%n];d+='Q'+ctl[i][0].toFixed(1)+' '+ctl[i][1].toFixed(1)+' '+q[0].toFixed(1)+' '+q[1].toFixed(1)}
+ return d+'Z'}
+// d body, ex/ey/es eyes, hx/hy head anchor, hs max feature scale, bx/by/br belly, tx/ty/ta tail anchor + angle, feet, extra = body-coloured parts drawn with the body
+var P_B=[
+ {d:'M50 28C72 26 86 42 85 62C84 82 70 91 50 91C30 91 16 82 15 62C14 42 29 30 50 28Z',ex:50,ey:56,es:11,hx:50,hy:30,hs:1,bx:50,by:79,br:18,tx:77,ty:73,ta:30,feet:[[35,91],[65,91]]},
+ {d:'M50 27C67 27 73 42 75 56C78 73 82 91 50 93C18 91 22 73 25 56C27 42 33 27 50 27Z',ex:50,ey:48,es:9.5,hx:50,hy:29,hs:.95,bx:50,by:80,br:18,tx:72,ty:80,ta:32,feet:[[36,93],[64,93]]},
+ {d:'M50 36C75 34 92 52 91 70C90 86 74 92 50 92C26 92 10 86 9 70C8 52 25 34 50 36Z',extra:'<path d="M43 38C42 32 46 28 51 27C50 31 54 33 57 37Z"/>',ex:50,ey:62,es:14,hx:50,hy:30,hs:.95,bx:50,by:81,br:19,tx:79,ty:75,ta:20,feet:[]},
+ {d:'M22 52C30 46 70 46 78 52C92 54 95 68 91 78C88 90 76 92 66 91L34 91C24 92 12 90 9 78C5 68 8 54 22 52Z',extra:'<path d="M17 55L19 34L37 48ZM83 55L81 34L63 48Z"/>',ex:50,ey:63,es:12,hx:50,hy:48,hs:1,bx:50,by:82,br:25,tx:83,ty:70,ta:14,feet:[[22,91],[38,92],[62,92],[78,91]]},
+ {d:null,ex:50,ey:56,es:10,hx:50,hy:28,hs:1,bx:50,by:81,br:12,tx:77,ty:69,ta:30,feet:[]},
+ {d:'M17 52C30 46 70 46 83 52C95 60 95 80 85 88C74 94 26 94 15 88C5 80 5 60 17 52Z',extra:'<circle cx="30" cy="46" r="11"/><circle cx="70" cy="46" r="11"/>',ex:50,ey:46,es:20,hx:50,hy:48,hs:.85,bx:50,by:81,br:19,tx:79,ty:79,ta:20,feet:[[26,93],[74,93]],frog:1}
 ];
-function petInner(type,a,b,c){if(b===a)b=CREAM;return '<g filter="url(#rough)">'+PET_BODY[type](a,b,c)+'</g>'}
+P_B[4].d=pPuff();
+function pLeaf(){return 'M0 3C-7 -4 -6 -16 0 -25C6 -16 7 -4 0 3Z'}
+// head features, origin at the head anchor, up is -y
+function pFeat(k,c,cream){
+ if(k==0)return '<path d="M-15 3C-16 -9 -7 -17 0 -17C8 -17 16 -9 15 3C8 5 -8 5 -15 3Z" fill="'+c+'"/><circle cx="-5.5" cy="-8" r="2.8" fill="'+cream+'"/><circle cx="5" cy="-10" r="2.2" fill="'+cream+'"/><circle cx="8" cy="-3.5" r="1.8" fill="'+cream+'"/>';
+ if(k==1)return '<path d="M-7 4L-9 -7L0 -23L9 -7L7 4Z" fill="'+c+'"/><path d="M0 -23L9 -7L7 4L0 4Z" fill="'+pMix(c,cream,.4)+'"/>';
+ if(k==2)return '<g fill="'+c+'"><path d="'+pLeaf()+'" transform="rotate(-34) translate(0 1)"/><path d="'+pLeaf()+'" transform="rotate(34) translate(0 1)"/><path d="'+pLeaf()+'"/></g>';
+ if(k==3)return '<path d="M0 4C-11 1 -11 -9 -5 -16C-5 -11 -2 -10 -1 -12C-3 -18 2 -24 4 -26C6 -20 12 -14 10 -6C9 0 5 4 0 4Z" fill="'+c+'"/><path d="M0 2C-5 0 -4 -6 0 -9C4 -6 5 0 0 2Z" fill="'+pMix(c,cream,.55)+'"/>';
+ if(k==4)return '<path d="M0 5Q-3 -3 3 -9" fill="none" stroke="'+c+'" stroke-width="3" stroke-linecap="round"/><path d="M3 -24C9 -17 12 -13 12 -9C12 -4 8 -2 3 -2C-2 -2 -6 -4 -6 -9C-6 -13 -3 -17 3 -24Z" fill="'+c+'"/>';
+ return '<g fill="'+c+'"><path d="'+pLeaf()+'" transform="translate(-9 0) rotate(-32) scale(.95)"/><path d="'+pLeaf()+'" transform="translate(9 0) rotate(32) scale(.95)"/></g>';
+}
+// tails (feather, flame, leaf), origin at the tail anchor
+function pTail(k,c,body,cream){
+ if(k==2)return '<g fill="'+c+'"><path d="'+pLeaf()+'" transform="rotate(-28) scale(1.2)"/><path d="'+pLeaf()+'" transform="rotate(28) scale(1.2)"/><path d="'+pLeaf()+'" transform="scale(1.4)"/></g>';
+ if(k==3)return '<path d="M0 4Q-2 -12 4 -19" fill="none" stroke="'+body+'" stroke-width="8" stroke-linecap="round"/><g transform="translate(4 -17) scale(1)">'+pFeat(3,c,cream)+'</g>';
+ return '<path d="M0 4Q-1 -10 3 -17" fill="none" stroke="'+body+'" stroke-width="6" stroke-linecap="round"/><g transform="translate(3 -16) rotate(10) scale(1.2)"><path d="'+pLeaf()+'" fill="'+c+'"/></g>';
+}
+// patterns on the belly (mushroom spots, crystal patch, drop stripes)
+function pPat(k,c,B,cream){
+ var bx=B.bx,by=B.by,br=B.br,o='',i;
+ if(k==0){var sp=[[-.62,-.55,3.6],[.25,-.85,2.8],[.7,-.1,3.2],[-.25,.4,2.6],[.32,.62,2.2],[-.8,.15,2.2]];for(i=0;i<sp.length;i++)o+='<circle cx="'+(bx+sp[i][0]*br).toFixed(1)+'" cy="'+(by+sp[i][1]*br*.5).toFixed(1)+'" r="'+sp[i][2]+'" fill="'+c+'"/>';return o}
+ if(k==1){var w=Math.min(br*.6,10.5),h=9.5;return '<path d="M'+bx+' '+(by-h)+'L'+(bx+w)+' '+(by-1)+'L'+bx+' '+(by+h)+'L'+(bx-w)+' '+(by-1)+'Z" fill="'+c+'"/><path d="M'+bx+' '+(by-h)+'L'+(bx+w)+' '+(by-1)+'L'+bx+' '+(by+h*.2)+'Z" fill="'+pMix(c,cream,.38)+'"/>'}
+ if(k==4){var x0=bx-br*.95,x1=bx+br*.95,m=bx;for(i=-1;i<=1;i++){var y=by+i*6.4;o+='<path d="M'+x0.toFixed(1)+' '+y+'Q'+((x0+m)/2).toFixed(1)+' '+(y-5)+' '+m+' '+y+'T'+x1.toFixed(1)+' '+y+'" fill="none" stroke="'+c+'" stroke-width="3.2" stroke-linecap="round"/>'}return o}
+ return '';
+}
+function petInner(type,a,b,c){
+ var ia=COL.indexOf(a),ib=COL.indexOf(b),ic=COL.indexOf(c);if(ia<0)ia=type%6;if(ib<0)ib=0;if(ic<0)ic=0;
+ var B=P_B[ia],body=P_SOFT[ia],cream=CREAM,dk=pMix(body,P_PLUM,.34),i;
+ var c2=ib==ia?pMix(COL[ib],P_PLUM,.34):COL[ib],c3=ic==ia?pMix(COL[ic],P_PLUM,.34):COL[ic];
+ var feet='';
+ for(i=0;i<B.feet.length;i++)feet+='<ellipse cx="'+B.feet[i][0]+'" cy="'+B.feet[i][1]+'" rx="7.5" ry="4.2" fill="'+dk+'"/>';
+ var tail=(ic==2||ic==3||ic==5)?'<g transform="translate('+B.tx+' '+B.ty+') rotate('+B.ta+')">'+pTail(ic,c3,body,cream)+'</g>':'';
+ var fs=Math.min(B.hs,(B.hy-1)/26);
+ var feat='<g transform="translate('+B.hx+' '+(B.hy+2)+') scale('+fs.toFixed(2)+')">'+pFeat(ib,c2,cream)+'</g>';
+ var extra=B.extra?'<g fill="'+body+'">'+B.extra+'</g>':'';
+ var ex1=B.frog?30:B.ex-B.es,ex2=B.frog?70:B.ex+B.es,ey=B.ey,cheek=pMix(body,'#ff5f93',.5);
+ var my=B.frog?ey+17:ey+6;
+ var face='<circle cx="'+ex1+'" cy="'+ey+'" r="4" fill="'+P_INK+'"/><circle cx="'+ex2+'" cy="'+(ey+.8)+'" r="4" fill="'+P_INK+'"/>'
+  +(B.frog?'<ellipse cx="29" cy="68" rx="3.6" ry="2.5" fill="'+cheek+'"/><ellipse cx="71" cy="68" rx="3.6" ry="2.5" fill="'+cheek+'"/>':'<ellipse cx="'+(ex1-5.5)+'" cy="'+(ey+6)+'" rx="3.4" ry="2.4" fill="'+cheek+'"/><ellipse cx="'+(ex2+5.5)+'" cy="'+(ey+6.8)+'" rx="3.4" ry="2.4" fill="'+cheek+'"/>')
+  +'<path d="M'+(B.frog?44:46.8)+' '+my+'Q50 '+(my+3.6)+' '+(B.frog?56:53.2)+' '+(my+.4)+'" fill="none" stroke="'+P_INK+'" stroke-width="1.9" stroke-linecap="round"/>';
+ var o=tail+(ib==0?'':feat)+feet+extra+'<path d="'+B.d+'" fill="'+body+'"/>'+pPat(ic,c3,B,cream)+(ib==0?feat:'')+face;
+ return '<g filter="url(#rough)"><g transform="translate(-2.5 5.5) scale(.94)">'+o+'</g></g>';
+}
 // wordmark: same recipe as Sprout. Per-letter fill, darker inner stroke; the thin dark outline and drop are a filter on .out
 function wmHTML(){
  var L=function(ch,c,sc,r,y){return '<span class="L" style="--c:'+c+';--s:'+sc+';--r:'+r+'deg;--y:'+y+'em">'+ch+'</span>'};
@@ -234,7 +276,7 @@ function wmHTML(){
 }
 
 // bubbly score digits for the result screen (same recipe as the wordmark letters; #cscore carries the outline filter)
-function bub(txt,cols){return txt.split('').map(function(ch,i){var c=cols[i%cols.length];return '<span style="display:inline-block;color:'+c[0]+';-webkit-text-stroke:.13em '+c[1]+';paint-order:stroke fill;transform:rotate('+(i%2?4:-4)+'deg)">'+ch+'</span>'}).join('')}
+function bub(txt,cols){return txt.split('').map(function(ch,i){if(ch===' ')return '<span style="display:inline-block;width:.32em"></span>';var c=cols[i%cols.length];return '<span style="display:inline-block;color:'+c[0]+';-webkit-text-stroke:.13em '+c[1]+';paint-order:stroke fill;transform:rotate('+(i%2?4:-4)+'deg)">'+ch+'</span>'}).join('')}
 function lum(h){var n=parseInt(h.slice(1),16),f=function(v){v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)};return .2126*f(n>>16)+.7152*f((n>>8)&255)+.0722*f(n&255)}
 function petSVGStr(type,a,b,c,cls){return '<svg class="'+cls+'" viewBox="0 0 100 100" aria-hidden="true">'+petInner(type,a,b,c)+'</svg>'}
 
