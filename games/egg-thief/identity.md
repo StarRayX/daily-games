@@ -1,9 +1,10 @@
-# Egg Thief identity: Solr/Fizz pop on coral
-- Colours: ground coral #ff7a45, stripe tint #ff8b5c, ink #4a1500, cream #fff4dc, card #fffaf0, sunny yellow #ffc93c, bubblegum pink #ff6eb4, mint #3ad6a0.
-- Feedback tiles (colour plus symbol): cold #4c8dff snowflake, warm #ffb52e one flame, hot #ff3b30 big flame, caught #2fc48d check.
-- Wordmark: Allo 900, ROND 100, opsz 32. Each letter its own fill, own rotation and baseline, overlapping slightly. Inner ring via -webkit-text-stroke with paint-order stroke fill, outer ink outline and solid drop via stacked drop-shadow filters. "EGG" small above "THIEF", the masked egg thief dots the I, tilted tag "CATCH HIM!".
-- Landing and result: broad low contrast stripes plus faint white dots, wordmark, one sentence, black Play button. Play screen: flat coral, one cream card, calm tiles, no stripes or dots.
-- Sprites: flat fills, chunky shapes, 3.5 to 4.5 px ink outline, 4 colours max, dot eyes, no gloss. thief (egg with bandit mask), nest (straw bowl with an egg), guard (pink cap), footprint, badge-cold/warm/hot/caught.
+# Egg Thief identity: egg-yolk, flat, hand-drawn
+- Colours: ground yolk #ffb92e, pattern tint #ffc957, eggshell cream #fff6e3 (cards), tile #f6e5c4, speckled brown #8a5a2b (speckles, straw strands, crack lines), dark ink #3b2410, robin-egg blue #9fd8d2, shell pink #ffb3a7, hot red-orange #ff5a36, caught mint #3ad6a0.
+- Feedback tiles (colour plus glyph): cold robin snowflake, warm yolk one flame, hot red-orange big flame, caught mint check. A cream chip with an ink arrow on each tile points from the guard toward the thief (8 compass directions).
+- Rules (6x6 board, 36 nests): each guard shows only an 8-way compass arrow from the guard to the thief (no distance band). After each miss the thief runs one nest straight away from that guard (ties: axis where he is farther, then vertical; cornered means he stays). A cracked shell marks the nest he stood on one guard ago. Day = his start nest; solver par on the result card.
+- Wordmark: Allo 900, ROND 100, opsz 32, each letter its own fill, rotation and baseline, ink outline and drop. Tag "CATCH HIM!" is small plain white Allo 900 under it, no outline, no drop.
+- Landing and result: yolk ground, stripes plus irregular quail-egg speckles on a masked patchy layer, cream card with a cracked-eggshell zigzag top. Play screen: flat yolk, calm cream card, no pattern.
+- Sprites: flat fills, no outlines, no faces on objects, hand-jittered via SVG feTurbulence + feDisplacementMap (scale 2 to 3, never on text). thief (pink speckled egg, mask band, two eye holes, no mouth), nest x3 (egg in straw nest: cream, robin, tan), guard (dark cap), crack (shell mark), badge-cold/warm/hot/caught.
 - Buttons: black, radius 10, white text. Tap targets 48px or more. Text 14px or larger.
-- Banned: grain, noise, gradients for shading, glow, offset colour copies, hatching, paper effects.
-- Files: assets/thumb.svg (stripes, dots, wordmark as embedded PNG), assets/mark.svg (favicon). Test hooks: ?demo=start, game, end, lose.
+- Banned: grain, noise texture, gradients for shading, glow, offset colour copies, hatching, paper effects, halftone dots.
+- Files: assets/thumb.svg (stripes, speckles, wordmark as embedded PNG), assets/mark.svg (favicon). Storage keys et2_* (per day), et_streak/et_last/et_days (shared). Test hooks: ?demo=start, game, end, lose.

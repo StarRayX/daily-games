@@ -4,6 +4,6 @@
 - Landing and result: broad low-contrast stripes (150deg) plus a faint white dot grid. Play screen: flat pink with one cream card, black radius-10 buttons.
 - Wordmark: HTML in Allo 900, ROND 100, opsz 32. Each letter has its own fill and ring colour (-webkit-text-stroke, paint-order stroke fill), a small bounce rotation, overlap. One filter: stacked drop-shadow in ink makes the outline and solid drop.
 - The A is a cracked egg with a lime pet peeking out. Tag word: "MIX!", tilted, same treatment. Thumb is the wordmark rendered to PNG over vector stripes.
-- Sprites: flat fills, 4 px ink outline, round joins, 4 colours max, dot eyes, no gloss, no gradients. Wobbly ingredients get the yellow squiggle badge (assets/wobble.svg).
+- Sprites: flat hand-cut fills, rough SVG-filter edges, no outlines, no faces on objects, 3 colours max. Pets get two dot eyes. Wobbly ingredients get the pink squiggle badge (assets/wobble.svg).
 - Pets: 4 bodies (kitty, bean, puff, bunny) coloured by the recipe. Pot: round sky-blue cauldron, lime brew, 3 cream slot rings.
 - Banned: grain, noise, offset colour copies, hatching, gradients, glow, text under 14px.

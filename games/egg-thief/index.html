@@ -7,26 +7,39 @@
 <link rel="icon" type="image/svg+xml" href="assets/mark.svg">
 <style>
 @font-face{font-family:"Allo";src:url("../../shared/AlloVariable.woff2") format("woff2");font-weight:100 900;font-display:swap}
-:root{--coral:#ff7a45;--tint:#ff8b5c;--ink:#4a1500;--cream:#fff4dc;--card:#fffaf0;--tile:#f6e8cf;--sun:#ffc93c;--pink:#ff6eb4;--mint:#3ad6a0}
+:root{--yolk:#ffb92e;--tint:#ffc957;--ink:#3b2410;--brown:#8a5a2b;--card:#fff6e3;--tile:#f6e5c4;--robin:#9fd8d2;--pink:#ffb3a7;--mint:#3ad6a0;--hot:#ff5a36}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;background:var(--ink);color:var(--ink);font-family:"Allo",system-ui,sans-serif;font-weight:700;overflow:hidden;touch-action:manipulation;user-select:none}
-#app{position:relative;max-width:480px;height:100%;margin:0 auto;overflow:hidden;background:var(--coral);container-type:inline-size}
+#app{position:relative;max-width:480px;height:100%;margin:0 auto;overflow:hidden;background:var(--yolk);container-type:inline-size}
 section{position:absolute;inset:0;display:none;flex-direction:column;padding:16px 16px calc(16px + env(safe-area-inset-bottom))}
 section.on{display:flex}
 img{display:block}
 button{font:inherit;color:inherit}
 button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
-/* loud ground: broad low contrast stripes plus faint dots */
-.gnd{background:radial-gradient(rgba(255,255,255,.28) 1.6px,transparent 2.2px) 0 0/16px 16px,repeating-linear-gradient(-35deg,var(--coral) 0 56px,var(--tint) 56px 112px)}
+/* ground: plain egg-yolk, with stripes and quail-egg speckles on a masked layer that shows only in soft random patches */
+.gnd{background:var(--yolk)}
+.gnd::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(rgba(255,255,255,.35) 1.4px,transparent 1.6px) 0 0/14px 14px,repeating-linear-gradient(-35deg,var(--yolk) 0 56px,var(--tint) 56px 112px);-webkit-mask-image:radial-gradient(circle at var(--p0x,12%) var(--p0y,8%),rgba(0,0,0,var(--p0a,.85)) 0,transparent var(--p0r,34%)),radial-gradient(circle at var(--p1x,88%) var(--p1y,28%),rgba(0,0,0,var(--p1a,.85)) 0,transparent var(--p1r,30%)),radial-gradient(circle at var(--p2x,10%) var(--p2y,55%),rgba(0,0,0,var(--p2a,.85)) 0,transparent var(--p2r,32%)),radial-gradient(circle at var(--p3x,90%) var(--p3y,74%),rgba(0,0,0,var(--p3a,.85)) 0,transparent var(--p3r,34%)),radial-gradient(circle at var(--p4x,50%) var(--p4y,96%),rgba(0,0,0,var(--p4a,.85)) 0,transparent var(--p4r,28%));mask-image:radial-gradient(circle at var(--p0x,12%) var(--p0y,8%),rgba(0,0,0,var(--p0a,.85)) 0,transparent var(--p0r,34%)),radial-gradient(circle at var(--p1x,88%) var(--p1y,28%),rgba(0,0,0,var(--p1a,.85)) 0,transparent var(--p1r,30%)),radial-gradient(circle at var(--p2x,10%) var(--p2y,55%),rgba(0,0,0,var(--p2a,.85)) 0,transparent var(--p2r,32%)),radial-gradient(circle at var(--p3x,90%) var(--p3y,74%),rgba(0,0,0,var(--p3a,.85)) 0,transparent var(--p3r,34%)),radial-gradient(circle at var(--p4x,50%) var(--p4y,96%),rgba(0,0,0,var(--p4a,.85)) 0,transparent var(--p4r,28%))}
+.gnd>*{position:relative}
 /* buttons: black, rectangular */
 .btn{border:0;border-radius:10px;background:#111;color:#fff;font-weight:800;font-size:20px;padding:12px 44px;min-height:52px;cursor:pointer}
 .btn:active{transform:translateY(2px)}
 .link{background:none;border:0;font-weight:800;font-size:16px;text-decoration:underline;text-underline-offset:4px;cursor:pointer;padding:12px 16px;min-height:48px}
-/* bubbly wordmark: ring colour inside, ink outline outside, solid drop below */
-.wm{--fs:min(27cqw,116px);font-size:var(--fs);font-weight:900;font-variation-settings:"ROND" 100,"opsz" 32;line-height:.9;text-transform:uppercase;margin:0;
- filter:drop-shadow(.055em 0 0 var(--ink)) drop-shadow(-.055em 0 0 var(--ink)) drop-shadow(0 .055em 0 var(--ink)) drop-shadow(0 -.055em 0 var(--ink)) drop-shadow(0 .09em 0 var(--ink))}
-.wm i,.bb i{display:inline-block;position:relative;font-style:normal;color:var(--c);-webkit-text-stroke:.13em var(--r);paint-order:stroke fill;transform:translateY(var(--y)) rotate(var(--rot));margin:0 -.015em}
-.wm i.sp,.bb i.sp{width:.28em;-webkit-text-stroke:0}
+/* hand-drawn cards: the fill lives on a pseudo layer that gets a small wobble filter, so text is never distorted */
+.hero,.card,.res{position:relative;isolation:isolate}
+.hero::before,.card::before,.res::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--card);border-radius:20px;filter:url(#rough)}
+.crack::before{border-top-left-radius:3px;border-top-right-radius:3px}
+.crack::after{content:"";position:absolute;left:0;right:0;top:-11px;height:18px;z-index:-1;background:var(--card);filter:url(#rough2);clip-path:polygon(0 100%,0 62%,3% 38%,6% 66%,10% 14%,14% 58%,19% 28%,23% 72%,28% 8%,33% 52%,37% 22%,42% 70%,47% 12%,52% 60%,57% 24%,61% 68%,66% 6%,71% 56%,76% 20%,80% 66%,85% 10%,90% 54%,94% 26%,97% 60%,100% 34%,100% 100%)}
+/* wordmark: same recipe as Sprout. One line, per letter fill, darker inner stroke, thin em-based outline */
+.out{filter:drop-shadow(.045em 0 0 var(--ink)) drop-shadow(-.045em 0 0 var(--ink)) drop-shadow(0 .045em 0 var(--ink)) drop-shadow(0 -.045em 0 var(--ink)) drop-shadow(0 .09em 0 var(--ink))}
+.wm{display:flex;align-items:flex-end;justify-content:center;font-size:var(--fs,min(13cqw,60px));line-height:1;padding-top:.3em;margin:0;font-weight:900}
+.wm.sm{--fs:44px;padding-top:0}
+.wm .L{display:block;font-weight:900;font-variation-settings:"ROND" 100,"opsz" 32;line-height:.8;color:var(--c);-webkit-text-stroke:.13em var(--s);paint-order:stroke fill;margin:0 -.005em;transform:translateY(var(--y,0)) rotate(var(--r,0deg))}
+.wm .gap{display:block;width:.28em}
+.wm .o{display:block;position:relative;width:.8em;height:.72em;margin:0 .02em;transform:translateY(var(--y,0)) rotate(var(--r,0deg))}
+.wm .o img{position:absolute;left:0;bottom:-.04em;width:.8em;height:.96em;display:block}
+.wmw{width:max-content;max-width:100%}
+.bb i{display:inline-block;position:relative;font-style:normal;color:var(--c);-webkit-text-stroke:.13em var(--r);paint-order:stroke fill;transform:translateY(var(--y)) rotate(var(--rot));margin:0 -.015em}
+.bb i.sp{width:.28em;-webkit-text-stroke:0}
 .ln{display:block;white-space:nowrap}
 .dot{position:absolute;left:50%;top:-.84em;width:.8em;max-width:none;transform:translateX(-46%) rotate(9deg);-webkit-text-stroke:0}
 #start{align-items:center;justify-content:center;text-align:center}
@@ -34,79 +47,107 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
 .lock{width:max-content;max-width:100%;display:flex;flex-direction:column}
 .lock .l1{align-self:flex-start;font-size:.66em;margin:0 0 .1em -.02em}
 .lock .l2{margin-top:.62em}
-.lock .tag{align-self:flex-end;font-size:.46em;margin:.14em .12em 0 0;transform:rotate(-6deg)}
-.one{margin:34px 0 22px;font-size:20px;line-height:1.3;font-weight:800;max-width:19em;text-wrap:balance}
-#sfine{margin-top:16px;font-size:15px;font-weight:700}
+.tagline{display:block;margin:8px 0 0 38%;color:#fff;font-weight:900;font-size:20px;letter-spacing:.14em;line-height:1;text-transform:uppercase;font-variation-settings:"ROND" 100,"opsz" 32;transform:rotate(-5deg)}
+.hero{width:100%;margin-top:34px;padding:22px 18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.one{margin:0;font-size:19px;line-height:1.3;font-weight:800;max-width:19em;text-wrap:balance}
+.rule{margin:0;font-size:15px;line-height:1.3;font-weight:700;text-wrap:balance}
+.hero .btn{margin-top:6px}
+#sfine{font-size:15px;font-weight:700}
 /* play screen: calm */
-#game{background:var(--coral)}
-.card{flex:0 1 auto;margin:auto 0;min-height:0;background:var(--card);border-radius:20px;padding:14px 16px 16px;display:flex;flex-direction:column;gap:12px;overflow:auto}
+#game{background:var(--yolk);padding:10px 10px calc(10px + env(safe-area-inset-bottom))}
+.card{--bw:min(100%,calc((100dvh - 250px)/1.17))}
+.card{flex:0 1 auto;margin:0 0 auto;min-height:0;padding:14px;display:flex;flex-direction:column;gap:12px}
 .card header{display:flex;align-items:center;gap:10px}
 .card header img{width:40px;height:40px}
 .card .nm{font-weight:900;font-size:22px;flex:1;font-variation-settings:"ROND" 100}
-#streak{background:var(--sun);border-radius:10px;padding:5px 11px;font-weight:800;font-size:15px}
+#streak{background:var(--yolk);border-radius:9px 11px 10px 12px;padding:5px 11px;font-weight:800;font-size:15px}
 #streak:empty{display:none}
-#posts{display:flex;align-items:center;gap:10px}
-#posts>img{width:44px;height:44px;flex:none}
-#slots{display:flex;gap:8px;flex:1}
-.slot{position:relative;flex:1;max-width:56px;aspect-ratio:1;min-height:44px;border-radius:12px;background:var(--tile);display:grid;place-items:center}
-.slot.now{outline:3px solid var(--ink);outline-offset:-3px;background:var(--card)}
+#posts{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;align-items:center;width:var(--bw);margin:0 auto}
+#posts>img{width:100%;aspect-ratio:1;object-fit:contain;padding:6%}
+#slots{display:contents}
+.slot{position:relative;aspect-ratio:1;display:grid;place-items:center}
+.slot::before,.nest::before{content:"";position:absolute;inset:0;border-radius:12px 9px 11px 10px/10px 12px 9px 11px;background:var(--tile);filter:url(#rough)}
+.slot.now::before{background:#ffe3a0}
+.nest:nth-child(3n+2)::before{filter:url(#rough2)}
+.nest:nth-child(3n)::before{filter:url(#rough3)}
+.slot:nth-child(2n)::before{filter:url(#rough2)}
 .slot .bd{position:absolute;inset:0;width:100%;height:100%}
-.nc{position:absolute;left:3px;top:3px;min-width:22px;height:22px;border-radius:11px;background:var(--ink);color:var(--cream);font-weight:800;font-size:14px;display:grid;place-items:center;padding:0 4px;font-variant-numeric:tabular-nums;line-height:1}
+.nc{position:absolute;left:2px;top:2px;min-width:20px;height:20px;border-radius:10px;background:var(--ink);color:var(--card);font-weight:800;font-size:14px;display:grid;place-items:center;padding:0 4px;font-variant-numeric:tabular-nums;line-height:1}
 .slot.stamp,.nest.new .bd{animation:pop .32s ease-out}
 @keyframes pop{0%{transform:scale(.6);opacity:.2}70%{transform:scale(1.08)}100%{transform:none;opacity:1}}
-#grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:min(100%,calc(100dvh - 400px));min-width:216px;margin:0 auto}
-.nest{position:relative;border:0;background:var(--tile);border-radius:14px;padding:0;aspect-ratio:1;min-height:48px;cursor:pointer;display:block}
-.nest>img.n{position:absolute;inset:10%;width:80%;height:80%}
-.nest .bd{position:absolute;inset:0;width:100%;height:100%;border-radius:14px}
+#grid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;width:var(--bw);margin:0 auto}
+.nest{position:relative;border:0;background:none;padding:0;aspect-ratio:1;min-height:44px;cursor:pointer;display:block}
+.nest>img.n{position:absolute;inset:5%;width:90%;height:90%}
+.nest .bd{position:absolute;inset:0;width:100%;height:100%}
 .nest:active{transform:scale(.94)}
+.nest .gc{position:absolute;right:2px;top:2px;width:30%;height:auto}
+.nest .shell{position:absolute;left:0;bottom:0;width:44%;height:auto}
+/* direction arrow: cream chip, ink arrow, the chip turns to point from the guard toward the thief */
+.ar{position:absolute;left:50%;top:52%;width:58%;margin:-29% 0 0 -29%;aspect-ratio:1;border-radius:46% 54% 50% 50%;background:var(--card);display:grid;place-items:center;transform:rotate(var(--a))}
+.ar svg{width:74%;height:74%}
+.slot .ar{width:62%;margin:-31% 0 0 -31%}
+.ar.in{position:static;margin:0;width:24px;flex:none;background:var(--tile)}
 .dbg{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
 .dbg svg{width:72%;height:auto}
-.trail{position:absolute;left:4px;bottom:3px;font-size:14px;font-weight:800;background:var(--ink);color:var(--cream);padding:1px 5px;pointer-events:none}
-#key{display:flex;gap:6px 14px;align-items:center;justify-content:center;flex-wrap:wrap;font-weight:700;font-size:14px}
+.trail{position:absolute;left:4px;bottom:3px;font-size:14px;font-weight:800;background:var(--ink);color:var(--card);padding:1px 5px;pointer-events:none}
+#key{display:flex;gap:12px;align-items:center;justify-content:flex-start;flex-wrap:nowrap;font-weight:700;font-size:13px;line-height:1;white-space:nowrap}
 #key .k{display:flex;align-items:center;gap:5px}
-#key img{width:26px;height:26px}
-#say{display:flex;align-items:center;gap:12px;min-height:76px}
-#say .tx{flex:1;font-weight:900;font-size:22px;line-height:1.15}
-#say .tx small{display:flex;align-items:center;gap:6px;font-weight:700;font-size:15px;line-height:1.3;margin-top:5px}
-#say .tx small img{width:14px;height:22px;display:inline-block;flex:none}
-#say .big{width:68px;height:68px;flex:none;animation:pop .35s ease-out}
+#key img{width:22px;height:22px}
+#key .ar.in{width:22px}
+#say{display:flex;align-items:center;gap:12px;min-height:64px}
+#say .tx{flex:1;min-width:0;font-weight:900;font-size:20px;line-height:1.15}
+#say .tx small{display:block;font-weight:600;font-size:15px;line-height:1.3;margin-top:4px;color:rgba(59,36,16,.72)}
+#say .big{width:60px;height:60px;max-width:none;flex:none;animation:pop .35s ease-out}
 /* result: loud again */
 #end{overflow-y:auto;align-items:center;gap:12px}
 #end .wm.sm{--fs:min(10cqw,44px)}
 #end .wm.sm .ln{text-align:center}
 #end .bb{--fs:min(15cqw,64px);font-size:var(--fs);font-weight:900;font-variation-settings:"ROND" 100,"opsz" 32;line-height:.95;text-transform:uppercase;text-align:center;transform:rotate(-3deg);margin:6px 0 4px;
  filter:drop-shadow(.055em 0 0 var(--ink)) drop-shadow(-.055em 0 0 var(--ink)) drop-shadow(0 .055em 0 var(--ink)) drop-shadow(0 -.055em 0 var(--ink)) drop-shadow(0 .09em 0 var(--ink))}
-.res{width:100%;background:var(--card);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:12px}
-.res .head{display:flex;align-items:center;gap:14px}
+.res{width:100%;margin-top:6px;padding:18px 16px 16px;display:flex;flex-direction:column;gap:12px;flex:none}
+.res{align-items:center;text-align:center}
+.res .head{display:flex;align-items:center;justify-content:center;gap:14px}
+.res .head>div:nth-child(2){text-align:left}
 .res .head img{width:56px;height:auto;flex:none}
 #cdate{font-size:14px;font-weight:700}
 #ctitle{font-weight:900;font-size:22px;line-height:1.1}
-.score{display:flex;align-items:baseline;gap:6px;font-variant-numeric:tabular-nums;margin-left:auto}
+.score{white-space:nowrap;display:flex;align-items:baseline;gap:6px;font-variant-numeric:tabular-nums;margin-left:6px}
 .score b{font-size:56px;line-height:.9;font-weight:900;font-variation-settings:"ROND" 100,"opsz" 32}
 .score span{font-size:22px;font-weight:800}
-.hist{display:flex;gap:8px}
-.hist img{flex:1;min-width:0;max-width:56px;height:auto;aspect-ratio:1}
-.rr{display:flex;align-items:center;gap:14px}
-.route{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;width:176px;flex:none}
-.route i{aspect-ratio:1;background:var(--tile);border-radius:8px;position:relative;font-style:normal;display:grid;place-items:center}
-.route i img{width:58%}
-.route i b{position:absolute;right:3px;bottom:1px;font-size:14px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1}
-.rr p{margin:0;font-size:15px;line-height:1.35;font-weight:700}
+.hist{display:flex;gap:8px;justify-content:center}
+.ht{position:relative;flex:1;min-width:0;max-width:50px;aspect-ratio:1}
+.ht img{position:absolute;inset:0;width:100%;height:100%}
+.rr{display:flex;flex-direction:column;align-items:center;gap:8px;width:100%}
+.route{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;width:min(100%,240px);flex:none}
+.route i{aspect-ratio:1;background:var(--tile);border-radius:10px 8px 11px 9px/9px 11px 8px 10px;position:relative;font-style:normal;display:grid;place-items:center}
+.route i img{width:50%;margin-top:-10px}
+.route i u{position:absolute;left:0;right:0;bottom:2px;display:flex;flex-wrap:wrap;justify-content:center;gap:1px;text-decoration:none}
+.route i b{min-width:16px;height:16px;border-radius:8px;background:var(--ink);color:var(--card);font-size:11px;font-weight:800;display:grid;place-items:center;font-variant-numeric:tabular-nums;line-height:1}
+.rr p{margin:0;font-size:15px;line-height:1.35;font-weight:700;color:rgba(59,36,16,.72);text-align:center}
 #end .act{display:flex;flex-direction:column;align-items:center;gap:8px}
 #cfine{font-size:15px;font-weight:700;text-align:center}
 @media (max-width:400px){.one{font-size:18px}.btn{padding:12px 36px}}
-@media (max-height:700px){#say{min-height:64px}#say .big{width:56px;height:56px}.card{gap:8px;padding:12px}#grid{width:min(100%,calc(100dvh - 360px))}}
+@media (max-height:700px){#say{min-height:56px}#say .big{width:52px;height:52px}.card{gap:8px;padding:12px;--bw:min(100%,calc((100dvh - 215px)/1.17))}}
+@media (max-width:380px){#key{gap:8px;font-size:12px}#key img,#key .ar.in{width:18px}#say .tx{font-size:18px}#say .tx small{font-size:14px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <filter id="rough" x="-2%" y="-2%" width="104%" height="104%"><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter>
+  <filter id="rough2" x="-2%" y="-2%" width="104%" height="104%"><feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="2" seed="21" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter>
+  <filter id="rough3" x="-2%" y="-2%" width="104%" height="104%"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter>
+</svg>
 <div id="app">
   <section id="start" class="on gnd">
     <div class="mid">
-      <h1 class="wm" id="wm" aria-label="Egg Thief. Catch him!"></h1>
-      <p class="one">A thief hides on one of 16 nests. Post up to 5 guards and catch him.</p>
-      <button class="btn" id="play">Play</button>
-      <div id="sfine"></div>
+      <div class="wmw"><h1 class="wm out" id="wm" aria-label="Egg Thief. Catch him!"></h1><div class="tagline" aria-hidden="true">Catch him!</div></div>
+      <div class="hero crack">
+        <p class="one">A thief hides on one of 36 nests. Post up to 5 guards. Each one says which way he is: up, down, left or right.</p>
+        <p class="rule">After each miss he runs one nest straight away from your guard.</p>
+        <button class="btn" id="play">Play</button>
+        <div id="sfine"></div>
+      </div>
     </div>
   </section>
 
@@ -115,19 +156,19 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
       <header><img src="assets/mark.svg" alt=""><div class="nm">Egg Thief</div><div id="streak"></div></header>
       <div id="posts" aria-label="Your guards"><img src="assets/guard.svg" alt="Guard"><div id="slots"></div></div>
       <div id="grid" aria-label="Nests"></div>
-      <div id="key" aria-label="Key"></div>
       <div id="say"></div>
+      <div id="key" aria-label="Key"></div>
     </div>
   </section>
 
   <section id="end" class="gnd">
-    <h2 class="wm sm" id="wm2" style="margin-top:36px" aria-label="Egg Thief"></h2>
+    <h2 class="wm out sm" id="wm2" style="margin-top:36px" aria-label="Egg Thief"></h2>
     <div class="bb" id="verdict"></div>
-    <div class="res">
+    <div class="res crack">
       <div class="head"><img src="assets/thief.svg" alt=""><div><div id="cdate"></div><div id="ctitle"></div></div><div class="score"><b id="cscore"></b><span>/ 5</span></div></div>
       <div class="hist" id="rtiles" aria-label="Result"></div>
       <div class="rr"><div class="route" id="route" aria-label="His route"></div><p id="par"></p></div>
-    </div>
+      </div>
     <div class="act"><button class="btn" id="copy">Copy result</button><div id="cfine"></div><button class="link" id="prac">Practice case</button></div>
   </section>
 </div>
@@ -139,147 +180,188 @@ function ds(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')
 function today(){return ds(new Date())}
 function load(k,def){try{return JSON.parse(localStorage.getItem(k))??def}catch(e){return def}}
 function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+/* ground speckles: small irregular quail-egg flecks in speckled brown, seeded so they never jump */
+(function(){const r=mulberry32(2718),f=[];for(let i=0;i<34;i++){const x=(r()*150).toFixed(1),y=(r()*150).toFixed(1),big=r()<.35,rx=(big?3.4+r()*2.6:1.6+r()*1.8).toFixed(1),ry=(big?2.2+r()*2:1.1+r()*1.4).toFixed(1),rot=Math.round(r()*180),op=(.4+r()*.35).toFixed(2);f.push(`<ellipse cx='${x}' cy='${y}' rx='${rx}' ry='${ry}' transform='rotate(${rot} ${x} ${y})' fill-opacity='${op}'/>`)}
+const svg=`<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150'><g fill='#8a5a2b'>${f.join('')}</g></svg>`;document.documentElement.style.setProperty('--speck','url("data:image/svg+xml,'+encodeURIComponent(svg)+'")')})();
+/* ground pattern patches: 5 soft spots, random per page load, edges favoured so the pattern fades behind text and card */
+(function(){const R=Math.random,e=document.querySelectorAll(".gnd"),v={};for(let i=0;i<5;i++){const left=i%2===0;v["--p"+i+"x"]=Math.round(left?R()*28:72+R()*28)+"%";v["--p"+i+"y"]=Math.round(i*22+R()*14-2)+"%";v["--p"+i+"a"]=(.7+R()*.3).toFixed(2);v["--p"+i+"r"]=Math.round(26+R()*16)+"%"}e.forEach(n=>{for(const k in v)n.style.setProperty(k,v[k])})})();
 function show(id){['start','game','end'].forEach(s=>$(s).classList.toggle('on',s===id))}
 let ac;function tone(f,d,type,vol,slide){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f,ac.currentTime);if(slide)o.frequency.exponentialRampToValueAtTime(slide,ac.currentTime+d);g.gain.setValueAtTime(vol||.08,ac.currentTime);g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+d);o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+d)}catch(e){}}
 function buzz(p){try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}}
 
 // ---------- the board ----------
-const MAXG=5,CELLS=16;
-const dist=(a,b)=>Math.abs((a>>2)-(b>>2))+Math.abs((a&3)-(b&3));
-function nbrs(i){const r=i>>2,c=i&3,o=[];if(r>0)o.push(i-4);if(r<3)o.push(i+4);if(c>0)o.push(i-1);if(c<3)o.push(i+1);return o}
-// feedback index: 0 cold (3+), 1 warm (2), 2 hot (1), 3 caught (0)
-const col=d=>d===0?3:d===1?2:d===2?1:0;
-const KEY=[{k:'cold',n:'Cold',e:'🟦',s:'badge-cold'},{k:'warm',n:'Warm',e:'🟧',s:'badge-warm'},{k:'hot',n:'Hot',e:'🟥',s:'badge-hot'},{k:'win',n:'Caught',e:'🟩',s:'badge-caught'}];
-function movesOf(set){const s=new Set();set.forEach(x=>nbrs(x).forEach(n=>s.add(n)));return [...s]}
-
-// Belief-set solver. Tracks every nest the thief could be on, assuming he must step to a neighbour after each miss.
-// Picks the guard that leaves the smallest expected set for the next turn (caught counts as zero).
-function solve(path){
-  let B=Array.from({length:CELLS},(_,i)=>i);const gs=[];
-  for(let k=0;k<MAXG;k++){
-    let bestG=-1,bestS=1e9;
-    for(let g=0;g<CELLS;g++){
-      const cls=[[],[],[],[]];B.forEach(x=>cls[col(dist(g,x))].push(x));
-      let s=0;for(let c=0;c<3;c++)if(cls[c].length)s+=cls[c].length*(moveAfter(k)?movesOf(cls[c]).length:cls[c].length);
-      if(!B.includes(g))s+=.5;
-      if(s<bestS-1e-9){bestS=s;bestG=g}
-    }
-    gs.push(bestG);
-    const f=col(dist(bestG,path[k]));
-    if(f===3)return {par:k+1,guesses:gs};
-    const kept=B.filter(x=>col(dist(bestG,x))===f);
-    B=moveAfter(k)?movesOf(kept):kept;
-  }
-  return {par:0,guesses:gs};
+// Rules: each guard reports a distance band (hot 1, warm 2, cold 3+, caught 0; Manhattan) and the compass direction from the
+// guard to the thief. After every miss the thief runs one nest straight away from that guard. A cracked shell marks the
+// nest he stood on one guard ago. Everything is deterministic, so a day is just his starting nest.
+const N=6,MAXG=5,CELLS=N*N;
+const R_=i=>Math.floor(i/N),C_=i=>i%N;
+const dist=(a,b)=>Math.abs(R_(a)-R_(b))+Math.abs(C_(a)-C_(b));
+function nbrs(i){const r=R_(i),c=C_(i),o=[];if(r>0)o.push(i-N);if(r<N-1)o.push(i+N);if(c>0)o.push(i-1);if(c<N-1)o.push(i+1);return o}
+// 4-way arrow: the axis where he is farther from the guard (vertical if equal). Index 0 north, 2 east, 4 south, 6 west.
+const SHELL_FROM=3; // the shell shows from the 3rd guard on
+const DIRN=['north','','east','','south','','west',''];
+const DIRE=['⬆️','','➡️','','⬇️','','⬅️',''];
+const dirOf=(g,t)=>{const dr=R_(t)-R_(g),dc=C_(t)-C_(g);return Math.abs(dr)>=Math.abs(dc)?(dr<0?0:4):(dc>0?2:6)};
+const cmpK=(a,b)=>{for(let i=0;i<a.length;i++)if(a[i]!==b[i])return a[i]-b[i];return 0};
+// Flee rule: one nest up, down, left or right, whichever is farthest from the guard. Tie: the axis where he is already
+// farther from the guard (vertical if equal). Still tied at a wall: toward the middle, then lowest nest number.
+// If no neighbour is farther away he is cornered and stays put.
+function flee(g,t){
+  const d0=dist(g,t),vFirst=Math.abs(R_(t)-R_(g))>=Math.abs(C_(t)-C_(g));
+  let best=t,bk=null;
+  for(const n of nbrs(t)){const d=dist(g,n);if(d<=d0)continue;
+    const k=[d,(R_(n)!==R_(t))===vFirst?1:0,-(Math.abs(R_(n)-(N-1)/2)+Math.abs(C_(n)-(N-1)/2)),-n];
+    if(!bk||cmpK(k,bk)>0){best=n;bk=k}}
+  return best;
 }
-// The thief only moves after every SECOND miss: he sits still for guesses 1 and 2, steps, sits still for 3 and 4, steps, then guess 5.
-const moveAfter=k=>k%2===1;
-function makePath(r){let p=Math.floor(r()*CELLS);const path=[p];for(let k=1;k<MAXG;k++){if(moveAfter(k-1)){const nb=nbrs(p);p=nb[Math.floor(r()*nb.length)]}path.push(p)}return path}
-// Retry seeds until the solver catches him within 5 guards. First choice is a day with par 3 to 5 so it is never a freebie.
-function genDay(seed){
-  let last=null;
-  for(let a=0;a<1000;a++){
-    const path=makePath(mulberry32(hashStr(seed+'#'+a)));
-    const sol=solve(path);
-    last={path,par:sol.par,solver:sol.guesses,tries:a+1};
-    if(sol.par>0&&(sol.par>=3||a>=100))return last;
+// positions of the thief when each guard is posted: p[j] is where he stands when guard j lands
+function simPos(s0,gs){const p=[s0];for(let j=0;j<gs.length;j++)p.push(p[j]===gs[j]?p[j]:flee(gs[j],p[j]));return p}
+// one report as the player sees it: the 4-way arrow only (plus the shell from the third guard on)
+const fkey=(g,t)=>g===t?'win':''+dirOf(g,t);
+// Belief-set players. Each tracks every starting nest still consistent with all reports so far under the flee rule.
+// optPick posts the guard that leaves the fewest survivors (sum of squared class sizes).
+const optPick=(cur,k)=>{let bg=-1,bs=1e9;
+  for(let g=0;g<CELLS;g++){const m={};let ca=0;
+    cur.forEach(p=>{if(p[k]===g){ca++;return}const key=fkey(g,p[k])+'|'+(k>=SHELL_FROM-1?p[k-1]:'-');m[key]=(m[key]||0)+1});
+    let s=0;for(const q in m)s+=m[q]*m[q];s-=ca*.01;if(s<bs-1e-9){bs=s;bg=g}}
+  return bg};
+// Greedy player: ignores that he runs. Taps the middle of the nests that fit the latest arrow only.
+function greedyPlay(s0){let t=s0,last=null;
+  for(let k=0;k<MAXG;k++){
+    const cand=Array.from({length:CELLS},(_,i)=>i).filter(c=>!last||(c!==last[0]&&dirOf(last[0],c)===last[1]));
+    const mr=cand.reduce((a,c)=>a+R_(c),0)/cand.length,mc=cand.reduce((a,c)=>a+C_(c),0)/cand.length;
+    let g=0,bd=1e9;for(let x=0;x<CELLS;x++){const d=(R_(x)-mr)**2+(C_(x)-mc)**2;if(d<bd-1e-9){bd=d;g=x}}
+    if(g===t)return k+1;last=[g,dirOf(g,t)];t=flee(g,t)}
+  return 0}
+function playOut(s0,pick){
+  let C=Array.from({length:CELLS},(_,i)=>i);const gs=[],sizes=[];let ok=true;
+  for(let k=0;k<MAXG;k++){
+    const g=pick(C.map(s=>simPos(s,gs)),k);gs.push(g);
+    const tp=simPos(s0,gs),t=tp[k];
+    if(t===g)return {par:k+1,guesses:gs,ok,sizes};
+    const key=fkey(g,t)+'|'+(k>=SHELL_FROM-1?tp[k-1]:'-');
+    C=C.filter(s=>{const p=simPos(s,gs);return p[k]!==g&&fkey(g,p[k])+'|'+(k>=SHELL_FROM-1?p[k-1]:'-')===key});
+    if(!C.includes(s0))ok=false;
+    sizes.push(C.length);
   }
-  return last;
+  return {par:0,guesses:gs,ok,sizes};
+}
+const solve=s0=>playOut(s0,optPick);
+const PARS=Array.from({length:CELLS},(_,s)=>solve(s));
+// A day is a seeded pick of starting nest. Preference: solver par 3 or 4, then 5, then 2. Never par 1 (a freebie).
+function genDay(seed){
+  const r=mulberry32(hashStr(seed+'#v3')),order=Array.from({length:CELLS},(_,i)=>i);
+  for(let i=CELLS-1;i>0;i--){const j=Math.floor(r()*(i+1));[order[i],order[j]]=[order[j],order[i]]}
+  for(const tier of [[3,4],[5],[2]]){const s=order.find(x=>tier.includes(PARS[x].par));if(s!==undefined)return {start:s,par:PARS[s].par,solver:PARS[s].guesses}}
+  const s=order.find(x=>PARS[x].par>0);return {start:s,par:PARS[s].par,solver:PARS[s].guesses};
 }
 function check(){
-  let bad=0;const hist={};
+  let bad=0;const hist={},gh={},byStart={},bel=[0,0,0],beln=[0,0,0];
+  for(let g=0;g<CELLS;g++)for(let t=0;t<CELLS;t++){if(g===t)continue;const n=flee(g,t),moved=n!==t;
+    if(moved&&(!nbrs(t).includes(n)||dist(g,n)<=dist(g,t)))bad++;
+    if(!moved&&nbrs(t).some(x=>dist(g,x)>dist(g,t)))bad++;
+    if(moved&&nbrs(t).some(x=>dist(g,x)>dist(g,n)))bad++}
+  PARS.forEach((p,s)=>{byStart[p.par]=(byStart[p.par]||0)+1;if(!p.ok||p.par<1||p.par>MAXG)bad++;p.sizes.forEach((z,i)=>{if(i<3){bel[i]+=z;beln[i]++}})});
   for(let d=1;d<=60;d++){
-    const s='2026-12-'+String(d).padStart(2,'0'),day=genDay(s),p=day.path;
-    if(JSON.stringify(genDay(s).path)!==JSON.stringify(p))bad++;
-    if(p.length!==MAXG)bad++;
-    for(let k=0;k<MAXG;k++){if(!(p[k]>=0&&p[k]<CELLS))bad++;if(k){if(moveAfter(k-1)){if(p[k]===p[k-1]||dist(p[k],p[k-1])!==1)bad++}else if(p[k]!==p[k-1])bad++}}
-    const sol=solve(p);
-    if(sol.par<1||sol.par>MAXG||sol.par!==day.par)bad++;
-    let caught=0;sol.guesses.forEach((g,k)=>{if(!caught&&g===p[k])caught=k+1});
+    const s='2026-12-'+String(d).padStart(2,'0'),day=genDay(s);
+    if(JSON.stringify(genDay(s))!==JSON.stringify(day))bad++;
+    if(!(day.start>=0&&day.start<CELLS))bad++;
+    const sol=solve(day.start);
+    if(!sol.ok||sol.par<2||sol.par>MAXG||sol.par!==day.par)bad++;
+    const p=simPos(day.start,day.solver);let caught=0;day.solver.forEach((g,k)=>{if(!caught&&g===p[k])caught=k+1});
     if(caught!==sol.par)bad++;
     hist[sol.par]=(hist[sol.par]||0)+1;
+    const gp=greedyPlay(day.start);gh[gp||'fail']=(gh[gp||'fail']||0)+1;
   }
-  console.log('Egg Thief self-check, 60 days, par spread',JSON.stringify(hist),'problems:',bad);
+  console.log('Egg Thief self-check, 60 days, solver par spread',JSON.stringify(hist),'| greedy middle-tapper (ignores his running)',JSON.stringify(gh),'| par over all 36 starts',JSON.stringify(byStart),'| avg nests left after clue 1/2/3',(bel[0]/beln[0]).toFixed(1),(bel[1]/Math.max(1,beln[1])).toFixed(1),(bel[2]/Math.max(1,beln[2])).toFixed(1),'| problems:',bad);
 }
 check();
 
 // ---------- art ----------
 // bubbly letters: each its own colour, rotation and baseline
-const PAL=[['#fff4dc','#ff6eb4'],['#ffc93c','#ff7a45'],['#ff6eb4','#fff4dc'],['#3ad6a0','#fff4dc'],['#fff4dc','#3ad6a0'],['#ffc93c','#ff6eb4'],['#ff6eb4','#ffc93c'],['#fff4dc','#ff7a45']];
+const PAL=[['#fff6e3','#ffb3a7'],['#9fd8d2','#fff6e3'],['#ffb3a7','#fff6e3'],['#fff6e3','#9fd8d2'],['#ff7a3d','#fff6e3'],['#9fd8d2','#ffb3a7'],['#ffb3a7','#9fd8d2'],['#fff6e3','#8a5a2b']];
 const ROT=[-7,5,-4,6,-6,4,-5,7],YO=[.03,-.04,.02,-.03,.04,-.02,.03,-.04];
 function bub(word,o){o=o||{};let k=o.k||0;return [...word].map(ch=>{
   if(ch===' ')return '<i class="sp"> </i>';
   const p=PAL[k%PAL.length],rot=ROT[k%8],y=YO[k%8];k++;
   const egg=o.egg&&ch===o.egg?'<img class="dot" src="assets/thief.svg" alt="">':'';
   return `<i style="--c:${p[0]};--r:${p[1]};--rot:${rot}deg;--y:${y}em">${ch}${egg}</i>`}).join('')}
-$('wm').innerHTML='<div class="lock"><span class="ln l1">'+bub('EGG',{k:0})+'</span><span class="ln l2">'+bub('THIEF',{k:3,egg:'I'})+'</span><span class="ln tag">'+bub('CATCH HIM!',{k:5})+'</span></div>';
-$('wm2').innerHTML='<span class="ln">'+bub('EGG THIEF',{k:0,egg:'I'})+'</span>';
-const sImg=(f,cls)=>`<img class="${cls||''}" src="assets/${KEY[f].s}.svg" alt="">`;
-const FOOT='<img src="assets/footprint.svg" alt="">';
-const GRID0='';
-$('key').innerHTML=[['Hot',2,'1 step'],['Warm',1,'2'],['Cold',0,'3+'],['Caught',3,'0']].map(([n,f,d])=>`<span class="k">${sImg(f)}${n} ${d}</span>`).join('');
+function wmHTML(){
+  const L=(ch,c,sc,r,y)=>'<span class="L" aria-hidden="true" style="--c:'+c+';--s:'+sc+';--r:'+r+'deg;--y:'+y+'em">'+ch+'</span>';
+  const cr='#fff6e3',crS='#f2a21a',pk='#ffb3a7',pkS='#e5655c',bl='#9fd8d2',blS='#4fa7a0',or='#ff7a3d',orS='#d9501a';
+  return L('E',cr,crS,-6,.03)+L('G',pk,pkS,4,-.03)+L('G',bl,blS,-4,.03)+'<span class="gap"></span>'+L('T',cr,crS,5,-.02)+L('H',or,orS,-5,.03)
+   +'<span class="o" style="--r:5deg;--y:-.02em"><img src="assets/thief.svg" alt=""></span>'+L('E',pk,pkS,-4,.02)+L('F',bl,blS,6,-.03);
+}
+$('wm').innerHTML=wmHTML();$('wm2').innerHTML=wmHTML();
+const sImg=(won,cls)=>`<img class="${cls||''}" src="assets/${won?'badge-caught':'badge-clue'}.svg" alt="">`;
+const arrowSVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.4L19.6 14.3L14.4 13.5L14.9 20.5L9.3 20.7L9.7 13.3L4.5 14.2Z" fill="#3b2410"/></svg>';
+const arrow=(dir,cls)=>`<span class="ar${cls?' '+cls:''}" style="--a:${dir*45}deg">${arrowSVG}</span>`;
+const NESTS=['nest','nest-b','nest-c'];
+$('key').innerHTML='<span class="k">'+arrow(2,'in')+'Which way he is</span><span class="k"><img src="assets/crack.svg" alt="">He stood here</span><span class="k">'+sImg(true)+'Caught</span>';
+const RULE='After each miss he runs one nest straight away from your guard.';
 
 // ---------- game ----------
-let seed,practice,day,guesses=[],locked=false;
-const fb=k=>col(dist(guesses[k],day.path[k]));
-const hasWon=()=>guesses.some((g,k)=>fb(k)===3);
+let seed,practice,day,guesses=[],locked=false,P=[0];
+const sync=()=>{P=simPos(day.start,guesses)};
+const won_=k=>guesses[k]===P[k];
+const dirAt=k=>guesses[k]===P[k]?-1:dirOf(guesses[k],P[k]);
+const hasWon=()=>guesses.some((g,k)=>g===P[k]);
 const isOver=()=>hasWon()||guesses.length>=MAXG;
 function begin(s,p){
   seed=s;practice=p;locked=false;day=genDay(s);
-  const done=!p&&load('et_'+s,null);
-  if(done){guesses=done.g;return showCard()}
-  guesses=p?[]:load('et_p_'+s,[]);
+  const done=!p&&load('et3_'+s,null);
+  if(done){guesses=done.g;sync();return showCard()}
+  guesses=p?[]:load('et3_p_'+s,[]);sync();
   show('game');render(-1);
 }
 function sayHTML(){
   const n=guesses.length;
-  if(!n)return '<div class="tx">Tap a nest to post a guard.<small>He steps one nest after every 2nd miss.</small></div>';
-  const f=fb(n-1);
-  const big=sImg(f,'big');
-  if(f===3)return '<div class="tx">Caught him!<small>Guard '+n+' of 5. Cuffs on.</small></div>'+big;
+  if(!n)return '<div class="tx">Tap a nest to post a guard.<small>Guard 1 of 5. He then runs a nest away.</small></div>';
+  const w=won_(n-1),big=w?sImg(w,'big'):'<span class="ht big">'+sImg(w)+arrow(dirAt(n-1))+'</span>';
+  if(w)return '<div class="tx">Caught him!<small>Guard '+n+' of 5. Cuffs on.</small></div>'+big;
   if(n>=MAXG)return '<div class="tx">He got away.<small>The thief was never where you looked.</small></div>'+big;
-  const msg=['Cold. 3 or more steps away.','Warm. 2 steps away.','Hot. 1 step away.'][f];
-  return '<div class="tx">'+msg+'<small>'+(moveAfter(n-1)?FOOT+'Then he sneaked one step. ':'He stayed put. ')+'Guard '+(n+1)+' of 5.</small></div>'+big;
+  const msg='He is '+DIRN[dirAt(n-1)]+' of that guard.';
+  return '<div class="tx">'+msg+'<small>'+'Guard '+(n+1)+' of 5. He then runs a nest away.</small></div>'+big;
 }
 const DEBUG=false; // TEMP: set true to show where the thief is
 function dbg(i){
   if(!DEBUG)return '';
   let s='';
-  if(!isOver()&&day.path[guesses.length]===i)s+='<span class="dbg now"><img src="assets/thief.svg" alt="" style="width:60%"></span>';
-  day.path.slice(0,guesses.length).forEach((p,k)=>{if(p===i)s+='<span class="trail">he was here at guess '+(k+1)+'</span>'});
+  if(!isOver()&&P[guesses.length]===i)s+='<span class="dbg now"><img src="assets/thief.svg" alt="" style="width:60%"></span>';
+  P.slice(0,guesses.length).forEach((p,k)=>{if(p===i)s+='<span class="trail">he was here at guess '+(k+1)+'</span>'});
   return s;
 }
 function render(flip){
   $('streak').textContent=load('et_streak',0)?'Streak '+load('et_streak',0):'';
-  const over=isOver();
+  const over=isOver(),n=guesses.length,shell=n>=SHELL_FROM?P[n-2]:-1;
   $('slots').innerHTML=Array.from({length:MAXG},(_,i)=>{
-    if(i<guesses.length){const f=fb(i);return `<div class="slot ${KEY[f].k}${i===flip?' stamp':''}" role="img" aria-label="Guard ${i+1}: ${KEY[f].n}">${sImg(f,'bd')}<span class="nc">${i+1}</span></div>`}
-    return `<div class="slot ${i===guesses.length&&!over?'now':''}"><span class="nc" style="background:none;color:var(--ink)">${i+1}</span></div>`}).join('');
+    if(i<n){const w=won_(i);return `<div class="slot${i===flip?' stamp':''}" role="img" aria-label="Guard ${i+1}: ${w?'Caught':'he is to the '+DIRN[dirAt(i)]}">${sImg(w,'bd')}${w?'':arrow(dirAt(i))}<span class="nc">${i+1}</span></div>`}
+    return `<div class="slot ${i===n&&!over?'now':''}"><span class="nc" style="background:none;color:var(--ink)">${i+1}</span></div>`}).join('');
   let h='';
   for(let i=0;i<CELLS;i++){
     const ks=[];guesses.forEach((g,k)=>{if(g===i)ks.push(k)});
-    const r=Math.floor(i/4)+1,c=i%4+1;
-    if(!ks.length){h+=`<button class="nest" data-i="${i}" aria-label="Nest row ${r} column ${c}"><img class="n" src="assets/nest.svg" alt="">${dbg(i)}</button>`;continue}
-    const last=ks[ks.length-1],f=fb(last);
-    h+=`<button class="nest${last===flip?' new':''}" data-i="${i}" aria-label="Nest row ${r} column ${c}, guard ${ks.map(k=>k+1).join(' and ')}, ${KEY[f].n}">${sImg(f,'bd')}<span class="nc">${ks.map(k=>k+1).join('·')}</span>${dbg(i)}</button>`;
+    const r=Math.floor(i/4)+1,c=i%4+1,sh=shell===i?'<img class="shell" src="assets/crack.svg" alt="">':'',shA=shell===i?', cracked shell, he stood here a guard ago':'';
+    if(!ks.length){h+=`<button class="nest" data-i="${i}" aria-label="Nest row ${r} column ${c}${shA}"><img class="n" src="assets/${NESTS[(i+(i>>2))%3]}.svg" alt="">${sh}${dbg(i)}</button>`;continue}
+    const last=ks[ks.length-1],w=won_(last);
+    h+=`<button class="nest${last===flip?' new':''}" data-i="${i}" aria-label="Nest row ${r} column ${c}, guard ${ks.map(k=>k+1).join(' and ')}, ${w?'Caught':'he is to the '+DIRN[dirAt(last)]}${shA}">${sImg(w,'bd')}${w?'':arrow(dirAt(last))}<img class="gc" src="assets/guard.svg" alt=""><span class="nc">${ks.map(k=>k+1).join('·')}</span>${sh}${dbg(i)}</button>`;
   }
   $('grid').innerHTML=h;
   $('say').innerHTML=sayHTML()+(DEBUG?'<div class="tx" style="color:#c00">DEBUG ON: the thief is shown on his current nest.</div>':'');
 }
 function tap(i){
   if(locked||isOver())return;
-  guesses.push(i);
-  const k=guesses.length-1,f=fb(k);
+  guesses.push(i);sync();
+  const k=guesses.length-1,w=won_(k);
   render(k);
-  if(f===3){[523,659,784,1047].forEach((q,j)=>setTimeout(()=>tone(q,.18,'triangle',.1),j*90));buzz([40,40,80])}
-  else{tone([200,330,520][f],.2,f===2?'square':'triangle',.07,[150,300,640][f]);buzz(f===2?[60,40,60]:f===1?[40]:[20])}
-  if(!practice)save('et_p_'+seed,guesses);
+  if(w){[523,659,784,1047].forEach((q,j)=>setTimeout(()=>tone(q,.18,'triangle',.1),j*90));buzz([40,40,80])}
+  else{tone(260,.2,'triangle',.07,420);buzz([25])}
+  if(!practice)save('et3_p_'+seed,guesses);
   if(isOver()){locked=true;setTimeout(finishAll,1000)}
 }
 function finishAll(){
   const won=hasWon();
   if(!practice){
-    save('et_'+seed,{g:guesses});
+    save('et3_'+seed,{g:guesses});
     const days=load('et_days',[]);
     if(!days.includes(seed)){days.push(seed);save('et_days',days);
       if(won){const last=load('et_last',''),y=ds(new Date(Date.now()-864e5));save('et_streak',last===y?load('et_streak',0)+1:1);save('et_last',seed)}
@@ -289,16 +371,19 @@ function finishAll(){
 }
 function showCard(){
   const n=guesses.length,won=hasWon(),score=won?n:'X';
-  const strip=guesses.map((g,k)=>KEY[fb(k)].e).join('');
+  const strip=guesses.map((g,k)=>won_(k)?'🟩':DIRE[dirAt(k)]).join('');
   show('end');
   $('verdict').innerHTML=won?bub('CAUGHT',{k:3})+'<br>'+bub('HIM!',{k:1}):bub('HE GOT',{k:0})+'<br>'+bub('AWAY!',{k:4});
   $('cdate').textContent=practice?'Practice case':seed;
   $('ctitle').textContent=won?['','Pure luck','Master thief catcher','Good read','Close call','Last guard'][n]:'He got away';
   $('cscore').textContent=score;
-  $('rtiles').innerHTML=guesses.map((g,k)=>sImg(fb(k))).join('');
-  $('par').innerHTML='His route. Boot prints mark each step he took. Solver par '+day.par+'.';
-  $('route').innerHTML=Array.from({length:CELLS},(_,i)=>{const ks=[];day.path.slice(0,n).forEach((p,k)=>{if(p===i)ks.push(k+1)});return ks.length?`<i><img src="assets/footprint.svg" alt=""><b>${ks.join('·')}</b></i>`:'<i></i>'}).join('');
-  $('cfine').textContent=practice?'Practice does not count':'Streak '+load('et_streak',0)+' · same thief route for everyone today';
+  $('rtiles').innerHTML=guesses.map((g,k)=>{const w=won_(k);return `<span class="ht">${sImg(w)}${w?'':arrow(dirAt(k))}</span>`}).join('');
+  $('par').innerHTML='His route. A shell marks each nest he left. Solver par '+day.par+'.';
+  $('route').innerHTML=Array.from({length:CELLS},(_,i)=>{const ks=[];P.slice(0,n).forEach((p,k)=>{if(p===i)ks.push(k+1)});
+    if(!ks.length)return '<i></i>';
+    const end=won&&ks.includes(n);
+    return `<i><img src="assets/${end?'thief':'crack'}.svg" alt=""><u>${ks.map(k=>`<b>${k}</b>`).join('')}</u></i>`}).join('');
+  $('cfine').textContent=practice?'Practice does not count':'Streak '+load('et_streak',0)+' · same thief start for everyone today';
   window._share='Egg Thief '+seed+'\n'+strip+' '+score+'/5';
 }
 $('play').onclick=()=>begin(today(),false);
@@ -306,15 +391,75 @@ $('grid').onclick=e=>{const b=e.target&&e.target.closest&&e.target.closest('butt
 $('copy').onclick=()=>{(navigator.clipboard?navigator.clipboard.writeText(window._share):Promise.reject()).then(()=>$('copy').textContent='Copied!',()=>prompt('Copy:',window._share))};
 $('prac').onclick=()=>{$('copy').textContent='Copy result';begin('practice-'+Math.random().toString(36).slice(2,7),true)};
 addEventListener('error',e=>{const s=$('say');if(s)s.textContent='Error: '+e.message});
-$('sfine').textContent=load('et_'+today(),null)?'You have played today. See your result.':(load('et_streak',0)?'Streak '+load('et_streak',0):'New thief route every day');
+$('sfine').textContent=load('et3_'+today(),null)?'You have played today. See your result.':(load('et_streak',0)?'Streak '+load('et_streak',0):'New thief every day');
 // test hooks: ?demo=start | game | end | lose  (never touches saved progress)
 (function(){
   const m=/[?&]demo=(\w+)/.exec(location.search);if(!m)return;
   seed='demo-day';practice=true;day=genDay(seed);
-  if(m[1]==='game'){guesses=[day.solver[0],day.solver[1],(day.path[2]+5)%CELLS];if(fb(2)===3)guesses[2]=(day.path[2]+6)%CELLS;show('game');render(2)}
-  else if(m[1]==='end'){guesses=day.solver.slice(0,day.par);showCard()}
-  else if(m[1]==='lose'){guesses=[];for(let k=0;k<MAXG;k++)guesses.push((day.path[k]+5)%CELLS);for(let k=0;k<MAXG;k++)if(fb(k)===3)guesses[k]=(day.path[k]+6)%CELLS;showCard()}
+  // a guard that is guaranteed to miss given the guards already posted
+  const miss=()=>{sync();const t=P[guesses.length];let g=(t+5)%CELLS;if(g===t)g=(t+6)%CELLS;return g};
+  if(m[1]==='game'){guesses=[day.solver[0]];sync();guesses.push(miss());sync();guesses.push(miss());sync();show('game');render(2)}
+  else if(m[1]==='end'){guesses=day.solver.slice(0,day.par);sync();showCard()}
+  else if(m[1]==='lose'){guesses=[];for(let k=0;k<MAXG;k++){guesses.push(miss())}sync();showCard()}
 })();
 </script>
-</body>
+<script>
+/* Hand-cut corners v2: rough, hand-torn edges drawn as a vector clip-path outline (crisp at any pixel density, no filters). */
+(function(){
+  var st=document.createElement("style");st.textContent="[data-hp=b]::before{clip-path:var(--hcp);-webkit-clip-path:var(--hcp)}[data-hp=a]::after{clip-path:var(--hcp);-webkit-clip-path:var(--hcp)}";document.head.appendChild(st);
+  var n=0;
+  function R(seed){var x=Math.sin(seed*12.9898+78.233)*43758.5453;return x-Math.floor(x)}
+  function outline(w,h,r,seed){
+    // walk the perimeter of a rounded rectangle, sampling about every 5px, pushing each point in or out a little
+    r=Math.min(r,w/2-1,h/2-1);
+    var pts=[],step=5,amp=Math.max(1.6,Math.min(3.6,Math.min(w,h)*.055));
+    var segs=[[r,0,w-r,0],[w,r,w,h-r],[w-r,h,r,h],[0,h-r,0,r]];
+    var corners=[[w-r,r,-Math.PI/2],[w-r,h-r,0],[r,h-r,Math.PI/2],[r,r,Math.PI]];
+    var k=0;
+    for(var s=0;s<4;s++){
+      var a=segs[s],len=Math.hypot(a[2]-a[0],a[3]-a[1]),m=Math.max(2,Math.round(len/step));
+      var nx=[0,1,0,-1][s],ny=[-1,0,1,0][s];
+      for(var i=0;i<m;i++){var t=i/m,x=a[0]+(a[2]-a[0])*t,y=a[1]+(a[3]-a[1])*t;
+        var d=(Math.sin(k*.7+seed)*.45+ (R(seed*31+k)-.5)*1.1)*amp;k++;
+        pts.push([x+nx*d,y+ny*d])}
+      var c=corners[s],cm=Math.max(3,Math.round(r*1.57/step));
+      for(var j=0;j<cm;j++){var an=c[2]+(Math.PI/2)*(j/cm),d2=(R(seed*17+k)-.5)*1.1*amp;k++;
+        pts.push([c[0]+Math.cos(an)*(r+d2),c[1]+Math.sin(an)*(r+d2)])}
+    }
+    // smooth through midpoints so the wobble reads as a cut edge, not a zigzag
+    var p='M'+((pts[0][0]+pts[1][0])/2).toFixed(1)+' '+((pts[0][1]+pts[1][1])/2).toFixed(1);
+    for(var q=1;q<=pts.length;q++){var A=pts[q%pts.length],B=pts[(q+1)%pts.length];
+      p+=' Q'+A[0].toFixed(1)+' '+A[1].toFixed(1)+' '+((A[0]+B[0])/2).toFixed(1)+' '+((A[1]+B[1])/2).toFixed(1)}
+    return p+'Z';
+  }
+  function shape(el){
+    if(!el.dataset)return;var cs=getComputedStyle(el);
+    var r=parseFloat(cs.borderTopLeftRadius)||0;
+    var pseudo="";
+    if(r<4){var pb=getComputedStyle(el,"::before"),pa=getComputedStyle(el,"::after");
+      if(pb.content&&pb.content!=="none"&&pb.position==="absolute"&&(parseFloat(pb.borderTopLeftRadius)||0)>=4){r=parseFloat(pb.borderTopLeftRadius);pseudo="b"}
+      else if(pa.content&&pa.content!=="none"&&pa.position==="absolute"&&(parseFloat(pa.borderTopLeftRadius)||0)>=4){r=parseFloat(pa.borderTopLeftRadius);pseudo="a"}}
+    if(r<4||r>=999)return;
+    var w=el.offsetWidth,h=el.offsetHeight;if(!w||!h)return;
+    if(r>=Math.min(w,h)/2-1)return; // circles stay circles
+    var key=w+'x'+h;if(el.dataset.hc===key)return;
+    if(!el.dataset.hs){n++;el.dataset.hs=n}
+    el.dataset.hc=key;
+    var path=outline(w,h,r,+el.dataset.hs);
+    var cp="path('"+path+"')";
+    if(pseudo){el.dataset.hp=pseudo;el.style.setProperty("--hcp",cp);return}
+    // never clip something that has a badge or chip hanging over its edge: leave those smooth
+    var b=el.getBoundingClientRect(),over=false;el.querySelectorAll("*").forEach(function(c){var q=c.getBoundingClientRect();if(q.width&&(q.left<b.left-1||q.top<b.top-1||q.right>b.right+1||q.bottom>b.bottom+1))over=true});
+    if(over)return;
+    el.style.clipPath=cp;el.style.webkitClipPath=cp;
+  }
+  function all(root){if(root.querySelectorAll)root.querySelectorAll('*').forEach(shape)}
+  function go(){all(document.body);
+    new MutationObserver(function(ms){ms.forEach(function(m){m.addedNodes.forEach(function(nd){if(nd.nodeType===1){shape(nd);all(nd)}})})}).observe(document.body,{childList:true,subtree:true});
+    document.addEventListener('click',function(){setTimeout(function(){all(document.body)},60)},true);
+    addEventListener('resize',function(){all(document.body)})}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();
+})();
+</script>
+<script>/* thumb mode: ?thumb shows only the landing wordmark on its ground, used to render the gallery card */(function(){if(!/[?&]thumb\b/.test(location.search))return;function go(){var s=document.getElementById("start");if(!s)return;var wm=s.querySelector(".wm");if(!wm)return;var w=wm.parentElement===s?wm:wm.parentElement;s.querySelectorAll("*").forEach(function(e){if(!e.contains(w)&&!w.contains(e)&&e!==w)e.style.display="none"});w.style.transform="scale(1.25)";for(var a=s;a&&a!==document.documentElement;a=a.parentElement){a.style.maxWidth="none";a.style.width="100%";a.style.marginLeft="0";a.style.marginRight="0"}}if(document.readyState==="loading")addEventListener("DOMContentLoaded",function(){setTimeout(go,50)});else setTimeout(go,50)})();</script></body>
 </html>

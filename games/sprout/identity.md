@@ -3,10 +3,10 @@
 - Growth tiles: wilted tan #c9b48a, sprout #b8ec7a, leafy #3fbf4f, bloom gold #ffc21f. Season colours: leafy green, sunshine, tomato.
 - Landing and result: broad low contrast diagonal stripes plus a faint white dot grid. Play screen: flat lime with one cream card, black rectangular buttons (radius 10), flat tiles.
 - Wordmark recipe: SPROUT in Allo 900, ROND 100, opsz 32. Each letter its own colour with a deeper inner outline (text-stroke, paint-order stroke fill), a small rotation and baseline shift, slight overlap.
-- Outer outline and solid drop come from stacked drop-shadow() filters in ink on the whole wordmark. Tag word GROW! uses the same recipe, tilted -7deg.
-- The O is a seed ring (sunshine with orange inner outline, cream centre) with a two-leaf green sprout on top.
-- Sprites: flat saturated fills, chunky rounded shapes, one 4 unit ink outline, at most 4 colours, dot eyes, no gloss or gradients.
+- Outer outline and solid drop come from stacked drop-shadow() filters in ink on the whole wordmark. The tag word GROW! is small plain white text (about 20px, letterspaced, tilted -5deg), no outline, no drop.
+- The O is a flat sunshine seed with a cream centre and a two-leaf lime sprout, no strokes.
+- Sprites: flat hand-cut shapes with rough edges (SVG turbulence displacement), no outlines, no faces, at most 3 colours each, no gradients or shading.
 - Plants: tomato, carrot, corn, cabbage, pea, radish plus golden-flower. Each file is a 500x100 sheet of 5 frames: seed, sprout, leafy, bloom, wilted.
-- Weather: sun, rain cloud, snowflake (frost), wind. 64x64 stickers, same outline. Love chip is green with a plus, hate chip is red with a minus.
+- Weather: sun, rain drops, snowflake (frost), wind. 64x64 flat marker-style glyphs. Love chip is light green with a plus, hate chip is light red with a minus.
 - Rules: no grain, noise, texture, offset colour copies, hatching, gradients or glow. Only solid ink drops. Type 14px or larger. Allo 600 to 900.
 - Test hooks: ?demo=start, ?demo=game, ?demo=end.

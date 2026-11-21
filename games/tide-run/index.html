@@ -7,7 +7,7 @@
 <link rel="icon" type="image/svg+xml" href="assets/mark.svg">
 <style>
 @font-face{font-family:"Allo";src:url("../../shared/AlloVariable.woff2") format("woff2");font-weight:100 900;font-display:swap}
-:root{--bg:#2f8bff;--tint:#4a9bff;--ink:#0b2a66;--cream:#fff8e6;--card:#fffaf0;--sand:#ffd98a;--coral:#ff5a5f;--sun:#ffc93c;--water:#a9d3ff;--u:min(100vw,480px)}
+:root{--bg:#2f8bff;--tint:#4a9bff;--ink:#0b2a66;--cream:#fff8e6;--card:#fffaf0;--sand:#ffd98a;--coral:#ff5a5f;--sun:#ffc93c;--water:#9fcbff;--u:min(100vw,480px)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;background:var(--ink);color:var(--ink);font-family:"Allo",system-ui,sans-serif;font-variation-settings:"ROND" 100,"opsz" 18;overflow:hidden;touch-action:manipulation;user-select:none}
 #app{position:relative;max-width:480px;height:100%;margin:0 auto;overflow:hidden;background:var(--bg)}
@@ -16,98 +16,115 @@ section.on{display:flex}
 img{-webkit-user-drag:none}
 button{font-family:inherit}
 button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
-/* loud ground: broad low contrast stripes plus faint small dots */
-.pop{background:radial-gradient(circle,rgba(255,255,255,.22) 1.5px,transparent 2px) 0 0/16px 16px,repeating-linear-gradient(-32deg,var(--bg) 0 64px,var(--tint) 64px 128px)}
-/* bubbly wordmark: per letter colour, inner stroke, dark outline, solid drop */
-.wm{--o:.055em;--d:.1em;display:inline-flex;align-items:center;position:relative;font-weight:900;font-variation-settings:"ROND" 100,"opsz" 32;line-height:1}
-.wt{display:inline-flex;align-items:center;
- filter:drop-shadow(var(--o) 0 0 var(--ink)) drop-shadow(calc(var(--o)*-1) 0 0 var(--ink)) drop-shadow(0 var(--o) 0 var(--ink)) drop-shadow(0 calc(var(--o)*-1) 0 var(--ink)) drop-shadow(0 var(--d) 0 var(--ink))}
-.wm i{font-style:normal;display:inline-block;color:var(--f);-webkit-text-stroke:.12em var(--s);paint-order:stroke fill;stroke-linejoin:round;margin:0 -.025em;transform:translateY(var(--y)) rotate(var(--r))}
-.wm i.sp{width:.3em}
-.wm img{position:absolute;pointer-events:none;width:.95em;height:.95em;right:-.6em;top:-.58em;transform:rotate(10deg);filter:drop-shadow(0 var(--d) 0 var(--ink))}
-.big{font-size:calc(var(--u)*.165)}
-.small{font-size:calc(var(--u)*.105)}
-.tag{font-size:calc(var(--u)*.085);transform:rotate(-5deg);margin-top:.15em}
+/* ground: flat colour, with the stripes and dots on their own layer, shown only in soft random patches */
+.pop{background:var(--bg);isolation:isolate}
+.pop::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+ background:radial-gradient(circle,rgba(255,255,255,.22) 1.5px,transparent 2px) 0 0/16px 16px,repeating-linear-gradient(-32deg,transparent 0 64px,var(--tint) 64px 128px);
+ -webkit-mask-image:radial-gradient(circle at var(--a1x,12%) var(--a1y,10%),#000 0,transparent var(--a1r,22%)),radial-gradient(circle at var(--a2x,88%) var(--a2y,22%),#000 0,transparent var(--a2r,20%)),radial-gradient(circle at var(--a3x,6%) var(--a3y,62%),#000 0,transparent var(--a3r,20%)),radial-gradient(circle at var(--a4x,92%) var(--a4y,70%),#000 0,transparent var(--a4r,24%)),radial-gradient(circle at var(--a5x,50%) var(--a5y,98%),#000 0,transparent var(--a5r,20%));
+ mask-image:radial-gradient(circle at var(--a1x,12%) var(--a1y,10%),#000 0,transparent var(--a1r,22%)),radial-gradient(circle at var(--a2x,88%) var(--a2y,22%),#000 0,transparent var(--a2r,20%)),radial-gradient(circle at var(--a3x,6%) var(--a3y,62%),#000 0,transparent var(--a3r,20%)),radial-gradient(circle at var(--a4x,92%) var(--a4y,70%),#000 0,transparent var(--a4r,24%)),radial-gradient(circle at var(--a5x,50%) var(--a5y,98%),#000 0,transparent var(--a5r,20%))}
+.pop>*{position:relative}
+/* wordmark: same recipe as Sprout. One line, per letter fill, darker inner stroke, thin em-based outer outline */
+.out{filter:drop-shadow(.045em 0 0 var(--ink)) drop-shadow(-.045em 0 0 var(--ink)) drop-shadow(0 .045em 0 var(--ink)) drop-shadow(0 -.045em 0 var(--ink)) drop-shadow(0 .09em 0 var(--ink))}
+.wm{display:flex;align-items:flex-end;justify-content:center;font-size:min(14vw,64px);line-height:1;padding-top:.3em}
+.wm .L{display:block;font-weight:900;font-variation-settings:"ROND" 100,"opsz" 32;line-height:.8;color:var(--c);-webkit-text-stroke:.13em var(--s);paint-order:stroke fill;margin:0 -.005em;transform:translateY(var(--y,0)) rotate(var(--r,0deg))}
+.wm .gap{display:block;width:.28em}
+.wm .o{display:block;position:relative;width:.95em;height:.72em;margin:0 0 0 .06em;transform:translateY(var(--y,0)) rotate(var(--r,0deg))}
+.wm .o img{position:absolute;left:0;bottom:-.03em;width:.95em;height:.95em;display:block;pointer-events:none}
+.wm.small{font-size:48px;padding-top:0}
+.tg{display:block;font-size:20px;font-weight:900;font-variation-settings:"ROND" 100,"opsz" 32;letter-spacing:.14em;line-height:1;color:#fff;transform:rotate(-5deg);margin:0}
 .btn{border:0;background:#111;color:#fff;border-radius:10px;font-weight:800;font-size:20px;min-height:56px;padding:0 48px;cursor:pointer;font-variation-settings:"ROND" 60,"opsz" 20}
 .btn:active{transform:translateY(2px)}
 .link{background:none;border:0;color:var(--ink);font-weight:800;font-size:16px;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px;cursor:pointer;padding:12px 8px;min-height:48px;font-variation-settings:"ROND" 60,"opsz" 16}
 /* landing */
 #start{align-items:center;justify-content:center;text-align:center;padding:32px 24px;gap:0}
-#start .tag{margin-bottom:26px}
+#start .wmw{margin-bottom:26px}
+#start .tg{margin:8px 0 0 38%}
 .lead{margin:0 0 26px;font-size:20px;font-weight:800;line-height:1.3;max-width:300px;font-variation-settings:"ROND" 60,"opsz" 20}
 .fine{margin-top:18px;font-size:15px;font-weight:700;opacity:.85;min-height:1.3em}
 /* play screen: flat colour, cream card */
 #game{padding:14px 14px calc(14px + env(safe-area-inset-bottom));background:var(--bg)}
-.card{background:var(--card);border-radius:20px;padding:16px;display:grid;gap:14px;margin:auto 0}
+.card{position:relative;padding:16px;display:grid;gap:14px;margin:auto 0}
+.card::before,.sheet::before{content:"";position:absolute;inset:0;z-index:0;background:var(--card);border-radius:20px;filter:url(#roughL)}
+.card>*,.sheet>*{position:relative;z-index:1}
 .card header{display:flex;justify-content:space-between;align-items:center}
 .card header b{font-size:22px;font-weight:900;font-variation-settings:"ROND" 100,"opsz" 32}
 #streak{font-size:15px;font-weight:800}
 #slots{display:grid;grid-template-columns:repeat(9,1fr);gap:5px}
-.slot{aspect-ratio:1;border-radius:8px;background:#f3e9cd;display:grid;place-items:center}
-.slot.now{box-shadow:inset 0 0 0 3px var(--ink)}
-.slot.fill{background:none;animation:pop .35s ease}
+.slot{position:relative;aspect-ratio:1;display:grid;place-items:center}
+.slot::before,.st::before{content:"";position:absolute;inset:0;border-radius:8px;background:var(--tc,#f3e9cd);filter:url(#roughS)}
+.slot.now::before{background:#ecdcae}
+.slot.fill::before{display:none}
+.slot.fill{animation:pop .35s ease}
 @keyframes pop{0%{transform:scale(.6)}70%{transform:scale(1.1)}100%{transform:none}}
-.st{aspect-ratio:1;width:100%;border-radius:8px;display:grid;place-items:center;background:var(--bg)}
-.st.y{background:var(--sun)}.st.g{background:var(--coral)}.st.r{background:var(--ink)}
-.st img{width:78%;height:78%;display:block}
+.st{--tc:var(--bg);position:relative;aspect-ratio:1;width:100%;display:grid;place-items:center}
+.st.y{--tc:var(--sun)}.st.g{--tc:var(--coral)}.st.r{--tc:var(--ink)}
+.st img{position:relative;width:78%;height:78%;display:block}
 .board{width:min(100%,50vh);aspect-ratio:1;margin:0 auto}
 #grid{display:grid;grid-template-columns:repeat(5,1fr);grid-auto-rows:1fr;gap:6px;width:100%;height:100%}
-.cell{position:relative;border:0;padding:0;margin:0;min-width:0;min-height:48px;border-radius:12px;background:var(--sand);font:inherit;color:var(--ink);cursor:pointer;overflow:hidden}
+.cell{position:relative;border:0;padding:0;margin:0;min-width:0;min-height:48px;background:none;font:inherit;color:var(--ink);cursor:pointer}
+.cell::after{content:"";position:absolute;inset:0;z-index:0;border-radius:12px;background:var(--sand);filter:url(#rough)}
 .cell:active{transform:scale(.95)}
-.cell .sp{position:absolute;left:17%;top:17%;width:66%;height:66%;pointer-events:none}
+.cell .sp{z-index:1;position:absolute;left:17%;top:17%;width:66%;height:66%;pointer-events:none}
 .cell .runner{left:14%;top:14%;width:72%;height:72%;animation:hop .6s ease-in-out infinite alternate}
 @keyframes hop{to{transform:translateY(-7%)}}
-.cell.wet{background:var(--water) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='16' viewBox='0 0 32 16'><path d='M3 9 Q9 2 16 9 T29 9' fill='none' stroke='%23fff8e6' stroke-width='3' stroke-linecap='round'/></svg>") center/32px 16px no-repeat;cursor:default}
+.cell.wet{cursor:default}
+.cell.wet::after{background:var(--water) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='16' viewBox='0 0 32 16'><path d='M3 9.5 Q8 2.5 16 8.5 T29 8' fill='none' stroke='%23fff8e6' stroke-width='3' stroke-linecap='round'/></svg>") center/32px 16px no-repeat}
 .cell.wet .sp:not(.fx){opacity:.35}
 .cell.rock{cursor:default}
-.cell.can{box-shadow:inset 0 0 0 4px var(--coral)}
-.cell .n{position:absolute;right:8%;top:5%;font-size:15px;font-weight:900;font-variation-settings:"ROND" 100,"opsz" 18;font-variant-numeric:tabular-nums;line-height:1;z-index:2}
+.ring{position:absolute;inset:2px;z-index:3;pointer-events:none;border:4px solid var(--coral);border-radius:15px 10px 14px 9px/10px 15px 9px 14px;filter:url(#roughR)}
+.cell .n{z-index:2;position:absolute;right:8%;top:5%;font-size:15px;font-weight:900;font-variation-settings:"ROND" 100,"opsz" 18;font-variant-numeric:tabular-nums;line-height:1;z-index:2}
 .cell.next .n{font-size:20px}
+.cell:has(.ring) .n{z-index:5;background:var(--sand);padding:3px 5px 2px;border-radius:8px;right:6%;top:4%}
 .cell .cr{left:3%;top:4%;width:42%;height:42%;z-index:2}
 .cell.next .sp:not(.cr){left:22%;top:28%;width:60%;height:60%}
 .cell.next .runner{left:20%;top:26%;width:64%;height:64%}
-.cell.rise::before{content:"";position:absolute;inset:0;z-index:4;background:var(--water);animation:rise .6s ease-out}
-@keyframes rise{0%{transform:translateY(100%)}100%{transform:translateY(0)}}
+.cell.rise::before{content:"";position:absolute;inset:0;z-index:4;border-radius:12px;background:var(--water);filter:url(#rough);animation:rise .6s ease-out}
+@keyframes rise{0%{clip-path:inset(100% -8px -8px -8px)}100%{clip-path:inset(-8px)}}
 .cell.gone .sp{animation:wash .6s ease-out}
 @keyframes wash{0%{transform:scale(.6);opacity:0}100%{transform:none;opacity:1}}
 .shake{animation:shake .3s}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
-.say-row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
-#say{min-height:64px;display:flex;flex-direction:column;justify-content:center;gap:4px}
-#say b{font-size:22px;font-weight:900;line-height:1.1;font-variation-settings:"ROND" 100,"opsz" 28}
+.say-row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start}
+#say{min-width:0;display:flex;flex-direction:column;gap:4px}
+#say b{font-size:20px;font-weight:900;line-height:24px;font-variation-settings:"ROND" 100,"opsz" 28}
 #say small{font-size:15px;font-weight:600;line-height:1.3;opacity:.85}
-#pts{text-align:right;line-height:1}
-#pts b{display:block;font-size:48px;font-weight:900;font-variation-settings:"ROND" 100,"opsz" 32;font-variant-numeric:tabular-nums}
-#pts span{font-size:14px;font-weight:700}
-#legend{display:flex;gap:6px 14px;flex-wrap:wrap}
-#legend .k{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:700}
-#legend img{width:26px;height:26px;display:block}
+#pts{display:flex;align-items:baseline;gap:5px;white-space:nowrap;line-height:24px;text-align:right}
+#pts b{font-size:20px;font-weight:900;line-height:24px;font-variation-settings:"ROND" 100,"opsz" 28;font-variant-numeric:tabular-nums}
+#pts span{font-size:14px;font-weight:700;line-height:24px}
+#legend{display:flex;justify-content:space-between;gap:8px;flex-wrap:nowrap}
+#legend .k{display:flex;align-items:center;gap:4px;font-size:13px;font-weight:700;white-space:nowrap}
+#legend img{width:20px;height:20px;display:block;flex:none}
 #restart{justify-self:start;margin:-8px 0 -6px;font-size:15px;padding:12px 0}
 /* result: loud ground again */
-#end{align-items:center;padding:44px 16px 24px;gap:0}
+#end{align-items:center;padding:30px 16px 16px;gap:0;overflow-y:auto}
 #end .small{margin:10px 0 6px}
-.sheet{width:100%;max-width:400px;background:var(--card);border-radius:20px;padding:18px;display:grid;gap:14px;margin-top:18px}
-.sheet .top{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px}
+.sheet{position:relative;width:100%;max-width:400px;padding:18px;display:grid;gap:14px;margin-top:18px}
+.sheet .top{display:grid;grid-template-columns:1fr;justify-items:center;text-align:center;gap:6px}
 #cdate{font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
 #ctitle{font-size:30px;font-weight:900;line-height:1;margin-top:4px;font-variation-settings:"ROND" 100,"opsz" 32}
-.sheet .num{text-align:right;line-height:.85}
-.sheet .num b{display:block;font-size:76px;font-weight:900;font-variation-settings:"ROND" 100,"opsz" 32;font-variant-numeric:tabular-nums}
+.sheet .num{text-align:center;line-height:.85;display:flex;align-items:baseline;justify-content:center;gap:6px}
+.sheet .num b{display:block;font-size:60px;font-weight:900;font-variation-settings:"ROND" 100,"opsz" 32;font-variant-numeric:tabular-nums}
 .sheet .num span{font-size:14px;font-weight:700}
-#plate{aspect-ratio:1;border-radius:14px;overflow:hidden;background:var(--water)}
+#plate{aspect-ratio:1}
 #plate svg{display:block;width:100%;height:100%}
-#rtiles{display:flex;flex-wrap:wrap;gap:6px}
-#rtiles .st{width:40px}
-#par{font-size:15px;font-weight:700;line-height:1.35}
-.sheet .btn{justify-self:start}
-#cfine{margin-top:10px;font-size:15px;font-weight:700}
+#rtiles{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
+#rtiles .st{width:48px}
+#par{font-size:15px;font-weight:700;line-height:1.35;text-align:center;opacity:.75}
+.endbtns{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%;margin-top:14px}
+#cfine{font-size:15px;font-weight:700;text-align:center}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<filter id="rough" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter>
+<filter id="roughS" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="2" seed="8" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter>
+<filter id="roughL" x="-4%" y="-4%" width="108%" height="108%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="5" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter>
+<filter id="roughR" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="12" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter>
+</defs></svg>
 <div id="app">
   <section id="start" class="pop on">
-    <div class="wm big" id="wm1" role="img" aria-label="Tide Run"></div>
-    <div class="wm tag" id="tg1" aria-hidden="true"></div>
+    <div class="wmw"><div class="wm out big" id="wm1" role="img" aria-label="Tide Run"></div></div>
     <p class="lead">Nine moves. The sea floods the island from the edge in. Grab chests, reach the flag.</p>
     <button class="btn" id="play">Play</button>
     <div class="fine" id="sfine"></div>
@@ -125,7 +142,7 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
   </section>
 
   <section id="end" class="pop">
-    <div class="wm small" id="wm2" role="img" aria-label="Tide Run"></div>
+    <div class="wm out small" id="wm2" role="img" aria-label="Tide Run"></div>
     <div class="sheet">
       <div class="top">
         <div><div id="cdate"></div><div id="ctitle"></div></div>
@@ -134,10 +151,8 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
       <div id="plate" aria-label="Your route across the island"></div>
       <div id="rtiles" aria-label="Result"></div>
       <div id="par"></div>
-      <button class="btn" id="copy">Copy result</button>
     </div>
-    <div id="cfine"></div>
-    <button class="link" id="prac">Try a practice island</button>
+    <div class="endbtns"><button class="btn" id="copy">Copy result</button><div id="cfine"></div><button class="link" id="prac">Try a practice island</button></div>
   </section>
 </div>
 <script>
@@ -276,20 +291,22 @@ check();
 
 
 // ---------- art ----------
-function wordmark(el,txt,spec,wave){
-  el.innerHTML='<span class="wt">'+[...txt].map((c,k)=>c===' '?'<i class="sp"></i>':`<i style="--f:${spec[k][0]};--s:${spec[k][1]};--r:${spec[k][2]}deg;--y:${spec[k][3]}em">${c}</i>`).join('')+'</span>'+(wave?'<img src="assets/wave.svg" alt="">':'');
+function wordmark(el){
+  const L=(ch,c,sc,r,y)=>'<span class="L" style="--c:'+c+';--s:'+sc+';--r:'+r+'deg;--y:'+y+'em">'+ch+'</span>';
+  const cY='#ffc93c',yS='#f0900f',cC='#ff5a5f',cS2='#d93a40',cW='#fff8e6',wS='#ffc93c',cB='#9fcbff',bS='#4a9bff';
+  el.innerHTML=L('T',cC,cS2,-6,.03)+L('I',cY,yS,4,-.03)+L('D',cW,wS,-4,.03)+L('E',cB,bS,5,-.02)+'<span class="gap"></span>'
+   +L('R',cC,cS2,-4,.02)+L('U',cY,yS,5,-.03)+L('N',cW,wS,-3,.03)+'<span class="o" style="--r:6deg;--y:-.03em"><img src="assets/wave.svg" alt=""></span>';
 }
-const cY='#ffc93c',cC='#ff5a5f',cW='#fff8e6',cS='#ffd98a';
-const WMSPEC=[[cY,cC,-6,.02],[cC,cW,4,-.03],[cW,cC,-3,.03],[cS,cC,5,-.02],0,[cC,cW,-4,.02],[cW,cC,5,-.03],[cY,cC,-3,.02]];
-const TGSPEC=[[cC,cW,-4,0],[cW,cC,3,-.04],[cY,cC,-3,.03],[cC,cW,4,-.02]];
-['wm1','wm2'].forEach(id=>wordmark($(id),'TIDE RUN',WMSPEC,true));
-wordmark($('tg1'),'RUN!',TGSPEC,false);
+['wm1','wm2'].forEach(id=>wordmark($(id)));
+// ground patches: random soft spots per load (CSS has fallbacks)
+['start','end'].forEach(id=>{const el=$(id),rr=(a,b)=>a+Math.random()*(b-a);
+  [[0,[4,30],[4,24],[16,26]],[1,[70,96],[6,40],[14,24]],[2,[2,30],[44,80],[14,24]],[3,[68,98],[50,88],[16,26]],[4,[30,70],[90,104],[14,24]]].forEach(([k,x,y,r])=>{el.style.setProperty('--a'+(k+1)+'x',rr(x[0],x[1]).toFixed(1)+'%');el.style.setProperty('--a'+(k+1)+'y',rr(y[0],y[1]).toFixed(1)+'%');el.style.setProperty('--a'+(k+1)+'r',rr(r[0],r[1]).toFixed(1)+'%')})});
 const A=(f,c)=>`<img class="sp ${c||''}" src="assets/${f}.svg" alt="" draggable="false">`;
 const IC={me:A('runner','runner fx'),chest:A('chest'),flag:A('flag-hill'),rock:A('rock'),crest:A('wave','cr'),splash:A('splash','fx')};
 const EMO={b:'🟦',y:'🟨',g:'🟩',r:'🟥'};
-const stampInner=k=>k==='y'?'<img src="assets/chest.svg" alt="">':k==='g'?'<img src="assets/flag-hill.svg" alt="">':k==='r'?'<img src="assets/splash.svg" alt="">':'';
+const stampInner=k=>k==='y'?'<img src="assets/chest-on-yellow.svg" alt="">':k==='g'?'<img src="assets/flag-hill.svg" alt="">':k==='r'?'<img src="assets/splash.svg" alt="">':'';
 const stamp=(k,extra)=>`<div class="st ${k}" ${extra||''}>${stampInner(k)}</div>`;
-$('legend').innerHTML=[['runner','You'],['chest','Chest +2'],['flag-hill','Flag +3'],['wave','Floods next']].map(([s,n])=>`<div class="k"><img src="assets/${s}.svg" alt="">${n}</div>`).join('');
+$('legend').innerHTML=[['runner','You'],['chest','Chest +2'],['flag-hill','Flag +3'],['wave','Floods']].map(([s,n])=>`<div class="k"><img src="assets/${s}.svg" alt="">${n}</div>`).join('');
 
 // ---------- game ----------
 let seed,practice,day,moves=[],locked=false,sim;
@@ -308,7 +325,7 @@ function sayHTML(){
   if(last==='g')return '<b class="carve">Flag reached.</b><small>Dry feet, mostly.</small>';
   if(last==='r')return sim.stranded?'<b class="carve">Nowhere left to go.</b><small>The sea took the last dry tile.</small>':'<b class="carve">Washed away.</b><small>You stood on a tile as it flooded.</small>';
   const soon=D.t.filter(x=>x===sim.m+1).length;
-  return '<b class="carve">'+(last==='y'?'Chest. +2':'Keep moving.')+'</b><small>Next to flood: '+soon+' tile'+(soon===1?'':'s')+'. Move '+(sim.m+1)+' of 9.</small>';
+  return '<b class="carve">'+(last==='y'?'Chest. +2':'Keep moving.')+'</b><small>Next to flood: '+soon+' tile'+(soon===1?'':'s')+'. <span style="white-space:nowrap">Move '+(sim.m+1)+' of 9.</span></small>';
 }
 function render(anim){
   const D=day.D,m=sim.m;
@@ -329,8 +346,9 @@ function render(anim){
     else if(coin&&!here)inner+=IC.chest;
     if(here)inner+=(sim.washed?IC.splash:IC.me);
     if(next&&!rock)inner+=IC.crest;
+    if(can)inner+='<i class="ring"></i>';
     if(!wet&&!rock)inner+=`<span class="n">${left}</span>`;
-    const cls=['cell',wet?'wet':'',rock?'rock':'',next&&!rock?'next':'',can?'can':'',here?'me':'',here&&sim.washed?'gone':'',anim&&wet&&D.t[i]===m?'rise':''].filter(Boolean).join(' ');
+    const cls=['cell',wet?'wet':'',rock?'rock':'',next&&!rock?'next':'',here?'me':'',here&&sim.washed?'gone':'',anim&&wet&&D.t[i]===m?'rise':''].filter(Boolean).join(' ');
     const r=Math.floor(i/W)+1,c=i%W+1;
     const lab='Row '+r+', column '+c+', '+(rock?'rock':wet?'water':isFlag?'flag':coin?'chest':'sand')+(!wet&&!rock?', floods in '+left+' moves':'')+(here?', you are here':'')+(can?', you can move here':'');
     h+=`<button class="${cls}" data-i="${i}" aria-label="${lab}">${inner}</button>`;
@@ -368,10 +386,10 @@ function finishAll(){
 // the result map: island, flood numbers, the route as a dotted path
 function plateSVG(){
   const D=day.D,C=44,G=5,P=10,S=P*2+C*5+G*4,ctr=i=>[P+(i%W)*(C+G)+C/2,P+Math.floor(i/W)*(C+G)+C/2];
-  let s=`<svg viewBox="0 0 ${S} ${S}" aria-hidden="true"><rect width="${S}" height="${S}" fill="#a9d3ff"/>`;
+  let s=`<svg viewBox="0 0 ${S} ${S}" aria-hidden="true"><defs><filter id="pr" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="6" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter></defs><rect width="${S}" height="${S}" rx="16" fill="#9fcbff" filter="url(#pr)"/><g filter="url(#pr)">`;
   for(let i=0;i<N;i++){
     const x=P+(i%W)*(C+G),y=P+Math.floor(i/W)*(C+G),gone=D.t[i]<=sim.m,rock=D.rocks.includes(i);
-    s+=`<rect x="${x}" y="${y}" width="${C}" height="${C}" rx="9" fill="${gone?"#cfe5ff":"#ffd98a"}"/>`;
+    s+=`<rect x="${x}" y="${y}" width="${C}" height="${C}" rx="9" fill="${gone?"#b9d9ff":"#ffd98a"}"/>`;
     if(rock)s+=`<image href="assets/rock.svg" x="${x+6}" y="${y+6}" width="${C-12}" height="${C-12}" opacity="${gone?.4:1}"/>`;
     else if(i===D.flag)s+=`<image href="assets/flag-hill.svg" x="${x+4}" y="${y+4}" width="${C-8}" height="${C-8}" opacity="${gone?.4:1}"/>`;
     else if(D.chests.includes(i))s+=`<image href="assets/chest.svg" x="${x+6}" y="${y+6}" width="${C-12}" height="${C-12}" opacity="${gone?.4:1}"/>`;
@@ -379,8 +397,8 @@ function plateSVG(){
   }
   const pts=[D.start,...moves.slice(0,sim.tiles.length)].map(ctr);
   const poly=pts.map(p=>p.join(',')).join(' ');
-  s+=`<polyline points="${poly}" fill="none" stroke="#0b2a66" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="0.1 10"/><polyline points="${poly}" fill="none" stroke="#ff5a5f" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="0.1 10"/>`;
-  const [sx,sy]=ctr(D.start);s+=`<image href="assets/runner.svg" x="${sx-17}" y="${sy-17}" width="34" height="34"/>`;
+  s+=`<polyline points="${poly}" fill="none" stroke="#ff5a5f" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="0.1 10"/>`;
+  s+=`</g>`;const [sx,sy]=ctr(D.start);s+=`<image href="assets/runner.svg" x="${sx-17}" y="${sy-17}" width="34" height="34"/>`;
   const [ex,ey]=pts[pts.length-1];
   if(sim.washed)s+=`<image href="assets/splash.svg" x="${ex-20}" y="${ey-20}" width="40" height="40"/>`;
   return s+'</svg>';
@@ -393,7 +411,7 @@ function showCard(){
   $('cscore').textContent=sc;
   $('plate').innerHTML=plateSVG();
   $('rtiles').innerHTML=sim.tiles.map(k=>stamp(k)).join('');
-  $('par').textContent='Best route: '+day.par+' points in '+day.parMoves+' moves. Numbers on the map are the move each tile went under.';
+  $('par').textContent='Best route: '+day.par+' points in '+day.parMoves+' moves. Numbers show the move.';
   $('cfine').textContent=practice?'Practice does not count':'Streak '+load('tr_streak',0)+' · same island for everyone today';
   window._share='Tide Run '+seed+'\n'+sim.tiles.map(k=>EMO[k]).join('')+' '+sc+'/9';
 }
@@ -416,5 +434,63 @@ $('sfine').textContent=load('tr_'+today(),null)?'You have played today. See your
   if(d==='game'){show('game');render(false)}else showCard();
 })();
 </script>
-</body>
+<script>
+/* Hand-cut corners v2: rough, hand-torn edges drawn as a vector clip-path outline (crisp at any pixel density, no filters). */
+(function(){
+  var st=document.createElement("style");st.textContent="[data-hp=b]::before{clip-path:var(--hcp);-webkit-clip-path:var(--hcp)}[data-hp=a]::after{clip-path:var(--hcp);-webkit-clip-path:var(--hcp)}";document.head.appendChild(st);
+  var n=0;
+  function R(seed){var x=Math.sin(seed*12.9898+78.233)*43758.5453;return x-Math.floor(x)}
+  function outline(w,h,r,seed){
+    // walk the perimeter of a rounded rectangle, sampling about every 5px, pushing each point in or out a little
+    r=Math.min(r,w/2-1,h/2-1);
+    var pts=[],step=5,amp=Math.max(1.6,Math.min(3.6,Math.min(w,h)*.055));
+    var segs=[[r,0,w-r,0],[w,r,w,h-r],[w-r,h,r,h],[0,h-r,0,r]];
+    var corners=[[w-r,r,-Math.PI/2],[w-r,h-r,0],[r,h-r,Math.PI/2],[r,r,Math.PI]];
+    var k=0;
+    for(var s=0;s<4;s++){
+      var a=segs[s],len=Math.hypot(a[2]-a[0],a[3]-a[1]),m=Math.max(2,Math.round(len/step));
+      var nx=[0,1,0,-1][s],ny=[-1,0,1,0][s];
+      for(var i=0;i<m;i++){var t=i/m,x=a[0]+(a[2]-a[0])*t,y=a[1]+(a[3]-a[1])*t;
+        var d=(Math.sin(k*.7+seed)*.45+ (R(seed*31+k)-.5)*1.1)*amp;k++;
+        pts.push([x+nx*d,y+ny*d])}
+      var c=corners[s],cm=Math.max(3,Math.round(r*1.57/step));
+      for(var j=0;j<cm;j++){var an=c[2]+(Math.PI/2)*(j/cm),d2=(R(seed*17+k)-.5)*1.1*amp;k++;
+        pts.push([c[0]+Math.cos(an)*(r+d2),c[1]+Math.sin(an)*(r+d2)])}
+    }
+    // smooth through midpoints so the wobble reads as a cut edge, not a zigzag
+    var p='M'+((pts[0][0]+pts[1][0])/2).toFixed(1)+' '+((pts[0][1]+pts[1][1])/2).toFixed(1);
+    for(var q=1;q<=pts.length;q++){var A=pts[q%pts.length],B=pts[(q+1)%pts.length];
+      p+=' Q'+A[0].toFixed(1)+' '+A[1].toFixed(1)+' '+((A[0]+B[0])/2).toFixed(1)+' '+((A[1]+B[1])/2).toFixed(1)}
+    return p+'Z';
+  }
+  function shape(el){
+    if(!el.dataset)return;var cs=getComputedStyle(el);
+    var r=parseFloat(cs.borderTopLeftRadius)||0;
+    var pseudo="";
+    if(r<4){var pb=getComputedStyle(el,"::before"),pa=getComputedStyle(el,"::after");
+      if(pb.content&&pb.content!=="none"&&pb.position==="absolute"&&(parseFloat(pb.borderTopLeftRadius)||0)>=4){r=parseFloat(pb.borderTopLeftRadius);pseudo="b"}
+      else if(pa.content&&pa.content!=="none"&&pa.position==="absolute"&&(parseFloat(pa.borderTopLeftRadius)||0)>=4){r=parseFloat(pa.borderTopLeftRadius);pseudo="a"}}
+    if(r<4||r>=999)return;
+    var w=el.offsetWidth,h=el.offsetHeight;if(!w||!h)return;
+    if(r>=Math.min(w,h)/2-1)return; // circles stay circles
+    var key=w+'x'+h;if(el.dataset.hc===key)return;
+    if(!el.dataset.hs){n++;el.dataset.hs=n}
+    el.dataset.hc=key;
+    var path=outline(w,h,r,+el.dataset.hs);
+    var cp="path('"+path+"')";
+    if(pseudo){el.dataset.hp=pseudo;el.style.setProperty("--hcp",cp);return}
+    // never clip something that has a badge or chip hanging over its edge: leave those smooth
+    var b=el.getBoundingClientRect(),over=false;el.querySelectorAll("*").forEach(function(c){var q=c.getBoundingClientRect();if(q.width&&(q.left<b.left-1||q.top<b.top-1||q.right>b.right+1||q.bottom>b.bottom+1))over=true});
+    if(over)return;
+    el.style.clipPath=cp;el.style.webkitClipPath=cp;
+  }
+  function all(root){if(root.querySelectorAll)root.querySelectorAll('*').forEach(shape)}
+  function go(){all(document.body);
+    new MutationObserver(function(ms){ms.forEach(function(m){m.addedNodes.forEach(function(nd){if(nd.nodeType===1){shape(nd);all(nd)}})})}).observe(document.body,{childList:true,subtree:true});
+    document.addEventListener('click',function(){setTimeout(function(){all(document.body)},60)},true);
+    addEventListener('resize',function(){all(document.body)})}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();
+})();
+</script>
+<script>/* thumb mode: ?thumb shows only the landing wordmark on its ground, used to render the gallery card */(function(){if(!/[?&]thumb\b/.test(location.search))return;function go(){var s=document.getElementById("start");if(!s)return;var wm=s.querySelector(".wm");if(!wm)return;var w=wm.parentElement===s?wm:wm.parentElement;s.querySelectorAll("*").forEach(function(e){if(!e.contains(w)&&!w.contains(e)&&e!==w)e.style.display="none"});w.style.transform="scale(1.25)";for(var a=s;a&&a!==document.documentElement;a=a.parentElement){a.style.maxWidth="none";a.style.width="100%";a.style.marginLeft="0";a.style.marginRight="0"}}if(document.readyState==="loading")addEventListener("DOMContentLoaded",function(){setTimeout(go,50)});else setTimeout(go,50)})();</script></body>
 </html>
