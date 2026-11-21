@@ -1,0 +1,12 @@
+# Sprout identity: seed packets and linocut botanical print
+- Palette: paper #f4e8cb, leaf green #3e7b3a, deep green #1d4a2b, tomato #d6402a, mustard #e7a82d, ink #20281c, plus soil #8a5a34 for plots only. Flat fills, no gradients.
+- Season progression: spring packets leaf green, summer mustard, autumn tomato. The golden seed is a paper packet with a mustard x2 ribbon.
+- Shape language: thick ink outlines (1.4 to 3 units), pointed leaf blades, chamfered cut letters, small paper-colour gouge strokes for veins and highlights.
+- Texture: every SVG runs through feTurbulence plus feDisplacementMap (scale 1 to 4) for cut edges. A multiply grain overlay sits over the whole app at 20 percent.
+- Misregistration: tomato offset layer behind the logo letters, hard tomato or mustard offset shadows on packets, stamps and buttons. No blur anywhere.
+- Plants: 6 sheets (tomato, carrot, corn, cabbage, pea, radish) plus golden-flower, each 5 frames: seed, sprout, leafy, fruit or bloom, wilted. Used as CSS sprite sheets (background-size 500%).
+- Weather: sun, rain, frost, wind, cloud woodcut glyphs. Forecast cells are paper stamps. Loves tab has a green plus, hates tab a tomato slash.
+- Type: Allo. Letterspaced uppercase for labels (weight 800), weight 900 tabular numerals for scores, sentence case for the one line of instruction.
+- Logo: hand-built cut letters in SVG paths, the O holds a seed and sends up a seedling. mark.svg is the packet-corner icon.
+- Avoid: emoji as art, line icon sets, gradients, glows, soft shadows, pill buttons, chips, centred single-column sameness.
+- Test hooks: ?demo=start, ?demo=game, ?demo=end.

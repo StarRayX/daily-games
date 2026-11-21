@@ -1,0 +1,13 @@
+# Tide Run identity: woodblock wave print and paper-cut sea
+- Palette: indigo #1c2b5e, sea blue #2e63b9, foam #f3eee0, sand #e7c98f, flag coral #e8553b, ink #11172e. Flat fills only.
+- Shape language: hand-cut polygons with rough edges, chunky outlines (2 to 4 px ink), angular chiselled letters.
+- Water is always seigaiha (assets/wave-tile.svg, 40x20 seamless) in sea blue and indigo with foam rims. Flooded tiles vanish into it.
+- Dry tiles are sand stamps. Rocks are cut indigo shapes. Chests are woodblock chests. The flag sits on a contour-line hill.
+- About-to-flood tiles get the curling crest plus a big carved numeral with a coral misregistration shadow.
+- Misregistration: a coral layer offset 3 to 7 px behind logo, numerals, plate and buttons. No blur shadows.
+- Texture: feTurbulence + feDisplacementMap wobble on art (scale 2 to 3), 11 to 16 percent paper grain overlay.
+- Type: Allo, ROND 0 (sharp). Small caps labels at +0.17em tracking, huge tabular numerals for score and countdown.
+- Layout: poster landing (wave over island, logo carved into the lip), left-aligned play screen with sea band at the foot, result as a printed plate with a dotted route and a stamp strip.
+- Motion: slow pattern drift (16 s), two-pose runner, rise-over-tile flood. All off under prefers-reduced-motion.
+- Avoid: gradients, glows, rounded cards, pills, emoji art (emoji only in the share text), stock icons, centred single column.
+- Test hooks: ?demo=start, ?demo=game, ?demo=end, ?demo=washed. They never write to storage.

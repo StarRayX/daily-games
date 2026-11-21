@@ -1,0 +1,11 @@
+# Egg Thief identity: wanted poster, two-colour riso
+- Palette: kraft paper #ead9b5, ink #2a1a12, hot red #e5452b, mustard #f0b13a (the wall/desk), teal #3f8f8a ONLY for the CAUGHT state and CASE CLOSED.
+- Shape language: hand-cut, rough edges (feTurbulence 0.03 + displacement 1.6 to 3), torn poster edges via clip-path, hard offset shadows (no blur), 2 to 6 px print misregistration in red or mustard.
+- Stamps encode state by shape, not colour: HOT round, WARM rectangle with dashed inner border, COLD hexagon, CAUGHT notched ticket. Guard slots mirror those shapes.
+- Thief: masked egg, tilted mask, halftone dots on the shadow side, red neckerchief. Poses: thief (peek), thief-run, thief-caught.
+- Boot prints (footprint.svg) are the movement motif: step indicator and the route on the result.
+- Texture: assets/grain.svg multiplied over the whole app at 80 percent.
+- Type: Allo. Labels are letterspaced uppercase 11 to 13 px, big numerals 900 weight with a red offset text-shadow. Logo is path-built block letters (logo.svg), one egg-shaped G counter.
+- Layout: asymmetric, everything rotated 1 to 2 degrees like pinned or stamped paper. Map has a stamped double frame and a folded corner.
+- Avoid: pill buttons, soft shadows, gradients, emoji art, glossy eyes, centred single column.
+- Test hooks: ?demo=start, ?demo=game, ?demo=end, ?demo=lose.

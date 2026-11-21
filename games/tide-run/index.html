@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tide Run</title>
+<link rel="icon" type="image/svg+xml" href="assets/mark.svg">
+<style>
+@font-face{font-family:"Allo";src:url("../../shared/AlloVariable.woff2") format("woff2");font-weight:100 900;font-display:swap}
+:root{--ind:#1c2b5e;--sea:#2e63b9;--foam:#f3eee0;--sand:#e7c98f;--coral:#e8553b;--ink:#11172e;--mute:rgba(243,238,224,.8)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--ink);color:var(--foam);font-family:"Allo",system-ui,sans-serif;overflow:hidden;touch-action:manipulation;user-select:none}
+#app{position:relative;max-width:480px;height:100%;margin:0 auto;overflow:hidden;background:var(--ind)}
+/* paper grain over everything */
+#app::after{content:"";position:absolute;inset:0;z-index:60;pointer-events:none;opacity:.11;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .07 0 0 0 0 .09 0 0 0 0 .18 1.6 0 0 0 -.5'/></filter><rect width='180' height='180' filter='url(%23n)'/></svg>")}
+section{position:absolute;inset:0;display:none;flex-direction:column;overflow-y:auto;overflow-x:hidden}
+section.on{display:flex}
+img{-webkit-user-drag:none}
+.cap{font-size:12px;font-weight:700;letter-spacing:.17em;text-transform:uppercase;font-variation-settings:"ROND" 0,"opsz" 12}
+.carve{font-weight:900;font-variation-settings:"ROND" 0,"opsz" 32;letter-spacing:-.01em;line-height:.95}
+/* buttons: cut blocks with a misregistered coral layer */
+.btn{position:relative;isolation:isolate;border:0;background:none;color:var(--ink);font:inherit;font-weight:900;font-size:20px;letter-spacing:.02em;font-variation-settings:"ROND" 0,"opsz" 24;padding:15px 26px;min-height:56px;cursor:pointer}
+.btn::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--coral);border:3px solid var(--ink);box-shadow:5px 5px 0 var(--foam);filter:url(#rough2)}
+.btn:active{transform:translate(2px,2px)}
+.link{background:none;border:0;font:inherit;color:var(--foam);text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px;cursor:pointer;padding:14px 8px;min-height:48px}
+button:focus-visible{outline:3px solid var(--foam);outline-offset:3px}
+/* stamps: one per move */
+.st{position:relative;aspect-ratio:1;border:2.5px solid var(--ink);filter:url(#rough2);display:grid;place-items:center;background:var(--sea) url(assets/wave-tile.svg) 0 0/24px 12px}
+.st.y{background:var(--sand)}.st.g{background:var(--coral)}.st.r{background:var(--ink);border-color:var(--foam)}
+.st img{width:82%;height:82%;display:block}
+.st.g img{width:92%;height:92%}
+/* landing */
+#start{background:var(--ind)}
+.hero{position:relative;flex:none;width:100%}
+.hero .ka{display:block;width:100%;height:auto}
+.hero .lg{position:absolute;left:13.9%;top:17.6%;width:75.6%;height:auto;transform:rotate(-1.2deg)}
+.hero .btn{position:absolute;left:5%;bottom:3.6%}
+.brief{padding:6px 20px 28px;display:grid;gap:14px;max-width:420px}
+.brief .lead{margin:0;font-size:19px;font-weight:700;line-height:1.25;font-variation-settings:"ROND" 0,"opsz" 20}
+.keys{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.keys div{display:grid;gap:6px;justify-items:start}
+.keys .st{width:100%;max-width:56px}
+.keys .cap{font-size:10.5px;letter-spacing:.12em}
+.fine{color:var(--mute);font-size:14px;font-weight:600}
+/* game */
+#game{padding:14px 16px calc(14px + env(safe-area-inset-bottom));gap:12px;background:var(--ind)}
+#game header{display:flex;justify-content:space-between;align-items:center;flex:none}
+#game header img{height:30px;width:auto;display:block}
+#slots{display:grid;grid-template-columns:repeat(9,1fr);gap:5px;width:100%;flex:none}
+.slot{aspect-ratio:1;border:2px dashed rgba(243,238,224,.5);display:grid;place-items:center}
+.slot.now{border:3px solid var(--coral)}
+.slot.fill{border:0;background:none;animation:flip .55s ease}
+.slot .st{width:100%}
+@keyframes flip{0%{transform:rotateX(0)}45%{transform:rotateX(90deg)}100%{transform:rotateX(0)}}
+.plate{position:relative;flex:none;width:min(100%,50vh);aspect-ratio:1;margin:4px auto 6px 0;padding:8px;border:5px solid var(--foam);outline:3px solid var(--ink);box-shadow:7px 7px 0 3px var(--coral);background:var(--sea) url(assets/wave-tile.svg) 0 0/48px 24px;animation:drift 16s linear infinite}
+@keyframes drift{to{background-position:48px 0}}
+#grid{display:grid;grid-template-columns:repeat(5,1fr);grid-auto-rows:1fr;gap:4px;width:100%;height:100%}
+.cell{position:relative;border:0;padding:0;margin:0;min-width:0;min-height:48px;background:url(assets/sand-tile.svg) center/100% 100% no-repeat;font:inherit;color:var(--ink);cursor:pointer;overflow:visible}
+.cell:active{transform:scale(.95)}
+.cell .sp{position:absolute;left:17%;top:13%;width:66%;height:66%;pointer-events:none}
+.cell .runner{position:absolute;left:12%;top:8%;width:76%;height:76%;background:url(assets/runner.svg) 0 0/200% 100% no-repeat;animation:run .56s steps(1) infinite}
+@keyframes run{0%{background-position:0 0}50%{background-position:100% 0}}
+.cell.wet{background:rgba(17,23,46,.42);box-shadow:inset 0 0 0 2px rgba(243,238,224,.35);cursor:default;overflow:hidden}
+.cell.rock{cursor:default}
+.cell.can::after{content:"";position:absolute;inset:4px;border:3px dashed var(--coral);pointer-events:none;z-index:3}
+.cell .n{position:absolute;right:6%;bottom:2%;font-size:14px;font-weight:800;font-variation-settings:"ROND" 0,"opsz" 14;font-variant-numeric:tabular-nums;color:var(--ink);opacity:.8;z-index:2}
+.cell.next .n{font-size:32px;font-weight:900;font-variation-settings:"ROND" 0,"opsz" 32;opacity:1;right:7%;bottom:-1%;text-shadow:2px 2px 0 var(--coral);line-height:1}
+.cell .cr{position:absolute;left:2%;top:2%;width:46%;height:46%;z-index:2;pointer-events:none}
+.cell.next .sp:not(.cr){top:20%;left:12%}
+.cell.rise::before{content:"";position:absolute;inset:0;z-index:4;background:url(assets/foam-edge.svg) repeat-x top/32px 10px,url(assets/wave-tile.svg) 0 0/48px 24px;animation:rise .7s ease-out}
+@keyframes rise{0%{transform:translateY(100%)}100%{transform:translateY(0)}}
+.cell.gone .sp{animation:wash .8s ease-out}
+@keyframes wash{0%{transform:translateY(8px) scale(.6);opacity:0}100%{transform:none;opacity:1}}
+.shake{animation:shake .3s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+#legend .cap{font-size:10.5px;letter-spacing:.1em}
+#legend{display:flex;gap:6px 12px;flex-wrap:wrap;flex:none;border-top:2px solid rgba(243,238,224,.3);padding-top:10px}
+#legend .k{display:flex;align-items:center;gap:6px}
+#legend .k img,#legend .k .runner{width:26px;height:26px;display:block;flex:none}
+#legend .k .runner{background:url(assets/runner.svg) 0 0/200% 100% no-repeat}
+.seabar{flex:1 0 56px;margin:0 -16px calc(-14px - env(safe-area-inset-bottom));background:url(assets/foam-edge.svg) repeat-x top/40px 12px,var(--sea) url(assets/wave-tile.svg) 0 0/48px 24px;border-top:3px solid var(--ink);animation:drift 16s linear infinite}
+.say-row{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:end;flex:none}
+#say{min-height:68px;display:flex;flex-direction:column;justify-content:center;gap:4px}
+#say b{font-size:24px}
+#say small{font-size:14px;font-weight:600;color:var(--mute);line-height:1.3}
+#pts{text-align:right;line-height:1}
+#pts b{display:block;font-size:64px;font-weight:900;font-variation-settings:"ROND" 0,"opsz" 32;font-variant-numeric:tabular-nums;text-shadow:3px 3px 0 var(--coral)}
+#pts .cap{font-size:10px}
+#restart{align-self:flex-start;margin-top:-6px;font-size:13px}
+/* result */
+#end{padding:14px 18px 22px;gap:14px;align-items:flex-start;background:var(--ind)}
+#end header img{height:30px;width:auto;display:block}
+.sheet{position:relative;width:100%;max-width:400px;background:var(--foam);color:var(--ink);border:4px solid var(--ink);box-shadow:7px 7px 0 var(--coral);padding:16px 16px 16px;transform:rotate(-.9deg);display:grid;gap:12px}
+.sheet .top{display:grid;grid-template-columns:1fr auto;align-items:end;gap:10px}
+.sheet .cap{color:var(--ink)}
+#ctitle{font-size:31px;margin-top:4px}
+.sheet .big{font-size:92px;font-weight:900;line-height:.8;font-variation-settings:"ROND" 0,"opsz" 32;font-variant-numeric:tabular-nums;text-align:right;text-shadow:4px 4px 0 var(--coral)}
+.sheet .big span{display:block;font-size:12px;letter-spacing:.17em;text-transform:uppercase;font-weight:700;text-shadow:none;margin-top:8px}
+#plate{border:3px solid var(--ink);background:var(--sea);aspect-ratio:1;overflow:hidden}
+#plate svg{display:block;width:100%;height:100%}
+#rtiles{display:flex;flex-wrap:wrap;gap:6px}
+#rtiles .st{width:40px}
+#rtiles .st{border-color:var(--ink)}
+#rtiles .st.r{border-color:var(--ink)}
+#par{font-size:14px;font-weight:700;line-height:1.3}
+.sheet .btn{justify-self:start;margin-top:2px}
+.sheet .btn::before{box-shadow:5px 5px 0 var(--ink)}
+#cfine{color:var(--mute);font-size:14px;font-weight:600;padding-left:2px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<filter id="rough2" x="-6%" y="-6%" width="112%" height="112%"><feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="2" seed="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.6" xChannelSelector="R" yChannelSelector="G"/></filter>
+</defs></svg>
+<div id="app">
+  <section id="start" class="on">
+    <div class="hero">
+      <img class="ka" src="assets/keyart.svg" alt="A huge wave curls over a small island with a flag.">
+      <img class="lg" src="assets/logo.svg" alt="Tide Run">
+      <button class="btn" id="play">Run today's island</button>
+    </div>
+    <div class="brief">
+      <p class="lead">Nine moves. The sea takes the outer ring first and works inward. Reach the flag. Grab chests on the way.</p>
+      <div class="keys" id="keys"></div>
+      <div class="fine" id="sfine"></div>
+    </div>
+  </section>
+
+  <section id="game">
+    <header>
+      <img src="assets/logo.svg" alt="Tide Run">
+      <div class="cap" id="streak"></div>
+    </header>
+    <div id="slots" aria-label="Your moves"></div>
+    <div class="plate"><div id="grid" aria-label="Island"></div></div>
+    <div id="legend" aria-label="Key"></div>
+    <div class="say-row"><div id="say"></div><div id="pts"></div></div>
+    <button class="link" id="restart" style="display:none">Take that first move back</button>
+    <div class="seabar" aria-hidden="true"></div>
+  </section>
+
+  <section id="end">
+    <header><img src="assets/logo.svg" alt="Tide Run"></header>
+    <div class="sheet">
+      <div class="top">
+        <div><div class="cap" id="cdate"></div><div class="carve" id="ctitle"></div></div>
+        <div class="big"><b id="cscore"></b><span>of 9 points</span></div>
+      </div>
+      <div id="plate" aria-label="Your route across the island"></div>
+      <div id="rtiles" aria-label="Result"></div>
+      <div id="par"></div>
+      <button class="btn" id="copy">Copy result</button>
+    </div>
+    <div id="cfine"></div>
+    <button class="link" id="prac">Try a practice island</button>
+  </section>
+</div>
+<script>
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function hashStr(s){let h=2166136261;for(const c of s){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
+const $=id=>document.getElementById(id);
+function ds(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function today(){return ds(new Date())}
+function load(k,def){try{return JSON.parse(localStorage.getItem(k))??def}catch(e){return def}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function show(id){['start','game','end'].forEach(s=>$(s).classList.toggle('on',s===id))}
+let ac;function tone(f,d,type,vol,slide){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f,ac.currentTime);if(slide)o.frequency.exponentialRampToValueAtTime(slide,ac.currentTime+d);g.gain.setValueAtTime(vol||.08,ac.currentTime);g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+d);o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+d)}catch(e){}}
+function buzz(p){try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}}
+
+// ---------- the board ----------
+// 5x5, index = row*5+col. Every tile has a flood time t: it is under water after t moves.
+// The sea takes the outer ring first, then the next ring, then the middle. All gone after move 9.
+const W=5,N=25,MAXM=9;
+const RING0=[0,1,2,3,4,9,14,19,24,23,22,21,20,15,10,5],RING1=[6,7,8,13,18,17,16,11];
+const ringOf=i=>{const r=Math.floor(i/W),c=i%W;return Math.min(r,c,W-1-r,W-1-c)};
+function nbrs(i){const r=Math.floor(i/W),c=i%W,o=[];if(r>0)o.push(i-W);if(r<W-1)o.push(i+W);if(c>0)o.push(i-1);if(c<W-1)o.push(i+1);return o}
+function floodTimes(r){
+  const o0=Math.floor(r()*16),o1=Math.floor(r()*8),rev=r()<.5,t=new Array(N).fill(MAXM);
+  const ord=(a,o)=>{const b=a.map((_,i)=>a[(i+o)%a.length]);return rev?b.reverse():b};
+  const put=(list,sizes,t0)=>{let p=0;sizes.forEach((s,k)=>{for(let j=0;j<s;j++)t[list[p++]]=t0+k})};
+  put(ord(RING0,o0),[3,3,3,3,4],1);put(ord(RING1,o1),[3,3,2],6);t[12]=9;
+  return t;
+}
+function shuffled(a,r){const b=a.slice();for(let i=b.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
+const pop=m=>(m&1)+((m>>1)&1)+((m>>2)&1);
+const legal=(D,pos,m)=>nbrs(pos).filter(n=>!D.rocks.includes(n)&&D.t[n]>m);
+
+// Plays a list of moves. Tiles: b plain move, y chest, g flag, r washed away.
+function simulate(D,moves){
+  let pos=D.start,m=0,mask=0,over=false,won=false,washed=false,stranded=false;const tiles=[];
+  for(const c of moves){
+    if(over)break;
+    m++;pos=c;
+    if(c===D.flag){tiles.push('g');won=true;over=true;break}
+    const ci=D.chests.indexOf(c);let got=false;
+    if(ci>=0&&!(mask&(1<<ci))){mask|=1<<ci;got=true}
+    if(D.t[c]<=m){tiles.push('r');over=true;washed=true}else tiles.push(got?'y':'b');
+  }
+  if(!over&&legal(D,pos,m).length===0){tiles.push('r');over=true;washed=true;stranded=true}
+  return {tiles,pos,m,mask,over,won,washed,stranded,score:2*pop(mask)+(won?3:0)};
+}
+
+// Solver: layer by layer search over (position, chests held). Finds the best score, the fewest moves for it,
+// one best route, and how many different best routes exist.
+function solve(D){
+  let cur=new Map([[D.start<<3,{w:1,p:null}]]);const layers=[cur];
+  let best=null;
+  for(let m=0;m<MAXM;m++){
+    const next=new Map();
+    for(const [k,s] of cur){
+      const pos=k>>3,mask=k&7;
+      for(const n of nbrs(pos)){
+        if(D.rocks.includes(n)||D.t[n]<=m)continue;
+        const m2=m+1;
+        if(n===D.flag){
+          const sc=2*pop(mask)+3;
+          if(!best||sc>best.score||(sc===best.score&&m2<best.moves)){best={score:sc,moves:m2,layer:m,key:k,end:n,ways:s.w}}
+          else if(sc===best.score&&m2===best.moves)best.ways+=s.w;
+          continue;
+        }
+        let nm=mask;const ci=D.chests.indexOf(n);if(ci>=0)nm|=1<<ci;
+        if(D.t[n]<=m2)continue;
+        const key=(n<<3)|nm,e=next.get(key);
+        if(e)e.w+=s.w;else next.set(key,{w:s.w,p:k});
+      }
+    }
+    cur=next;layers.push(cur);
+  }
+  if(!best)return null;
+  const path=[best.end];let k=best.key;
+  for(let l=best.layer;l>=0;l--){path.push(k>>3);k=layers[l].get(k).p;if(k===null)break}
+  path.reverse();path.shift(); // moves only, not the start tile
+  return {score:best.score,moves:best.moves,path,ways:best.ways};
+}
+function dists(D,src){const d=new Array(N).fill(99);d[src]=0;const q=[src];while(q.length){const x=q.shift();for(const n of nbrs(x))if(!D.rocks.includes(n)&&d[n]===99){d[n]=d[x]+1;q.push(n)}}return d}
+// Greedy player: always walks toward the nearest chest, then the flag.
+function greedy(D){
+  let pos=D.start,m=0,mask=0;const moves=[];
+  while(m<MAXM){
+    const left=D.chests.filter((c,i)=>!(mask&(1<<i)));
+    let target=D.flag;
+    if(left.length){const d=dists(D,pos);target=left.slice().sort((a,b)=>d[a]-d[b]||a-b)[0]}
+    const dt=dists(D,target),opts=legal(D,pos,m);
+    if(!opts.length)break;
+    opts.sort((a,b)=>dt[a]-dt[b]||a-b);
+    const n=opts[0];moves.push(n);m++;pos=n;
+    const ci=D.chests.indexOf(n);if(ci>=0)mask|=1<<ci;
+    if(n===D.flag||D.t[n]<=m)break;
+  }
+  return simulate(D,moves);
+}
+// Build a day. Strict: best route takes 2+ chests and the flag, only a few best routes exist, and greedy chest grabbing scores less.
+function genDay(seed){
+  let last=null;
+  for(let a=0;a<1500;a++){
+    const r=mulberry32(hashStr(seed+'#'+a));
+    const t=floodTimes(r),order=shuffled(Array.from({length:N},(_,i)=>i),r);
+    const nr=3+Math.floor(r()*2),rocks=order.slice(0,nr).sort((x,y)=>x-y),rest=order.slice(nr);
+    const start=rest[0],mid=rest.filter(i=>i!==start&&ringOf(i)>=1),flag=mid[0];
+    const chests=rest.filter(i=>i!==start&&i!==flag).slice(0,3);
+    const D={t,rocks,start,flag,chests};
+    const sol=solve(D);if(!sol||sol.score<7)continue;
+    const gr=greedy(D),strict=sol.ways<=4&&gr.score<sol.score;
+    const level=strict?0:gr.score<sol.score?1:2;
+    last={D,par:sol.score,parMoves:sol.moves,path:sol.path,ways:sol.ways,greedy:gr.score,level,tries:a+1};
+    if(level===0||(a>=600&&level<=1)||a>=1200)return last;
+  }
+  return last;
+}
+function check(){
+  let bad=0;const hist={},lv={};
+  for(let d=1;d<=60;d++){
+    const s='2026-12-'+String(d).padStart(2,'0'),day=genDay(s);
+    if(!day){bad++;continue}
+    const D=day.D;
+    if(JSON.stringify(genDay(s).D)!==JSON.stringify(D))bad++;
+    const ids=[D.start,D.flag,...D.chests,...D.rocks];
+    if(new Set(ids).size!==ids.length||ids.some(i=>!(i>=0&&i<N)))bad++;
+    if(D.rocks.length<3||D.rocks.length>4||D.chests.length!==3)bad++;
+    if(ringOf(D.flag)<1)bad++;
+    const sim=simulate(D,day.path);
+    if(!sim.won||sim.score!==day.par||sim.tiles.length!==day.parMoves||sim.tiles.includes('r'))bad++;
+    if(day.par<7||day.parMoves>MAXM)bad++;
+    if(day.level!==0)bad++;
+    hist[day.par]=(hist[day.par]||0)+1;lv[day.level]=(lv[day.level]||0)+1;
+  }
+  console.log('Tide Run self-check, 60 days, par spread',JSON.stringify(hist),'strict levels',JSON.stringify(lv),'problems:',bad);
+  return bad;
+}
+check();
+
+
+// ---------- art ----------
+const A=(f,c)=>`<img class="sp ${c||''}" src="assets/${f}.svg" alt="" draggable="false">`;
+const IC={me:'<span class="runner" aria-hidden="true"></span>',chest:A('chest'),flag:A('flag-hill'),rock:A('rock'),crest:A('crest','cr'),splash:A('splash')};
+const EMO={b:'🟦',y:'🟨',g:'🟩',r:'🟥'};
+const stampInner=k=>k==='y'?'<img src="assets/chest.svg" alt="">':k==='g'?'<img src="assets/flag-hill.svg" alt="">':k==='r'?'<img src="assets/splash.svg" alt="">':'';
+const stamp=(k,extra)=>`<div class="st ${k}" ${extra||''}>${stampInner(k)}</div>`;
+$('legend').innerHTML=[['<span class="runner"></span>','You'],['<img src="assets/chest.svg" alt="">','Chest +2'],['<img src="assets/flag-hill.svg" alt="">','Flag +3'],['<img src="assets/crest.svg" alt="">','Flood next']].map(([s,n])=>`<div class="k">${s}<span class="cap">${n}</span></div>`).join('');
+$('keys').innerHTML=[['b','Step'],['y','Chest +2'],['g','Flag +3'],['r','Washed']].map(([k,n])=>`<div>${stamp(k)}<span class="cap">${n}</span></div>`).join('');
+
+// ---------- game ----------
+let seed,practice,day,moves=[],locked=false,sim;
+function begin(s,p){
+  seed=s;practice=p;locked=false;day=genDay(s);
+  const done=!p&&load('tr_'+s,null);
+  if(done){moves=done.m;sim=simulate(day.D,moves);return showCard()}
+  moves=p?[]:load('tr_p_'+s,[]);
+  sim=simulate(day.D,moves);
+  show('game');render(false);
+}
+function sayHTML(){
+  const D=day.D,n=sim.tiles.length;
+  if(!n)return '<b class="carve">Tap a tile next to you.</b><small>The sea rises after every move. The number on a tile is how many moves until it floods.</small>';
+  const last=sim.tiles[n-1];
+  if(last==='g')return '<b class="carve">Flag reached.</b><small>Dry feet, mostly.</small>';
+  if(last==='r')return sim.stranded?'<b class="carve">Nowhere left to go.</b><small>The sea took the last dry tile.</small>':'<b class="carve">Washed away.</b><small>You stood on a tile as it flooded.</small>';
+  const soon=D.t.filter(x=>x===sim.m+1).length;
+  return '<b class="carve">'+(last==='y'?'Chest. +2':'Keep moving.')+'</b><small>Next to flood: '+soon+' tile'+(soon===1?'':'s')+'. Move '+(sim.m+1)+' of 9.</small>';
+}
+function render(anim){
+  const D=day.D,m=sim.m;
+  $('streak').textContent=load('tr_streak',0)?'Streak '+load('tr_streak',0):'';
+  $('slots').innerHTML=Array.from({length:MAXM},(_,i)=>{
+    if(i<sim.tiles.length){const k=sim.tiles[i];return `<div class="slot fill" ${anim&&i===sim.tiles.length-1?'':'style="animation:none"'}>${stamp(k)}</div>`}
+    return `<div class="slot ${i===sim.tiles.length&&!sim.over?'now':''}"></div>`}).join('');
+  $('pts').innerHTML='<b>'+sim.score+'</b><span class="cap">of 9 points</span>';
+  const ok=legal(D,sim.pos,m);
+  let h='';
+  for(let i=0;i<N;i++){
+    const wet=D.t[i]<=m,rock=D.rocks.includes(i),left=D.t[i]-m,next=!wet&&left===1;
+    const ci=D.chests.indexOf(i),coin=ci>=0&&!(sim.mask&(1<<ci)),isFlag=i===D.flag,here=i===sim.pos;
+    const can=!sim.over&&!locked&&ok.includes(i);
+    let inner='';
+    if(rock)inner+=IC.rock;
+    else if(isFlag)inner+=IC.flag;
+    else if(coin&&!here)inner+=IC.chest;
+    if(here)inner+=(sim.washed?IC.splash:IC.me);
+    if(next&&!rock)inner+=IC.crest;
+    if(!wet&&!rock)inner+=`<span class="n">${left}</span>`;
+    const cls=['cell',wet?'wet':'',rock?'rock':'',next&&!rock?'next':'',can?'can':'',here?'me':'',here&&sim.washed?'gone':'',anim&&wet&&D.t[i]===m?'rise':''].filter(Boolean).join(' ');
+    const r=Math.floor(i/W)+1,c=i%W+1;
+    const lab='Row '+r+', column '+c+', '+(rock?'rock':wet?'water':isFlag?'flag':coin?'chest':'sand')+(!wet&&!rock?', floods in '+left+' moves':'')+(here?', you are here':'')+(can?', you can move here':'');
+    h+=`<button class="${cls}" data-i="${i}" aria-label="${lab}">${inner}</button>`;
+  }
+  $('grid').innerHTML=h;
+  $('say').innerHTML=sayHTML();
+  $('restart').style.display=(sim.tiles.length===1&&!sim.over)?'':'none';
+}
+function tap(i){
+  if(locked||sim.over)return;
+  const D=day.D;
+  if(!legal(D,sim.pos,sim.m).includes(i)){tone(140,.12,'square',.04);try{const g=$('grid');g.classList.remove('shake');void g.offsetWidth;g.classList.add('shake')}catch(e){}return}
+  moves.push(i);sim=simulate(D,moves);
+  const k=sim.tiles[sim.tiles.length-1];
+  render(true);
+  tone(k==='y'?740:k==='g'?523:360,.14,'triangle',.08);
+  setTimeout(()=>tone(220,.45,'sine',.05,90),130);
+  if(k==='y')setTimeout(()=>tone(988,.14,'triangle',.08),150);
+  if(k==='g'){[523,659,784,1047].forEach((q,j)=>setTimeout(()=>tone(q,.18,'triangle',.1),j*90));buzz([40,40,80])}
+  else if(k==='r'){tone(300,.5,'sawtooth',.06,70);buzz([90,50,120])}
+  else buzz(k==='y'?[30,30,30]:[18]);
+  if(!practice)save('tr_p_'+seed,moves);
+  if(sim.over){locked=true;setTimeout(finishAll,1300)}
+}
+function finishAll(){
+  if(!practice){
+    save('tr_'+seed,{m:moves});
+    const days=load('tr_days',[]);
+    if(!days.includes(seed)){days.push(seed);save('tr_days',days);
+      if(sim.won){const last=load('tr_last',''),y=ds(new Date(Date.now()-864e5));save('tr_streak',last===y?load('tr_streak',0)+1:1);save('tr_last',seed)}
+      else save('tr_streak',0)}
+  }
+  showCard();
+}
+// the printed plate: island, flood numbers, the route as a dotted path
+function plateSVG(){
+  const D=day.D,C=44,G=4,P=12,S=P*2+C*5+G*4,ctr=i=>[P+(i%W)*(C+G)+C/2,P+Math.floor(i/W)*(C+G)+C/2];
+  let s=`<svg viewBox="0 0 ${S} ${S}" aria-hidden="true"><defs><pattern id="sgp" width="48" height="24" patternUnits="userSpaceOnUse"><image href="assets/wave-tile.svg" width="48" height="24"/></pattern></defs><rect width="${S}" height="${S}" fill="url(#sgp)"/>`;
+  for(let i=0;i<N;i++){
+    const x=P+(i%W)*(C+G),y=P+Math.floor(i/W)*(C+G),gone=D.t[i]<=sim.m,rock=D.rocks.includes(i);
+    s+=`<image href="assets/sand-tile.svg" x="${x}" y="${y}" width="${C}" height="${C}"/>`;
+    if(rock)s+=`<image href="assets/rock.svg" x="${x+5}" y="${y+4}" width="${C-10}" height="${C-10}"/>`;
+    else if(i===D.flag)s+=`<image href="assets/flag-hill.svg" x="${x+3}" y="${y+1}" width="${C-6}" height="${C-6}"/>`;
+    else if(D.chests.includes(i))s+=`<image href="assets/chest.svg" x="${x+6}" y="${y+6}" width="${C-12}" height="${C-12}"/>`;
+    if(gone)s+=`<rect x="${x}" y="${y}" width="${C}" height="${C}" fill="#11172e" opacity=".38"/>`;
+    if(!rock)s+=`<text x="${x+C-5}" y="${y+C-4}" text-anchor="end" font-family="Allo,sans-serif" font-weight="800" font-size="10" fill="#11172e" opacity=".75">${D.t[i]}</text>`;
+  }
+  const pts=[D.start,...moves.slice(0,sim.tiles.length)].map(ctr);
+  const poly=pts.map(p=>p.join(',')).join(' ');
+  s+=`<polyline points="${poly}" fill="none" stroke="#11172e" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="0.1 9"/><polyline points="${poly}" fill="none" stroke="#e8553b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="0.1 9"/>`;
+  const [sx,sy]=ctr(D.start);s+=`<svg x="${sx-17}" y="${sy-19}" width="34" height="34" viewBox="0 0 48 48"><image href="assets/runner.svg" width="96" height="48"/></svg>`;
+  const [ex,ey]=pts[pts.length-1];
+  if(sim.washed)s+=`<image href="assets/splash.svg" x="${ex-20}" y="${ey-20}" width="40" height="40"/>`;
+  return s+'</svg>';
+}
+function showCard(){
+  const n=sim.tiles.length,sc=sim.score;
+  show('end');
+  $('cdate').textContent=practice?'Practice island':'Tide Run '+seed;
+  $('ctitle').textContent=sim.won?(sc>=day.par?'Perfect run':sc>=7?'Strong run':sc>=5?'Safe and sound':'Made it out'):(sim.stranded?'Stranded':'Washed away');
+  $('cscore').textContent=sc;
+  $('plate').innerHTML=plateSVG();
+  $('rtiles').innerHTML=sim.tiles.map(k=>stamp(k)).join('');
+  $('par').textContent='Best route: '+day.par+' points in '+day.parMoves+' moves. Numbers on the plate are the move each tile went under.';
+  $('cfine').textContent=practice?'Practice does not count':'Streak '+load('tr_streak',0)+' · same island for everyone today';
+  window._share='Tide Run '+seed+'\n'+sim.tiles.map(k=>EMO[k]).join('')+' '+sc+'/9';
+}
+$('play').onclick=()=>begin(today(),false);
+$('grid').onclick=e=>{const b=e.target&&e.target.closest&&e.target.closest('button');if(b&&b.dataset&&b.dataset.i!==undefined)tap(+b.dataset.i)};
+$('restart').onclick=()=>{if(locked||sim.tiles.length!==1||sim.over)return;moves=[];sim=simulate(day.D,moves);if(!practice)save('tr_p_'+seed,moves);tone(260,.15,'triangle',.06);render(false)};
+$('copy').onclick=()=>{(navigator.clipboard?navigator.clipboard.writeText(window._share):Promise.reject()).then(()=>$('copy').textContent='Copied!',()=>prompt('Copy:',window._share))};
+$('prac').onclick=()=>{$('copy').textContent='Copy result';begin('practice-'+Math.random().toString(36).slice(2,7),true)};
+addEventListener('error',e=>{const s=$('say');if(s)s.textContent='Error: '+e.message});
+$('sfine').textContent=load('tr_'+today(),null)?'You have played today. See your result.':(load('tr_streak',0)?'Streak '+load('tr_streak',0):'New island every day');
+// test hooks: ?demo=start | game | end | washed. They never write to storage.
+(function(){
+  const d=new URLSearchParams(location.search).get('demo');
+  if(!d||d==='start')return;
+  seed='2026-12-07';practice=false;locked=false;day=genDay(seed);
+  if(d==='game')moves=day.path.slice(0,Math.min(3,day.path.length));
+  else if(d==='end')moves=day.path.slice();
+  else if(d==='washed'){const D=day.D;let pos=D.start;moves=[];for(let k=0;k<MAXM;k++){const nb=nbrs(pos).filter(n=>!D.rocks.includes(n)).sort((a,b)=>D.t[a]-D.t[b]);if(!nb.length)break;moves.push(nb[0]);pos=nb[0];if(D.t[pos]<=moves.length)break}}
+  sim=simulate(day.D,moves);
+  if(d==='game'){show('game');render(false)}else showCard();
+})();
+</script>
+</body>
+</html>
