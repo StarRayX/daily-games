@@ -1,13 +1,10 @@
-# Tide Run identity: woodblock wave print and paper-cut sea
-- Palette: indigo #1c2b5e, sea blue #2e63b9, foam #f3eee0, sand #e7c98f, flag coral #e8553b, ink #11172e. Flat fills only.
-- Shape language: hand-cut polygons with rough edges, chunky outlines (2 to 4 px ink), angular chiselled letters.
-- Water is always seigaiha (assets/wave-tile.svg, 40x20 seamless) in sea blue and indigo with foam rims. Flooded tiles vanish into it.
-- Dry tiles are sand stamps. Rocks are cut indigo shapes. Chests are woodblock chests. The flag sits on a contour-line hill.
-- About-to-flood tiles get the curling crest plus a big carved numeral with a coral misregistration shadow.
-- Misregistration: a coral layer offset 3 to 7 px behind logo, numerals, plate and buttons. No blur shadows.
-- Texture: feTurbulence + feDisplacementMap wobble on art (scale 2 to 3), 11 to 16 percent paper grain overlay.
-- Type: Allo, ROND 0 (sharp). Small caps labels at +0.17em tracking, huge tabular numerals for score and countdown.
-- Layout: poster landing (wave over island, logo carved into the lip), left-aligned play screen with sea band at the foot, result as a printed plate with a dotted route and a stamp strip.
-- Motion: slow pattern drift (16 s), two-pose runner, rise-over-tile flood. All off under prefers-reduced-motion.
-- Avoid: gradients, glows, rounded cards, pills, emoji art (emoji only in the share text), stock icons, centred single column.
-- Test hooks: ?demo=start, ?demo=game, ?demo=end, ?demo=washed. They never write to storage.
+# Tide Run identity: pop sticker, ocean blue
+- Colours: ground #2f8bff, stripe tint #4a9bff, ink #0b2a66, cream #fff8e6 (card #fffaf0), sand #ffd98a, coral #ff5a5f, sun yellow #ffc93c, flooded water #a9d3ff. Flat fills only.
+- Landing and result: broad diagonal stripes (two blues, 64px bands, -32deg) plus faint white dots on a 16px grid. Play screen: flat #2f8bff and one cream card.
+- Wordmark "TIDE RUN": Allo 900, ROND 100, opsz 32. Each letter own colour (yellow, coral, cream, sand), small rotation and baseline shift, letters overlap.
+- Letter recipe: -webkit-text-stroke .12em in a contrasting inner colour with paint-order stroke fill, then stacked drop-shadow() in ink for the outline (.055em) and a solid drop (.1em).
+- Game sprite in the wordmark: a curling wave sticker splashes off the end of the N (assets/wave.svg, own ink outline and solid drop). Tag word "RUN!" tilted -5deg, same recipe.
+- Sprites: runner, chest, flag-hill, rock, wave (next to flood), splash (washed away). 64px grid, flat fills, 3.5px ink outline, round joins, 4 colours max, dot eyes, no gloss.
+- Board: dry tiles flat sand with 12px corners, flooded tiles flat soft blue with one cream wave mark, coral inset ring on tiles you can step to, countdown number top right.
+- Buttons black #111, 10px radius, 56px tall, no text under 14px. Banned: grain, noise, gradients (except hard stripe stops), glow, hatching, offset copies, blur shadows.
+- Files: assets/thumb.svg (stripes, dots, embedded PNG of the wordmark), assets/mark.svg (favicon), one SVG per sprite. Test hooks: ?demo=start, game, end, washed.

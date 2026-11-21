@@ -1,12 +1,12 @@
-# Sprout identity: seed packets and linocut botanical print
-- Palette: paper #f4e8cb, leaf green #3e7b3a, deep green #1d4a2b, tomato #d6402a, mustard #e7a82d, ink #20281c, plus soil #8a5a34 for plots only. Flat fills, no gradients.
-- Season progression: spring packets leaf green, summer mustard, autumn tomato. The golden seed is a paper packet with a mustard x2 ribbon.
-- Shape language: thick ink outlines (1.4 to 3 units), pointed leaf blades, chamfered cut letters, small paper-colour gouge strokes for veins and highlights.
-- Texture: every SVG runs through feTurbulence plus feDisplacementMap (scale 1 to 4) for cut edges. A multiply grain overlay sits over the whole app at 20 percent.
-- Misregistration: tomato offset layer behind the logo letters, hard tomato or mustard offset shadows on packets, stamps and buttons. No blur anywhere.
-- Plants: 6 sheets (tomato, carrot, corn, cabbage, pea, radish) plus golden-flower, each 5 frames: seed, sprout, leafy, fruit or bloom, wilted. Used as CSS sprite sheets (background-size 500%).
-- Weather: sun, rain, frost, wind, cloud woodcut glyphs. Forecast cells are paper stamps. Loves tab has a green plus, hates tab a tomato slash.
-- Type: Allo. Letterspaced uppercase for labels (weight 800), weight 900 tabular numerals for scores, sentence case for the one line of instruction.
-- Logo: hand-built cut letters in SVG paths, the O holds a seed and sends up a seedling. mark.svg is the packet-corner icon.
-- Avoid: emoji as art, line icon sets, gradients, glows, soft shadows, pill buttons, chips, centred single-column sameness.
+# Sprout identity: flat sticker garden, Solr and Fizz family
+- Colours: ground lime #8ee03a, stripe tint #9fe85a, dark ink #1e4a0e, cream #fff8e0, card #fffaf0, tomato #ff5a3c, sunshine #ffcf3a, sky #4cb6ff. Soil patch #d9b98a.
+- Growth tiles: wilted tan #c9b48a, sprout #b8ec7a, leafy #3fbf4f, bloom gold #ffc21f. Season colours: leafy green, sunshine, tomato.
+- Landing and result: broad low contrast diagonal stripes plus a faint white dot grid. Play screen: flat lime with one cream card, black rectangular buttons (radius 10), flat tiles.
+- Wordmark recipe: SPROUT in Allo 900, ROND 100, opsz 32. Each letter its own colour with a deeper inner outline (text-stroke, paint-order stroke fill), a small rotation and baseline shift, slight overlap.
+- Outer outline and solid drop come from stacked drop-shadow() filters in ink on the whole wordmark. Tag word GROW! uses the same recipe, tilted -7deg.
+- The O is a seed ring (sunshine with orange inner outline, cream centre) with a two-leaf green sprout on top.
+- Sprites: flat saturated fills, chunky rounded shapes, one 4 unit ink outline, at most 4 colours, dot eyes, no gloss or gradients.
+- Plants: tomato, carrot, corn, cabbage, pea, radish plus golden-flower. Each file is a 500x100 sheet of 5 frames: seed, sprout, leafy, bloom, wilted.
+- Weather: sun, rain cloud, snowflake (frost), wind. 64x64 stickers, same outline. Love chip is green with a plus, hate chip is red with a minus.
+- Rules: no grain, noise, texture, offset colour copies, hatching, gradients or glow. Only solid ink drops. Type 14px or larger. Allo 600 to 900.
 - Test hooks: ?demo=start, ?demo=game, ?demo=end.

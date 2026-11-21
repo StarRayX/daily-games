@@ -1,10 +1,9 @@
-# Pet Lab identity: apothecary specimen catalogue
-- Palette: aged card #f6efd9, jar teal #2b8c8a, lab violet #5a3eaf, acid lime #bfe23a, rust #c4552b, ochre #e0a526 (yellow stamp only), ink #231a30.
-- Feedback is printed paper labels: lime with tick, ochre with half disc, grey with dashed dash. Shape plus colour, never colour alone.
-- Shape language: hand-cut polygons with chamfered corners, 1.8 to 3 px ink outlines, a violet or ink offset layer 2 to 3 px off register.
-- Every SVG runs a feTurbulence plus feDisplacementMap filter (scale about 2.5) for cut edges. Page has a faint noise overlay (10 percent).
-- Flat fills only. Hard offset shadows only (box-shadow with 0 blur). No gradients, blurs, glows.
-- Pets: 4 blob body types picked from the recipe, colours from the three ingredients. Dot or slit eyes, mismatched ears and spots.
-- Unstable jars: lime liquid that sloshes and a dashed rust wobble ring. Stable jars: still teal liquid.
-- Type: Allo, ROND 0. Small caps with .14em tracking for labels, heavy numerals for score. Logo is paths (assets/logo.svg).
-- Avoid: pills, chips, emoji art, icon sets, glossy eyes, centred single column. Emoji appear only in the copied share text.
+# Pet Lab identity: bubblegum pop
+- Colours: ground pink #ff6fbf, stripe tint #ff86c9, dark ink #5a0036, cream #fff6ea (card #fffaf0), lime #b6f03a, sky #4cb6ff, sunny yellow #ffc93c.
+- Feedback tiles: right #2fc45a with tick, wrong slot #ffc21f with swap arrows, not in it #cfc6d6 with a dash. Shape plus colour.
+- Landing and result: broad low-contrast stripes (150deg) plus a faint white dot grid. Play screen: flat pink with one cream card, black radius-10 buttons.
+- Wordmark: HTML in Allo 900, ROND 100, opsz 32. Each letter has its own fill and ring colour (-webkit-text-stroke, paint-order stroke fill), a small bounce rotation, overlap. One filter: stacked drop-shadow in ink makes the outline and solid drop.
+- The A is a cracked egg with a lime pet peeking out. Tag word: "MIX!", tilted, same treatment. Thumb is the wordmark rendered to PNG over vector stripes.
+- Sprites: flat fills, 4 px ink outline, round joins, 4 colours max, dot eyes, no gloss, no gradients. Wobbly ingredients get the yellow squiggle badge (assets/wobble.svg).
+- Pets: 4 bodies (kitty, bean, puff, bunny) coloured by the recipe. Pot: round sky-blue cauldron, lime brew, 3 cream slot rings.
+- Banned: grain, noise, offset colour copies, hatching, gradients, glow, text under 14px.

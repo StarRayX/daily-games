@@ -1,10 +1,9 @@
-# Vault Guard identity: architectural drafting sheet
-- Palette: blueprint navy #11305c, drafting white #e9f2ff, line cyan #8fc4ff, guard amber #ffb21f, alarm red #ff4636. Result screen only: paper #f3f1e7, with ink navy #0a2347 as shadow and text colour.
-- Shape language: one 1.5 px linework weight, lines overshoot their corners like a hand-ruled plan. Top-down guards (circle head, shoulder ellipse, hatched torso), dotted outlines for ghost trails, hatched amber for sight lines, door symbol with a swing arc, crosshair start.
-- Texture: faint construction grid tile, feTurbulence displacement (scale 2 to 4) on every line asset, grain overlay at 7 percent, rubber-stamp ink dropout on the CLEARED and ALARM stamps.
-- Layout: the play screen is a drawing sheet with a title block at the bottom. Sheet number is the attempt counter, the revision log is the attempt history. The result flips to a printed incident report on paper with tick-box rows.
-- Type: Allo, ROND 0. Small caps labels at +0.16em tracking, huge tabular numerals for sheet and score. Logo is hand-built monoline paths, keyhole as the counter of each A. Stamp lettering uses the same stroke alphabet.
-- Colour rules: flat fills only. Red text only on dark fills of ink (contrast), never small red on paper.
-- Avoid: rounded cards, pills, soft shadows, gradients, emoji or icon-set art, centred single column, typed logo.
-- Build: assets generated from a stroke-font script, sprites are 64 box SVGs, guard.svg faces up and is rotated in CSS.
-- Test hooks: ?demo=start, ?demo=game, ?demo=sneak, ?demo=end, ?demo=endfail.
+# Vault Guard identity: sticker pop
+- Colours: ground grape #7a4dff, stripe tint #8a62ff, ink #22105c, cream #fff6e8, card #fffaf0, gold #ffc93c, pink #ff6eb4, mint #3ad6a0.
+- Landing and result: broad diagonal stripes (grape and tint) plus a faint grid of small white dots. Play screen: flat grape, one cream card, black rectangular buttons (radius 10).
+- Wordmark: VAULT / GUARD in Allo 900, ROND 100, opsz 32. Every letter its own colour, small bounce and rotation, letters overlap, coloured inner outline (text-stroke, paint-order stroke fill), dark ink outline and solid drop from stacked drop-shadow. The A of VAULT is a round vault door sprite with a cream A on it.
+- Tag word: SNEAK! in cream with a gold inner outline, tilted -6 degrees, same ink outline and drop. The thief sticker sits beside it.
+- Sprites: flat fills, at most 4 colours, 3.5 px ink outline, round joins, dot eyes, no gloss or gradients. guard.svg and guard-ghost.svg face up and are rotated in CSS. thief, door (exit), start, vault-disc, alarm (caught), cleared.
+- Guard vision is a flat soft yellow tile tint. Route is a dotted pink line with numbered pink dots. Dark dots mean a known guard watches that tile on that step. Ghost guards are the guard sticker at 50 percent opacity with step labels.
+- Rules: no grain, no texture, no gradients, no glow, no offset copies. Only shadow is the solid ink drop on wordmark and tag. No text under 14 px.
+- Test hooks: ?demo=start (default), ?demo=game, ?demo=sneak, ?demo=end, ?demo=endfail.
