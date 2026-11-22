@@ -3,92 +3,73 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Five small daily games</title>
-<meta name="description" content="Five tiny puzzle games, one new puzzle a day each. Same puzzle for everyone. Play one in two minutes and share your tiles.">
-<meta property="og:title" content="Five small daily games">
-<meta property="og:description" content="One new puzzle a day each. Same puzzle for everyone. Two minutes a game.">
+<title>Daily games</title>
+<meta name="description" content="Small puzzle games with a new puzzle every day. Same puzzle for everyone.">
+<meta property="og:title" content="Daily games">
+<meta property="og:description" content="Small puzzle games with a new puzzle every day.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23111'/%3E%3Ccircle cx='20' cy='50' r='10' fill='%23f0b13a'/%3E%3Ccircle cx='38' cy='50' r='10' fill='%233e7b3a'/%3E%3Ccircle cx='56' cy='50' r='10' fill='%232e63b9'/%3E%3Ccircle cx='74' cy='50' r='10' fill='%23ffb21f'/%3E%3Ccircle cx='92' cy='50' r='10' fill='%23bfe23a'/%3E%3C/svg%3E">
+<link rel="icon" href="games/egg-thief/assets/mark.svg">
 <style>
 @font-face{font-family:"Allo";src:url("shared/AlloVariable.woff2") format("woff2");font-weight:100 900;font-display:swap}
-:root{--bg:#111;--ink:#f3eee0;--mute:#9a958a;--line:#2a2824}
+:root{--bg:#141414;--ink:#f4f0e6;--mute:#a8a397}
 *{box-sizing:border-box}
 html{background:var(--bg)}
-body{margin:0;color:var(--ink);font-family:"Allo",system-ui,sans-serif;font-size:17px;line-height:1.4;-webkit-font-smoothing:antialiased}
-.wrap{max-width:1180px;margin:0 auto;padding:0 22px}
-header{padding:clamp(40px,9vw,110px) 0 clamp(28px,5vw,56px)}
-.kick{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);font-weight:700;margin:0 0 18px}
-h1{margin:0;font-size:clamp(46px,10.5vw,132px);line-height:.88;letter-spacing:-.045em;font-weight:900;font-variation-settings:"ROND" 30,"opsz" 32;text-wrap:balance}
-h1 em{font-style:normal;color:#f0b13a}
-.lede{max-width:34em;margin:26px 0 0;font-size:clamp(18px,2.4vw,23px);color:#d8d2c2;font-weight:500}
-.lede b{color:var(--ink);font-weight:700}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;padding-bottom:70px}
-.card{display:flex;flex-direction:column;text-decoration:none;color:inherit;border-radius:6px;outline-offset:6px}
-.card:focus-visible{outline:3px solid #fff}
-.art{position:relative;aspect-ratio:4/3;overflow:hidden;border-radius:6px;background:#222}
-.art img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
-.card:hover .art img{transform:scale(1.035) rotate(-.6deg)}
-.meta{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:14px 2px 0}
-.meta h2{margin:0;font-size:27px;letter-spacing:-.025em;font-weight:900;font-variation-settings:"ROND" 40}
-.tag{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);font-weight:700;white-space:nowrap}
-.card p{margin:6px 2px 0;color:#c9c3b3;font-size:16px;max-width:30em}
-.go{margin:12px 2px 0;font-weight:800;font-size:15px;letter-spacing:.04em;text-transform:uppercase;display:inline-flex;gap:8px;align-items:center}
-.go i{display:inline-block;width:26px;height:2px;background:currentColor;position:relative;transition:width .25s}
-.go i::after{content:"";position:absolute;right:0;top:-4px;width:8px;height:8px;border-top:2px solid currentColor;border-right:2px solid currentColor;transform:rotate(45deg)}
-.card:hover .go i{width:44px}
-.c1 .go{color:#f0b13a}.c2 .go{color:#7bc47a}.c3 .go{color:#6aa0f2}.c4 .go{color:#ffb21f}.c5 .go{color:#bfe23a}
-.note{border-top:1px solid var(--line);padding:30px 0 60px;color:var(--mute);font-size:15px;display:grid;grid-template-columns:1fr 1fr;gap:20px 40px}
-.note b{color:#d8d2c2}
-@media (max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
-@media (max-width:600px){.grid{grid-template-columns:1fr;gap:34px}.note{grid-template-columns:1fr}}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+body{margin:0;color:var(--ink);font-family:"Allo",system-ui,sans-serif;font-size:17px;line-height:1.45;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+header{padding:64px 0 36px}
+h1{margin:0;font-size:clamp(36px,6vw,56px);line-height:1;letter-spacing:-.03em;font-weight:900}
+header p{margin:12px 0 0;color:var(--mute);font-size:18px;max-width:32em}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding-bottom:56px}
+.card{display:flex;flex-direction:column;text-decoration:none;color:inherit;border-radius:14px;overflow:hidden;background:#1f1f1f;transition:transform .15s ease}
+.card:hover{transform:translateY(-3px)}
+.card:focus-visible{outline:3px solid #fff;outline-offset:4px}
+.art{aspect-ratio:4/3;background:#222}
+.art img{display:block;width:100%;height:100%;object-fit:cover}
+.body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:6px;flex:1}
+.body h2{margin:0;font-size:22px;font-weight:900;letter-spacing:-.01em}
+.body p{margin:0;color:var(--mute);font-size:16px;flex:1}
+.play{align-self:flex-start;margin-top:10px;background:var(--ink);color:#141414;font-weight:800;font-size:16px;padding:9px 22px;border-radius:999px}
+footer{padding:0 0 56px;color:var(--mute);font-size:15px}
+@media (max-width:860px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.grid{grid-template-columns:1fr}header{padding:44px 0 28px}}
+@media (prefers-reduced-motion:reduce){.card{transition:none}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <p class="kick">Five prototypes, one new puzzle a day each</p>
-    <h1>Five small <em>daily</em> games.</h1>
-    <p class="lede">Each game gives everyone the <b>same puzzle today</b> and ends with a row of tiles you can paste to a friend. They take about two minutes. Pick one.</p>
+    <h1>Daily games</h1>
+    <p>A new puzzle every day, the same one for everyone. Each takes a couple of minutes.</p>
   </header>
 
   <main class="grid">
-    <a class="card c1" href="games/egg-thief/">
-      <div class="art"><img src="games/egg-thief/assets/thumb.png" alt="Egg Thief: a wanted poster of an egg in a bandit mask" width="640" height="480"></div>
-      <div class="meta"><h2>Egg Thief</h2><span class="tag">Deduce · 5 guesses</span></div>
-      <p>A thief hides in one of 36 nests. Each guard points the way, and every miss sends him running. Catch him in 5.</p>
-      <span class="go">Play <i></i></span>
+    <a class="card" href="games/egg-thief/">
+      <div class="art"><img src="games/egg-thief/assets/thumb.png" alt="" width="640" height="480"></div>
+      <div class="body">
+        <h2>Egg Thief</h2>
+        <p>A thief hides in one of 36 nests. Each guard points the way, and he runs after every miss.</p>
+        <span class="play">Play</span>
+      </div>
     </a>
-    <a class="card c2" href="games/sprout/">
-      <div class="art"><img src="games/sprout/assets/thumb.svg" alt="Sprout: a vintage seed packet" width="640" height="480"></div>
-      <div class="meta"><h2>Sprout</h2><span class="tag">Plan · 3 seasons</span></div>
-      <p>Plant one seed a day into a week of weather. Know which seed loves rain and which one hates frost.</p>
-      <span class="go">Play <i></i></span>
+    <a class="card" href="games/vault-guard/">
+      <div class="art"><img src="games/vault-guard/assets/thumb.png" alt="" width="640" height="480"></div>
+      <div class="body">
+        <h2>Vault Guard</h2>
+        <p>Plan a route past three patrolling guards. Each time you are caught, you learn where they stood.</p>
+        <span class="play">Play</span>
+      </div>
     </a>
-    <a class="card c3" href="games/tide-run/">
-      <div class="art"><img src="games/tide-run/assets/thumb.png" alt="Tide Run: a woodblock wave over a small island" width="640" height="480"></div>
-      <div class="meta"><h2>Tide Run</h2><span class="tag">Route · 9 moves</span></div>
-      <p>The sea floods the island from the outside in. Grab the chests, reach the flag, do not get washed away.</p>
-      <span class="go">Play <i></i></span>
-    </a>
-    <a class="card c4" href="games/vault-guard/">
-      <div class="art"><img src="games/vault-guard/assets/thumb.png" alt="Vault Guard: a blueprint of a vault floor" width="640" height="480"></div>
-      <div class="meta"><h2>Vault Guard</h2><span class="tag">Sneak · 5 tries</span></div>
-      <p>Plan a route past three patrolling guards. Every time you are caught, the board shows where they stood.</p>
-      <span class="go">Play <i></i></span>
-    </a>
-    <a class="card c5" href="games/pet-lab/">
-      <div class="art"><img src="games/pet-lab/assets/thumb.png" alt="Pet Lab: specimen jars and a mystery egg" width="640" height="480"></div>
-      <div class="meta"><h2>Pet Lab</h2><span class="tag">Mix · 6 tries</span></div>
-      <p>Crack today's hidden three-ingredient recipe. Two of the ingredients will not stay in the slot you put them in.</p>
-      <span class="go">Play <i></i></span>
+    <a class="card" href="games/sprout/">
+      <div class="art"><img src="games/sprout/assets/thumb.svg" alt="" width="640" height="480"></div>
+      <div class="body">
+        <h2>Sprout</h2>
+        <p>Plant one seed a day into a week of weather, over three seasons.</p>
+        <span class="play">Play</span>
+      </div>
     </a>
   </main>
 
-  <footer class="note">
-    <div><b>These are prototypes.</b> Your streak and today's result are saved in this browser only, so a different phone starts fresh. Practice mode never counts.</div>
-    <div><b>Tell whoever sent you the link</b> which one you would open again tomorrow, and which one you would close after a single go. That answer matters more than anything else on this page.</div>
-  </footer>
+  <footer>Prototypes. Your results are saved in this browser only.</footer>
 </div>
 </body>
 </html>
