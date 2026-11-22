@@ -51,10 +51,11 @@ button:focus-visible{outline:4px solid var(--sky);outline-offset:3px}
 .t .mk{position:absolute;right:-8px;bottom:-8px;width:21px;height:21px;z-index:2}
 .t.flip{animation:flip .55s ease var(--d,0s) both}
 @keyframes flip{0%{transform:rotateX(0);--cc:var(--empty)}49%{transform:rotateX(90deg);--cc:var(--empty)}50%{--cc:var(--c)}100%{transform:rotateX(0);--cc:var(--c)}}
-.t.flip .mk{animation:mkin .55s steps(1) var(--d,0s) both}
-@keyframes mkin{0%,49%{opacity:0}50%,100%{opacity:1}}
-.t.flip.mv .ing>.sp{animation:slide .45s ease both}
-@keyframes slide{from{transform:translateX(calc(var(--dx) * 100% + var(--dx) * var(--hg)))}to{transform:none}}
+.t.flip .mk{animation:mkin .55s ease var(--d,0s) both}
+@keyframes mkin{0%,49%{opacity:0;transform:scale(.3)}62%{opacity:1;transform:scale(1.3)}100%{opacity:1;transform:scale(1)}}
+.t.e .mk{opacity:0}
+.t.flip.mv .ing{animation:slide .5s cubic-bezier(.4,.1,.2,1) both}
+@keyframes slide{from{transform:translateX(calc(var(--dx) * (100% + 8px + var(--hg))))}to{transform:none}}
 /* start */
 #start{justify-content:center;gap:18px;text-align:center}
 #start .wmw{margin-bottom:22px}
@@ -140,8 +141,54 @@ button:focus-visible{outline:4px solid var(--sky);outline-offset:3px}
 #rtab{width:100%;display:flex;flex-direction:column;gap:7px}
 #end .btn{min-width:200px}
 .endbtns{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%;flex:none}
+/* how to play */
+.gr{display:flex;align-items:center;gap:8px}
+.gr .link{padding:8px 4px;min-height:40px;font-size:14px}
+.hw{position:absolute;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:14px;background:rgba(61,0,37,.66)}
+.hw.on{display:flex}
+.hc{width:100%;max-width:380px;max-height:100%;overflow-y:auto;background:var(--card);border-radius:22px;padding:14px 14px 16px;display:flex;flex-direction:column;align-items:stretch;gap:8px}
+.hst{display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer}
+.hcap{font-size:23px;font-weight:900;text-align:center;line-height:1.15;min-height:56px;display:grid;place-items:center;text-wrap:balance;font-variation-settings:"ROND" 100,"opsz" 24}
+.hcap.cin{animation:cin .28s ease both}
+@keyframes cin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.hdots{display:flex;justify-content:center;gap:2px}
+.hdots button{width:30px;height:30px;border:0;background:none;display:grid;place-items:center;padding:0;cursor:pointer}
+.hdots i{display:block;width:12px;height:12px;border-radius:50%;background:var(--empty);transition:transform .2s,background .2s}
+.hdots button.on i{background:var(--ink);transform:scale(1.25)}
+.hc.rm .hcap,.hc.rm .hdots{display:none}
+.hs1{display:flex;flex-direction:column;align-items:center;gap:2px;width:100%}
+.hs1 .hcap{display:grid;min-height:0;font-size:19px}
+.ds{position:relative;width:100%;display:flex;flex-direction:column;align-items:center;gap:8px;padding:4px 0}
+.dsr{display:flex;gap:12px;justify-content:center}
+.ds .t{width:54px;height:54px}
+.dsr .t{transition:transform .22s ease,opacity .22s ease}
+.dsr.hl .t{opacity:.3}
+.dsr.hl .t.on{opacity:1;transform:scale(1.16)}
+.ds .potwrap{width:100%;max-width:250px;margin:-4px 0 -4px}
+.dpot{position:absolute;inset:0}
+.dsh{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;width:100%;max-width:270px}
+.dmx{width:min(100%,240px);min-height:44px;font-size:18px;display:grid;place-items:center;padding:0}
+.dmx.press{transform:translateY(2px)}
+.ds.st .dsh,.ds.st .dmx{display:none}
+.fing{position:absolute;left:0;top:0;width:30px;height:30px;z-index:8;pointer-events:none;opacity:0;transition:transform .3s cubic-bezier(.4,.1,.2,1),opacity .2s}
+.fing i{display:block;width:100%;height:100%;border-radius:50%;background:rgba(17,17,17,.72);transition:transform .12s}
+.fing.tap i{transform:scale(.6)}
 @media (max-width:400px){#hist,#rtab{--ts:46px;--hg:6px}#recipe{--ts:46px}.keyrow{gap:6px 10px;font-size:13px}.keyrow span{gap:4px}}
 @media (max-height:700px){#hist,#rtab{--ts:44px}#recipe{--ts:44px}.hrow.em .t{height:20px}}
+/* first-play hints */
+#hint{position:absolute;inset:0;z-index:50;pointer-events:none;display:none}
+#hint.on{display:block}
+.hp{position:absolute;left:0;top:0;width:24px;height:24px;margin:-12px 0 0 -12px;transition:left .25s ease,top .25s ease}
+.hp i{display:block;width:100%;height:100%;border-radius:50%;background:rgba(90,0,54,.6);animation:hpul 1.3s ease-in-out infinite}
+@keyframes hpul{0%{box-shadow:0 0 0 0 rgba(90,0,54,.4);transform:scale(.88)}70%{box-shadow:0 0 0 16px rgba(90,0,54,0);transform:scale(1)}100%{box-shadow:0 0 0 0 rgba(90,0,54,0);transform:scale(.88)}}
+.hb,.hb *{clip-path:none!important}
+.hb{position:absolute;left:0;top:0;width:max-content;max-width:min(236px,calc(100% - 16px));display:flex;flex-direction:column;align-items:flex-start;background:var(--cream);color:var(--ink);border-radius:14px;padding:9px 13px 2px;font-size:17px;font-weight:800;line-height:1.2;pointer-events:auto;cursor:pointer;box-shadow:0 6px 16px rgba(61,0,37,.28);animation:hin .2s ease both;font-variation-settings:"ROND" 60,"opsz" 18;text-wrap:balance}
+.hb.up{--hy:6px}.hb.dn{--hy:-6px}
+@keyframes hin{from{opacity:0;transform:translateY(var(--hy,6px))}to{opacity:1;transform:none}}
+.hb .tl{position:absolute;left:var(--tx,24px);width:12px;height:12px;background:var(--cream);transform:translateX(-50%) rotate(45deg);border-radius:2px}
+.hb.up .tl{bottom:-5px}.hb.dn .tl{top:-5px}
+.hb .hsk{align-self:flex-end;border:0;background:none;color:var(--mute);font-size:13px;font-weight:700;text-decoration:underline;text-underline-offset:2px;padding:5px 0 7px 12px;min-height:30px;cursor:pointer;border-radius:0}
+#sstat{margin-top:-10px;opacity:.8}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -152,11 +199,13 @@ button:focus-visible{outline:4px solid var(--sky);outline-offset:3px}
     <div class="wmw" id="wm1" role="img" aria-label="Pet Lab"></div>
     <p class="lead">Guess the hidden 3-ingredient recipe in 6 mixes. Hatch a pet.</p>
     <button class="btn" id="play">Play</button>
+    <button class="link" id="hows">How to play</button>
     <div class="small" id="sfine"></div>
+    <div class="small" id="sstat"></div>
   </section>
 
   <section id="game">
-    <header class="gh"><div class="nm"><img src="assets/mark.svg" alt="">Pet Lab</div><div id="streak"></div></header>
+    <header class="gh"><div class="nm"><img src="assets/mark.svg" alt="">Pet Lab</div><div class="gr"><div id="streak"></div><button class="link" id="howg">How to play</button></div></header>
     <div class="card">
       <div class="lab" id="mixn"></div>
       <div id="hist" aria-label="Your mixes"></div>
@@ -168,6 +217,17 @@ button:focus-visible{outline:4px solid var(--sky);outline-offset:3px}
     </div>
     <div id="hatch" class="ground"></div>
   </section>
+
+  <div id="hint" aria-live="polite"><div class="hp" id="hp"><i></i></div><div class="hb" id="hb"></div></div>
+
+  <div id="how" class="hw" role="dialog" aria-modal="true" aria-label="How to play" aria-hidden="true">
+    <div class="hc" id="hc">
+      <div class="hst" id="hst"></div>
+      <div class="hcap" id="hcap" aria-live="polite"></div>
+      <div class="hdots" id="hdots"><button aria-label="Step 1"><i></i></button><button aria-label="Step 2"><i></i></button><button aria-label="Step 3"><i></i></button></div>
+      <button class="btn wide" id="hgot">Got it</button>
+    </div>
+  </div>
 
   <section id="end" class="ground">
     <div class="wmw" id="wm2" role="img" aria-label="Pet Lab"></div>
@@ -448,6 +508,7 @@ const fbOf=k=>score(finOf(k).fin,day.rec);
 const hasWon=()=>tries.some((t,k)=>fbOf(k).join()==='2,2,2');
 const isOver=()=>hasWon()||tries.length>=MAXM;
 function begin(s,p){
+  H.on=false;clearTimeout(H.tm);hintHide();
   seed=s;practice=p;locked=false;day=genDay(s);pot=[null,null,null];sel=0;
   $('hatch').style.display='none';
   const done=!p&&load('pl_'+s,null);
@@ -458,7 +519,7 @@ function begin(s,p){
 }
 function sayHTML(){
   const n=tries.length;
-  if(!n)return 'Fill the 3 slots, then press Mix.<small>Wobbly ingredients swap with the slot to their right after a mix.</small>';
+  if(!n)return 'Fill the 3 slots, then press Mix.<small>Wobbly ones swap places after a mix.</small>';
   const m=finOf(n-1),s=fbOf(n-1),g=s.filter(x=>x===2).length,y=s.filter(x=>x===1).length;
   if(g===3)return 'Hatched!<small>Solved in '+n+' of 6 mixes.</small>';
   if(n>=MAXM)return 'The pot fizzled out.<small>No mixes left.</small>';
@@ -469,9 +530,10 @@ function sayHTML(){
 const tally=s=>{const g=s.filter(x=>x===2).length,y=s.filter(x=>x===1).length;return g+y===0?'Nothing in it':[g?g+' right':'',y?y+' misplaced':''].filter(Boolean).join(', ')};
 function rowHTML(k,flip){
   const t=tries[k],m=finOf(k),s=fbOf(k);
+  const any=m.fin.some((ing,j)=>ing!==t[j]&&m.src[j]!==j),base=any?.6:.1;
   return '<div class="hrow"><span class="rn">'+(k+1)+'</span>'+m.fin.map((ing,j)=>{
     const dx=ing===t[j]?0:(m.src[j]-j),fl=k===flip;
-    return tileHTML(ST[s[j]].k,ing,day.u,{flip:fl,mv:fl&&dx,d:.45+j*.12,dx:dx,aria:'Slot '+(j+1)+', '+NAMES[ing]+', '+ST[s[j]].n+(day.u.includes(ing)?', wobbly':'')});
+    return tileHTML(ST[s[j]].k,ing,day.u,{flip:fl,mv:fl&&dx,d:base+j*.28,dx:dx,aria:'Slot '+(j+1)+', '+NAMES[ing]+', '+ST[s[j]].n+(day.u.includes(ing)?', wobbly':'')});
   }).join('')+'<span class="nt">'+tally(s)+'</span></div>';
 }
 function renderPot(){
@@ -500,32 +562,37 @@ function put(i){
   const nx=pot.indexOf(null);sel=nx<0?t:nx;
   tone(380+i*40,.08,'triangle',.05);buzz(8);
   renderPot();
+  hintOnPut();
+  const sl=$('pot').children[t],ing=sl&&sl.querySelector('.ing'),src=$('pal').children[i];
+  if(ing&&src)flyIn(src,ing,260);
 }
 function slotTap(i){
   if(isOver())return;
   if(pot[i]!==null)pot[i]=null;
   sel=i;renderPot();
+  if(H.on&&H.step===1&&!H.hid)hintShow();
 }
 function doMix(){
   if(locked||isOver()||pot.includes(null))return;
   tries.push(pot.slice());pot=[null,null,null];sel=0;
   const k=tries.length-1,s=fbOf(k),g=s.filter(x=>x===2).length;
   locked=true;render(k);
+  hintOnMix();
   if(g===3){[523,659,784,1047].forEach((q,j)=>setTimeout(()=>tone(q,.18,'triangle',.1),j*90));buzz([40,40,80])}
   else{tone(220+g*120,.22,g?'triangle':'square',.07,160+g*160);buzz(g>1?[50,40,50]:[25])}
   if(!practice)save('pl_p_'+seed,tries);
   if(isOver()){
     if(hasWon()){setTimeout(()=>{try{$('hatch').innerHTML=hatchHTML(day.rec);$('hatch').style.display='flex'}catch(e){}},1000);setTimeout(finishAll,3200)}
     else setTimeout(finishAll,1400);
-  }else setTimeout(()=>{locked=false;updateMix()},1100);
+  }else setTimeout(()=>{locked=false;updateMix()},400);
 }
 function finishAll(){
-  const won=hasWon();
+  const won=hasWon();hintEnd();
   if(!practice){
     save('pl_'+seed,{t:tries});
     const days=load('pl_days',[]);
     if(!days.includes(seed)){days.push(seed);save('pl_days',days);
-      if(won){const last=load('pl_last',''),y=ds(new Date(Date.now()-864e5));save('pl_streak',last===y?load('pl_streak',0)+1:1);save('pl_last',seed)}
+      if(won){const b=load('pl_best',0);if(!b||tries.length<b)save('pl_best',tries.length);const last=load('pl_last',''),y=ds(new Date(Date.now()-864e5));save('pl_streak',last===y?load('pl_streak',0)+1:1);save('pl_last',seed)}
       else save('pl_streak',0)}
   }
   showCard();
@@ -546,7 +613,177 @@ function showCard(){
   $('cfine').textContent=practice?'Practice does not count':'Streak '+load('pl_streak',0)+' · same recipe for everyone today';
   window._share=(practice?'Pet Lab practice':'Pet Lab '+seed)+'\n'+rows.map(s=>s.map(x=>ST[x].e).join('')).join('\n')+' '+score_+'/6';
 }
-$('play').onclick=()=>begin(today(),false);
+// ---------- how to play: a live demo built from the game's own tiles, pot and jars ----------
+const RM=()=>{try{return matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){return false}};
+const HOW_CAP=['Drop 3 ingredients in the pot','Green right. Yellow wrong spot. Grey no.','Wobbly ones swap places'];
+const DEMO_U=[3,2],DEMO_REC=[4,0,3],DSHELF=[4,0,3,5];
+function flyIn(from,ing,ms){
+  if(RM())return;
+  const a=from.getBoundingClientRect(),b=ing.getBoundingClientRect(),sl=ing.parentNode;
+  const dx=a.left+a.width/2-(b.left+b.width/2),dy=a.top+a.height/2-(b.top+b.height/2);
+  sl.style.zIndex=6;
+  const an=ing.animate([{transform:'translate('+dx+'px,'+dy+'px) scale(1.15)',opacity:.85},{transform:'translate(0,0) scale(1)',opacity:1}],{duration:ms||300,easing:'cubic-bezier(.25,.9,.3,1.1)'});
+  an.onfinish=an.oncancel=()=>{sl.style.zIndex=''};
+}
+function dsBuild(st){
+  const d=document.createElement('div');d.className='ds'+(st?' st':'');
+  d.innerHTML='<div class="dsr"><div class="t e"></div><div class="t e"></div><div class="t e"></div></div>'
+   +'<div class="potwrap"><img class="potimg" src="assets/pot.svg" alt=""><div class="bub"><i></i><i></i><i></i></div><div class="dpot"><div class="slot"></div><div class="slot"></div><div class="slot"></div></div></div>'
+   +'<div class="dsh">'+DSHELF.map(i=>'<div class="pb">'+ingHTML(i,DEMO_U)+'</div>').join('')+'</div>'
+   +'<div class="btn dmx">Mix</div><div class="fing"><i></i></div>';
+  return d;
+}
+function dsPot(d,arr){d.querySelectorAll('.slot').forEach((s,j)=>{s.innerHTML=arr[j]==null?'':ingHTML(arr[j],DEMO_U)})}
+function dsFill(d,fin,s){
+  d.querySelectorAll('.dsr .t').forEach((t,j)=>{
+    if(!fin){t.className='t e';t.innerHTML='';return}
+    t.innerHTML=ingHTML(fin[j],DEMO_U)+'<img class="mk" src="assets/mark-'+MKK[ST[s[j]].k]+'.svg" alt="">';t.className='t e';
+  });
+}
+function dsPaint(d,s,flip,base,gap){
+  d.querySelectorAll('.dsr .t').forEach((t,j)=>{
+    t.style.setProperty('--d',((base||0)+j*(gap||0))+'s');
+    t.className='t s-'+LABF[ST[s[j]].k]+(flip?' flip':'');
+  });
+}
+function dsReset(d,pot){
+  dsPot(d,pot);dsFill(d,null);
+  const r=d.querySelector('.dsr');r.classList.remove('hl');
+  d.querySelector('.dmx').classList.remove('press');
+  const f=d.querySelector('.fing');f.style.opacity=0;
+}
+function fgPos(d,el,ox,oy){const s=d.getBoundingClientRect(),r=el.getBoundingClientRect();d.querySelector('.fing').style.transform='translate('+(r.left+r.width/2-s.left-15+ox)+'px,'+(r.top+r.height/2-s.top-15+oy)+'px)'}
+function fgPark(d,el){const f=d.querySelector('.fing');f.style.transition='none';f.style.opacity=0;fgPos(d,el,0,46);void f.offsetWidth;f.style.transition=''}
+function fgTo(d,el){fgPos(d,el,0,6);d.querySelector('.fing').style.opacity=1}
+function fgTap(d,btn){const f=d.querySelector('.fing');f.classList.add('tap');if(btn)btn.classList.add('press');setTimeout(()=>{f.classList.remove('tap');if(btn)btn.classList.remove('press')},150)}
+const DEMO=[
+  async(d,W)=>{
+    dsReset(d,[null,null,null]);
+    const jars=d.querySelectorAll('.pb'),sl=d.querySelectorAll('.slot'),order=[0,3,1];
+    fgPark(d,jars[0]);await W(150);
+    for(let q=0;q<3;q++){
+      fgTo(d,jars[order[q]]);await W(320);
+      fgTap(d);sl[q].innerHTML=ingHTML(DSHELF[order[q]],DEMO_U);
+      flyIn(jars[order[q]],sl[q].firstChild,320);
+      await W(140);
+    }
+    d.querySelector('.fing').style.opacity=0;await W(1300);
+  },
+  async(d,W)=>{
+    const g=[4,5,0],m=mixFinal(g,DEMO_U),s=score(m.fin,DEMO_REC),mx=d.querySelector('.dmx');
+    dsReset(d,g);fgPark(d,mx);await W(100);
+    fgTo(d,mx);await W(300);fgTap(d,mx);await W(160);
+    dsPot(d,[null,null,null]);dsFill(d,m.fin,s);dsPaint(d,s,true,.05,.3);
+    d.querySelector('.fing').style.opacity=0;
+    await W(1250);
+    dsPaint(d,s,false);
+    const row=d.querySelector('.dsr'),ts=row.querySelectorAll('.t');
+    for(const want of ['g','y','x']){
+      ts.forEach((t,j)=>t.classList.toggle('on',ST[s[j]].k===want));row.classList.add('hl');await W(380);
+    }
+    row.classList.remove('hl');ts.forEach(t=>t.classList.remove('on'));await W(100);
+  },
+  async(d,W)=>{
+    const g=[4,3,5],m=mixFinal(g,DEMO_U),s=score(m.fin,DEMO_REC),mx=d.querySelector('.dmx');
+    dsReset(d,g);fgPark(d,mx);await W(100);
+    fgTo(d,mx);await W(300);fgTap(d,mx);await W(160);
+    dsPot(d,[null,null,null]);dsFill(d,m.fin,s);
+    d.querySelector('.fing').style.opacity=0;
+    const ts=d.querySelectorAll('.dsr .t'),ings=[...ts].map(t=>t.querySelector('.ing'));
+    const step=ts[1].getBoundingClientRect().left-ts[0].getBoundingClientRect().left;
+    ings.forEach((e,j)=>{const dx=m.src[j]-j;if(dx)e.style.transform='translateX('+dx*step+'px)'});
+    await W(750);
+    ings.forEach((e,j)=>{if(m.src[j]-j){e.style.transition='transform .6s cubic-bezier(.4,.1,.2,1)';e.style.transform='none'}});
+    await W(700);
+    dsPaint(d,s,true,0,.2);await W(1250);
+  }
+];
+let hwTok=0,hwStep=0;
+function hwSet(n){
+  hwStep=n;const c=$('hcap');c.textContent=HOW_CAP[n];c.classList.remove('cin');void c.offsetWidth;c.classList.add('cin');
+  [...$('hdots').children].forEach((b,i)=>b.classList.toggle('on',i===n));
+}
+async function hwRun(n){
+  const my=++hwTok,W=ms=>new Promise((res,rej)=>setTimeout(()=>my===hwTok?res():rej(0),ms));
+  hwSet(n);
+  const d=$('hst').querySelector('.ds');if(!d)return;
+  try{await DEMO[n](d,W);hwRun((n+1)%3)}catch(e){if(e!==0)console.error(e)}
+}
+function openHow(){
+  const h=$('how');if(h.classList.contains('on'))return;
+  const st=$('hst');st.innerHTML='';h.classList.add('on');h.setAttribute('aria-hidden','false');
+  if(RM()){
+    $('hc').classList.add('rm');
+    const specs=[{pot:[4,5,0]},{pot:[4,5,0],g:[4,5,0]},{pot:[4,3,5],g:[4,3,5]}];
+    specs.forEach((sp,n)=>{
+      const w=document.createElement('div');w.className='hs1';
+      const d=dsBuild(true);dsPot(d,sp.pot);
+      if(sp.g){const m=mixFinal(sp.g,DEMO_U),s=score(m.fin,DEMO_REC);dsFill(d,m.fin,s);dsPaint(d,s,false)}
+      const c=document.createElement('div');c.className='hcap';c.textContent=(n+1)+'. '+HOW_CAP[n];
+      w.appendChild(d);w.appendChild(c);st.appendChild(w);
+    });
+  }else{
+    $('hc').classList.remove('rm');
+    st.appendChild(dsBuild(false));hwRun(0);
+  }
+}
+function closeHow(){
+  hwTok++;const h=$('how');h.classList.remove('on');h.setAttribute('aria-hidden','true');$('hst').innerHTML='';save('pl_howto',1);
+}
+// ---------- first-play hints: a pointer and a short bubble on the real board, three steps, never blocks taps ----------
+var H={on:false,step:0,vis:false,hid:false,tm:0,demo:false,key:''};
+var HT={1:'Tap 3 ingredients, then Mix',2:'Green right. Yellow wrong spot.',3:'Wobbly ones swap places'};
+function hintHide(){H.vis=false;const h=$('hint');if(h)h.classList.remove('on')}
+function hintEnd(){if(!H.on)return;H.on=false;clearTimeout(H.tm);hintHide();if(!H.demo)save('pl_hints',1)}
+function hintTarget(){
+  if(H.step===1)return {el:pot.includes(null)?$('pal').children[0]:$('mix'),dir:'up'};
+  if(H.step===2){const r=$('hist').querySelector('.hrow');return {el:r&&r.children[2],dir:'down'}}
+  if(H.step===3)return {el:$('pal').children[day.u[0]],dir:'up'};
+  return null;
+}
+function hintShow(){
+  if(!H.on||H.hid||!$('game').classList.contains('on')||$('how').classList.contains('on'))return hintHide();
+  const t=hintTarget();if(!t||!t.el)return hintHide();
+  const T=t.el.getBoundingClientRect(),A=$('app').getBoundingClientRect();if(!T.width)return hintHide();
+  const hint=$('hint'),b=$('hb'),hp=$('hp');
+  if(!H.vis||H.key!==String(H.step)){
+    H.key=String(H.step);
+    b.innerHTML='<span class="ht">'+HT[H.step]+'</span><button type="button" class="hsk">Skip tips</button><i class="tl"></i>';
+    b.style.animation='none';void b.offsetWidth;b.style.animation='';
+  }
+  hint.classList.add('on');H.vis=true;
+  const cx=T.left+T.width/2-A.left,cy=T.top+T.height/2-A.top;
+  hp.style.left=(cx+T.width*.2)+'px';hp.style.top=(cy+T.height*.26)+'px';
+  const bw=b.offsetWidth,bh=b.offsetHeight,gap=14;let dir=t.dir,top;
+  if(dir==='up'){top=cy-T.height/2-gap-bh;if(top<6)dir='down'}
+  if(dir==='down'){top=cy+T.height/2+gap;if(top+bh>A.height-6){dir='up';top=cy-T.height/2-gap-bh}}
+  const left=Math.max(8,Math.min(cx-bw/2,A.width-bw-8));
+  b.className='hb '+(dir==='up'?'up':'dn');
+  b.style.left=left+'px';b.style.top=Math.max(4,top)+'px';
+  b.style.setProperty('--tx',Math.max(18,Math.min(cx-left,bw-18))+'px');
+}
+function hintOnPut(){
+  if(!H.on)return;
+  if(H.step===1){if(!H.hid)hintShow()}
+  else if(H.step===2){clearTimeout(H.tm);H.step=3;H.hid=false;hintShow()}
+  else hintEnd();
+}
+function hintOnMix(){
+  if(!H.on)return;
+  if(H.step===1){hintHide();if(isOver())return hintEnd();H.step=2;H.hid=false;clearTimeout(H.tm);H.tm=setTimeout(hintShow,RM()?300:1500)}
+  else hintEnd();
+}
+$('hb').onclick=e=>{if(e.target.closest&&e.target.closest('.hsk'))hintEnd();else{H.hid=true;hintHide()}};
+addEventListener('resize',()=>{if(H.on&&H.vis)hintShow()});
+$('game').addEventListener('scroll',()=>{if(H.on&&H.vis)hintShow()},{passive:true});
+try{document.fonts.ready.then(()=>{if(H.on&&H.vis)hintShow()})}catch(e){}
+$('hgot').onclick=closeHow;
+$('hst').onclick=()=>{if(!RM())hwRun((hwStep+1)%3)};
+[...$('hdots').children].forEach((b,i)=>{b.onclick=()=>{if(!RM())hwRun(i)}});
+$('hows').onclick=openHow;$('howg').onclick=openHow;
+addEventListener('keydown',e=>{if(e.key==='Escape'&&$('how').classList.contains('on'))closeHow()});
+
+$('play').onclick=()=>{begin(today(),false);if($('game').classList.contains('on')&&!practice&&!tries.length&&!load('pl_hints',0)){H.on=true;H.demo=false;H.step=1;H.hid=false;hintShow()}};
 $('pal').onclick=e=>{const b=e.target&&e.target.closest&&e.target.closest('button');if(b&&b.dataset&&b.dataset.ing!==undefined)put(+b.dataset.ing)};
 $('pot').onclick=e=>{const b=e.target&&e.target.closest&&e.target.closest('button');if(b&&b.dataset&&b.dataset.s!==undefined)slotTap(+b.dataset.s)};
 $('mix').onclick=doMix;
@@ -554,13 +791,21 @@ $('copy').onclick=()=>{(navigator.clipboard?navigator.clipboard.writeText(window
 $('prac').onclick=()=>{$('copy').textContent='Copy result';begin('practice-'+Math.random().toString(36).slice(2,7),true)};
 (function(){const R=Math.random;document.querySelectorAll('.ground').forEach(n=>{for(let i=0;i<5;i++){const left=i%2===0;n.style.setProperty('--p'+i+'x',Math.round(left?R()*28:72+R()*28)+'%');n.style.setProperty('--p'+i+'y',Math.round(i*22+R()*14-2)+'%');n.style.setProperty('--p'+i+'a',(.7+R()*.3).toFixed(2));n.style.setProperty('--p'+i+'r',Math.round(17+R()*12)+'%')}})})();
 addEventListener('error',e=>{const s=$('say');if(s)s.textContent='Error: '+e.message});
-$('sfine').textContent=load('pl_'+today(),null)?'You have played today. See your result.':(load('pl_streak',0)?'Streak '+load('pl_streak',0):'New recipe every day');
-// test hooks: ?demo=start | game | end | hatch
+(function(){
+  const n=new Date(),DN=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const no=Math.max(1,Math.round((Date.UTC(n.getFullYear(),n.getMonth(),n.getDate())-Date.UTC(2026,10,22))/864e5)+1);
+  $('sfine').textContent=DN[n.getDay()]+' '+n.getDate()+' '+MN[n.getMonth()]+' \u00b7 #'+no;
+  const pl=load('pl_days',[]).length,b=load('pl_best',0);
+  $('sstat').textContent=pl?'Streak '+load('pl_streak',0)+' \u00b7 Played '+pl+(b?' \u00b7 Best '+b:''):'';
+})();
+// test hooks: ?demo=start | game | end | hatch | howto | firstplay | firstplay2
 (function(){
   const dm=new URLSearchParams(location.search).get('demo');if(!dm)return;
   seed='demo-2026';practice=true;day=genDay(seed);locked=false;
   if(dm==='game'){tries=day.solver.slice(0,Math.min(3,Math.max(1,day.par-1)));pot=[4,null,null];sel=1;show('game');render(-1)}
   else if(dm==='end'){tries=day.solver.slice(0,day.par);show('game');showCard()}
+  else if(dm==='firstplay'||dm==='firstplay2'){tries=dm==='firstplay2'?day.solver.slice(0,1):[];pot=[null,null,null];sel=0;show('game');render(-1);H.on=true;H.demo=true;H.hid=false;H.step=dm==='firstplay2'?2:1;hintShow();requestAnimationFrame(()=>hintShow())}
+  else if(dm==='howto'){tries=[];pot=[null,null,null];sel=0;show('game');render(-1);openHow()}
   else if(dm==='hatch'){tries=day.solver.slice(0,day.par);show('game');render(-1);$('hatch').innerHTML=hatchHTML(day.rec);$('hatch').style.display='flex'}
 })();
 </script>
