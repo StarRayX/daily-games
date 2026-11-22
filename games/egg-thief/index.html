@@ -22,7 +22,6 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
 .gnd>*{position:relative}
 /* buttons: black, rectangular */
 .btn{border:0;border-radius:10px;background:#111;color:#fff;font-weight:800;font-size:20px;padding:12px 44px;min-height:52px;cursor:pointer}
-.btn:active{transform:translateY(2px)}
 .link{background:none;border:0;font-weight:800;font-size:16px;text-decoration:underline;text-underline-offset:4px;cursor:pointer;padding:12px 16px;min-height:48px}
 /* hand-drawn cards: the fill lives on a pseudo layer that gets a small wobble filter, so text is never distorted */
 .hero,.card,.res,.hcard{position:relative;isolation:isolate}
@@ -53,18 +52,19 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
 .hero .btn{margin-top:6px}
 #sfine{font-size:15px;font-weight:700}
 /* play screen: calm */
-#game{background:var(--yolk);padding:10px 10px calc(10px + env(safe-area-inset-bottom))}
-.card{--bw:min(100%,calc((100dvh - 250px)/1.17))}
-.card{flex:0 1 auto;margin:0 0 auto;min-height:0;padding:14px;display:flex;flex-direction:column;gap:12px}
-.card header{display:flex;align-items:center;gap:10px}
-.card header img{width:40px;height:40px}
-.hb{font-size:14px;padding:8px 6px;min-height:44px;white-space:nowrap}
-.card .nm{font-weight:900;font-size:22px;flex:1;font-variation-settings:"ROND" 100}
-#streak{background:var(--yolk);border-radius:9px 11px 10px 12px;padding:5px 11px;font-weight:800;font-size:15px}
-#streak:empty{display:none}
-#posts{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;align-items:center;width:var(--bw);margin:0 auto}
-#posts>img{width:100%;aspect-ratio:1;object-fit:contain;padding:6%}
-#slots{display:contents}
+#game{background:var(--yolk);padding:6px 10px calc(10px + env(safe-area-inset-bottom))}
+.stage{--bw:min(100%,460px,calc(100dvh - 232px));flex:1;min-height:0;width:100%;max-width:480px;margin:0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:6px;min-height:44px;flex:none}
+#timer{display:flex;align-items:center;gap:6px;font-weight:900;font-size:16px;font-variant-numeric:tabular-nums;padding-left:4px}
+#timer svg,.tbn svg,#streak svg{width:20px;height:20px;flex:none;display:block}
+.tb{display:flex;align-items:center;gap:2px}
+.tbn{display:flex;align-items:center;gap:6px;border:0;background:none;padding:0 8px;min-height:44px;min-width:44px;justify-content:center;font-weight:800;font-size:15px;cursor:pointer;white-space:nowrap}
+#streak{display:flex;align-items:center;gap:4px;padding:0 6px 0 8px;font-weight:900;font-size:16px;font-variant-numeric:tabular-nums}
+#instr{margin:0;font-weight:800;font-size:17px;line-height:1.2;text-align:center}
+#posts{display:flex;align-items:center;justify-content:center;gap:10px;font-weight:700;font-size:15px;line-height:1}
+#slots{display:flex;gap:8px;align-items:center}
+.gd{width:15px;height:15px;border-radius:50%;background:var(--ink);transition:background .2s}
+.gd.used{background:rgba(59,36,16,.2)}
 .slot{position:relative;aspect-ratio:1;display:grid;place-items:center}
 .slot::before,.nest::before{content:"";position:absolute;inset:0;border-radius:12px 9px 11px 10px/10px 12px 9px 11px;background:var(--tile);filter:url(#rough)}
 .slot.now::before{background:#ffe3a0}
@@ -89,11 +89,20 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
 @keyframes hop{0%{transform:translateY(40%) scale(.4);opacity:0}45%{transform:translateY(-45%) scale(1.05);opacity:1}70%{transform:translateY(0) scale(1.06,.9)}100%{transform:none;opacity:1}}
 @keyframes txin{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 @keyframes pop{0%{transform:scale(.6);opacity:.2}70%{transform:scale(1.08)}100%{transform:none;opacity:1}}
-#grid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;width:var(--bw);margin:0 auto}
+#grid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;width:var(--bw);margin:2px auto 0}
 .nest{position:relative;border:0;background:none;padding:0;aspect-ratio:1;min-height:44px;cursor:pointer;display:block}
 .nest>img.n{position:absolute;inset:5%;width:90%;height:90%}
 .nest .bd{position:absolute;inset:0;width:100%;height:100%}
-.nest:active{transform:scale(.94)}
+.nest:active{transform:scale(.96)}
+/* hover lift: only with a real pointer, and never with reduced motion. Per-tile tilt comes from --tilt */
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+ .nest,.btn,.tbn,.link{transition:transform .12s ease,filter .12s ease}
+ .nest:hover{transform:translateY(-2px) rotate(var(--tilt,0deg));filter:drop-shadow(0 5px 4px rgba(59,36,16,.28));z-index:2}
+ .btn:hover{transform:translateY(-2px) rotate(var(--tilt,-1.2deg));filter:drop-shadow(0 5px 5px rgba(59,36,16,.32))}
+ .tbn:hover,.link:hover{transform:translateY(-2px) rotate(var(--tilt,1deg));filter:drop-shadow(0 4px 3px rgba(59,36,16,.25))}
+ .nest:active,.btn:active,.tbn:active,.link:active{transform:scale(.96)}
+}
+.btn:active,.tbn:active,.link:active{transform:scale(.96)}
 .nest .gc{position:absolute;right:2px;top:2px;width:30%;height:auto}
 .nest .shell{position:absolute;left:0;bottom:0;width:44%;height:auto}
 /* direction arrow: cream chip, ink arrow, the chip turns to point from the guard toward the thief */
@@ -104,47 +113,105 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
 .dbg{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
 .dbg svg{width:72%;height:auto}
 .trail{position:absolute;left:4px;bottom:3px;font-size:14px;font-weight:800;background:var(--ink);color:var(--card);padding:1px 5px;pointer-events:none}
-#key{display:flex;gap:12px;align-items:center;justify-content:flex-start;flex-wrap:nowrap;font-weight:700;font-size:13px;line-height:1;white-space:nowrap}
+#key{display:flex;gap:6px 12px;align-items:center;justify-content:center;flex-wrap:wrap;font-weight:700;font-size:12px;line-height:1;white-space:nowrap;opacity:.72}
 #key .k{display:flex;align-items:center;gap:5px}
-#key img{width:22px;height:22px}
-#key .ar.in{width:22px}
-#say{display:flex;align-items:center;gap:12px;min-height:64px}
-#say .tx{flex:1;min-width:0;font-weight:900;font-size:20px;line-height:1.15}
-#say .tx small{display:block;font-weight:600;font-size:15px;line-height:1.3;margin-top:4px;color:rgba(59,36,16,.72)}
-#say .big{width:60px;height:60px;max-width:none;flex:none;animation:pop .35s ease-out}
-/* result: loud again */
-#end{overflow-y:auto;align-items:center;gap:12px}
-#end .wm.sm{--fs:min(10cqw,44px)}
-#end .wm.sm .ln{text-align:center}
-#end .bb{--fs:min(15cqw,64px);font-size:var(--fs);font-weight:900;font-variation-settings:"ROND" 100,"opsz" 32;line-height:.95;text-transform:uppercase;text-align:center;transform:rotate(-3deg);margin:6px 0 4px;
- filter:drop-shadow(.055em 0 0 var(--ink)) drop-shadow(-.055em 0 0 var(--ink)) drop-shadow(0 .055em 0 var(--ink)) drop-shadow(0 -.055em 0 var(--ink)) drop-shadow(0 .09em 0 var(--ink))}
-.res{width:100%;margin-top:6px;padding:18px 16px 16px;display:flex;flex-direction:column;gap:12px;flex:none}
-.res{align-items:center;text-align:center}
-.res .head{display:flex;align-items:center;justify-content:center;gap:14px}
-.res .head>div:nth-child(2){text-align:left}
-.res .head img{width:56px;height:auto;flex:none}
-#cdate{font-size:14px;font-weight:700}
-#ctitle{font-weight:900;font-size:22px;line-height:1.1}
-.score{white-space:nowrap;display:flex;align-items:baseline;gap:6px;font-variant-numeric:tabular-nums;margin-left:6px}
-.score b{font-size:56px;line-height:.9;font-weight:900;font-variation-settings:"ROND" 100,"opsz" 32}
-.score span{font-size:22px;font-weight:800}
-.hist{display:flex;gap:8px;justify-content:center}
-.ht{position:relative;flex:1;min-width:0;max-width:50px;aspect-ratio:1}
+#key img{width:18px;height:18px}
+#key .ar.in{width:18px}
+#say{display:flex;align-items:center;justify-content:center;gap:10px;min-height:52px;width:var(--bw);text-align:left}
+#say .tx{min-width:0;font-weight:900;font-size:18px;line-height:1.15}
+#say .tx small{display:block;font-weight:600;font-size:14px;line-height:1.3;margin-top:3px;color:rgba(59,36,16,.72)}
+#say .big{width:44px;height:44px;max-width:none;flex:none;animation:pop .35s ease-out}
+/* result: Wordle-style stack on the game's own ground */
+#end{overflow-y:auto;align-items:center;gap:0;padding-top:4px;padding-bottom:calc(10px + env(safe-area-inset-bottom))}
+#end>*{flex:none}
+.rt{align-self:flex-end;display:flex}
+#bk{background:none;border:0;display:flex;align-items:center;gap:8px;min-height:44px;padding:0 6px 0 10px;font-weight:800;font-size:15px;cursor:pointer}
+#bk span{text-decoration:underline;text-underline-offset:4px}
+#bk svg{width:16px;height:16px}
+.bdg{position:relative;width:60px;height:60px}
+.bdg::before{content:"";position:absolute;inset:0;border-radius:15px;background:var(--card);box-shadow:0 3px 0 rgba(59,36,16,.25)}
+.bdg img{position:absolute}
+.bdg .bn{left:15%;bottom:7%;width:70%}
+.bdg .bt{left:26%;bottom:24%;width:34%}
+.bdg .bg{right:7%;top:7%;width:36%}
+.bdg.lose .bn{left:5%;bottom:6%;width:60%;opacity:.5}
+.bdg.lose .bt{left:50%;bottom:20%;width:34%;transform:rotate(20deg)}
+.bdg svg{position:absolute;left:6%;top:36%;width:36%}
+#hl{margin:8px 0 0;font-weight:900;font-size:min(9.4cqw,40px);line-height:1;text-align:center;font-variation-settings:"ROND" 100,"opsz" 32}
+#sub{margin:6px 0 0;font-size:15px;font-weight:700;line-height:1.3;text-align:center;color:rgba(59,36,16,.78);font-variant-numeric:tabular-nums}
+.recap{display:flex;gap:12px;align-items:center;justify-content:center;margin:10px 0 0;width:100%}
+.mini{position:relative;display:grid;grid-template-columns:repeat(6,1fr);width:clamp(150px,52cqw,220px);flex:none}
+.mc{position:relative;aspect-ratio:1;min-width:0}
+.mc::before{content:"";position:absolute;inset:1.5px;border-radius:7px 6px 8px 6px/6px 8px 6px 7px;background:var(--tile);filter:url(#rough)}
+.mc:nth-child(3n+2)::before{filter:url(#rough2)}
+.mc:nth-child(3n)::before{filter:url(#rough3)}
+.mc>img.n{position:absolute;inset:7%;width:86%;height:86%}
+.mc .bd{position:absolute;inset:1.5px;width:calc(100% - 3px);height:calc(100% - 3px)}
+.mc .gc{position:absolute;right:2px;top:2px;width:30%;height:auto}
+.mc .nc{left:2px;top:2px;min-width:12px;height:12px;border-radius:6px;font-size:9px;padding:0 2px}
+.mc .cth{position:absolute;left:5%;bottom:4%;width:44%;height:auto}
+.mc .ar{width:58%;margin:-29% 0 0 -29%}
+.mc .rn{position:absolute;right:2px;bottom:2px;min-width:12px;height:12px;border-radius:6px;background:var(--hot);color:var(--ink);font-weight:800;font-size:9px;display:grid;place-items:center;padding:0 2px;line-height:1;font-variant-numeric:tabular-nums}
+.mc.fin::after{content:"";position:absolute;inset:0;border:2.5px solid var(--ink);border-radius:8px;pointer-events:none}
+.mc.esc::after{border-color:var(--hot)}
+.mc .run{position:absolute;left:2px;bottom:7px;width:30%;height:auto}
+.rp{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.rp polyline{fill:none;stroke:var(--ink);stroke-width:.085;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:0 .17;opacity:.85}
+.rcol{display:flex;flex-direction:column;align-items:flex-start;gap:8px;min-width:0;flex:0 1 150px}
+.hist{display:flex;flex-wrap:wrap;gap:4px;width:76px}
+.ht{position:relative;width:34px;aspect-ratio:1;flex:none}
 .ht img{position:absolute;inset:0;width:100%;height:100%}
-.rr{display:flex;flex-direction:column;align-items:center;gap:8px;width:100%}
-.route{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;width:min(100%,240px);flex:none}
-.route i{aspect-ratio:1;background:var(--tile);border-radius:10px 8px 11px 9px/9px 11px 8px 10px;position:relative;font-style:normal;display:grid;place-items:center}
-.route i img{width:50%;margin-top:-10px}
-.route i u{position:absolute;left:0;right:0;bottom:2px;display:flex;flex-wrap:wrap;justify-content:center;gap:1px;text-decoration:none}
-.route i b{min-width:16px;height:16px;border-radius:8px;background:var(--ink);color:var(--card);font-size:11px;font-weight:800;display:grid;place-items:center;font-variant-numeric:tabular-nums;line-height:1}
-.rr p{margin:0;font-size:15px;line-height:1.35;font-weight:700;color:rgba(59,36,16,.72);text-align:center}
-#end .act{display:flex;flex-direction:column;align-items:center;gap:8px}
-#cfine{font-size:15px;font-weight:700;text-align:center}
+.rcol p{margin:0;font-size:14px;line-height:1.3;font-weight:700;color:rgba(59,36,16,.78)}
+.sec{align-self:stretch;margin:12px 8px 0;text-align:left}
+.sec h3{margin:0 0 6px;font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+#end .sg{gap:4px}
+#end .sg b{font-size:34px}
+#end .sg span{font-size:12px;line-height:1.15;text-align:center}
+#end .sd{margin:0;gap:3px}
+#end .sr i{width:46px;text-align:left}
+#end .sr u{height:22px;line-height:22px;border-radius:3px;animation:grow .7s cubic-bezier(.2,.8,.3,1) backwards;animation-delay:var(--d,0s)}
+#end .sr u.hit{background:var(--mint);color:var(--ink)}
+#end .sr u.hit.fail{background:var(--hot)}
+@keyframes grow{from{width:0}}
+#cmp{align-self:stretch;margin:12px 8px 0;display:flex;align-items:center;gap:12px;text-align:left;border:0;border-radius:14px;background:var(--ink);color:var(--card);padding:9px 12px;min-height:56px;cursor:pointer}
+#cmp img{width:30px;height:auto;flex:none}
+#cmp div{flex:1;min-width:0}
+#cmp b{display:block;font-weight:900;font-size:16px;line-height:1.2}
+#cmp span{display:block;font-weight:700;font-size:14px;line-height:1.25;color:rgba(255,246,227,.85);font-variant-numeric:tabular-nums}
+#cmp svg{width:18px;height:18px;flex:none}
+#copy{display:flex;align-items:center;justify-content:center;gap:10px;border-radius:999px;width:min(240px,70%);margin-top:14px;padding:10px 24px;min-height:52px}
+#copy svg{width:22px;height:22px;flex:none}
+#nxt{margin-top:8px;font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}
+#cfine{font-size:13px;font-weight:700;text-align:center;margin-top:2px}
+#cfine:empty{display:none}
+#prac{padding:4px 16px;min-height:40px}
+#seeres{display:none;margin:0 auto}
+#game.view #seeres{display:block}
+#game.view .stage{--bw:min(100%,460px,calc(100dvh - 290px))}
+.nest .rn{position:absolute;right:3px;bottom:3px;min-width:18px;height:18px;border-radius:9px;background:var(--hot);color:var(--ink);font-weight:800;font-size:12px;display:grid;place-items:center;padding:0 4px;line-height:1;font-variant-numeric:tabular-nums}
+#parsheet{position:absolute;inset:0;z-index:30;display:none;align-items:center;justify-content:center;padding:14px;background:rgba(59,36,16,.55)}
+#parsheet.on{display:flex}
+#parsheet.on .hcard{animation:cardin .28s ease-out}
+#parsheet p{margin:0;font-size:15px;line-height:1.4;font-weight:700;text-align:left}
+@media (max-height:860px){.bdg{width:50px;height:50px}#hl{margin-top:6px}.recap{margin-top:8px}.sec{margin-top:9px}#end .sg b{font-size:30px}#cmp{margin-top:9px;min-height:50px;padding:7px 12px}#copy{margin-top:10px;min-height:48px;padding:8px 24px}#nxt{margin-top:6px}#prac{min-height:34px;padding:2px 16px}#bk{min-height:38px}}
+@media (max-height:700px){.bdg{width:46px;height:46px}#hl{margin-top:4px;font-size:30px}#bk{min-height:34px}.sec{margin-top:8px}#cmp{margin-top:8px;min-height:50px}#copy{margin-top:10px}#end .sg b{font-size:28px}.recap{margin-top:6px}}
 
 /* how-to overlay: a live little board that plays the three steps */
-#howto{position:absolute;inset:0;z-index:30;display:none;align-items:center;justify-content:center;padding:14px;background:rgba(59,36,16,.55)}
-#howto.on{display:flex}
-#howto.on .hcard{animation:cardin .28s ease-out}
+#howto,#scores{position:absolute;inset:0;z-index:30;display:none;align-items:center;justify-content:center;padding:14px;background:rgba(59,36,16,.55)}
+#howto.on,#scores.on{display:flex}
+#howto.on .hcard,#scores.on .hcard{animation:cardin .28s ease-out}
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;width:100%}
+.sg div{display:flex;flex-direction:column;align-items:center;gap:4px}
+.sg b{font-size:30px;line-height:1;font-weight:900;font-variant-numeric:tabular-nums}
+.sg span{font-size:12px;font-weight:700;color:rgba(59,36,16,.72)}
+.sd{width:100%;display:flex;flex-direction:column;gap:5px;margin-top:4px}
+.sd h3{margin:4px 0 2px;font-size:15px;font-weight:900;text-align:left}
+.sr{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:800;font-variant-numeric:tabular-nums}
+.sr i{width:16px;text-align:center;font-style:normal;flex:none}
+.sr em{flex:1;display:block;min-width:0;font-style:normal}
+.sr u{display:block;height:20px;min-width:24px;background:var(--ink);border-radius:5px;color:var(--card);text-decoration:none;font-size:13px;line-height:20px;text-align:right;padding:0 6px}
+.sr u.zero{background:rgba(59,36,16,.2);color:var(--ink)}
+.sr u.hit{background:var(--hot)}
 @keyframes cardin{from{transform:translateY(14px);opacity:0}to{transform:none;opacity:1}}
 .hcard{width:min(100%,400px);max-height:100%;overflow-y:auto;padding:18px 16px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
 .hh{font-weight:900;font-size:22px;font-variation-settings:"ROND" 100}
@@ -164,7 +231,7 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
 .g2{left:75%;top:25%;display:none}
 .g2 .th2{position:absolute;left:6%;bottom:4%;width:40%;height:auto}
 .hl{position:absolute;left:25%;top:25%;width:75%;height:25%;background:rgba(159,216,210,.55);border-radius:10px;opacity:0;transform-origin:0 50%}
-.dm .th{position:absolute;left:50%;top:25%;width:25%;height:25%}
+.dm .th{position:absolute;left:25%;top:25%;width:25%;height:25%}
 .th::before{content:"";position:absolute;inset:2.4%;border-radius:12px 9px 11px 10px/10px 12px 9px 11px;background:var(--tile)}
 .th img{position:absolute;inset:6%;width:88%;height:88%;opacity:.38}
 .fg{position:absolute;left:12.5%;top:37.5%;width:11%;aspect-ratio:1;margin:-5.5% 0 0 -5.5%;border-radius:50%;background:rgba(59,36,16,.82);opacity:0}
@@ -195,7 +262,7 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
 @keyframes nudge{0%,100%{transform:rotate(var(--a)) translateY(0)}50%{transform:rotate(var(--a)) translateY(-16%)}}
 @keyframes peek{0%{opacity:.38;transform:none}45%{opacity:1;transform:scale(1.14)}100%{opacity:.75;transform:none}}
 @keyframes reveal{0%{opacity:.38}10%,100%{opacity:1}}
-@keyframes run{0%,10%{transform:translateX(-100%);opacity:1}20%{transform:translate(-50%,-48%);opacity:1}30%{transform:translateX(0);opacity:1}46%{transform:translateX(0);opacity:1}50%{opacity:0}100%{transform:translateX(0);opacity:0}}
+@keyframes run{0%,10%{transform:translateX(-200%);opacity:1}20%{transform:translate(-100%,-48%);opacity:1}30%{transform:translateX(0);opacity:1}46%{transform:translateX(0);opacity:1}50%{opacity:0}100%{transform:translateX(0);opacity:0}}
 .cap{font-weight:900;font-size:24px;line-height:1.1;min-height:28px;font-variation-settings:"ROND" 100}
 .cap.sw{animation:txin .25s ease-out}
 .dots{display:flex;gap:2px;justify-content:center}
@@ -210,7 +277,8 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
 #dline{margin:-2px 0 0;font-size:14px;line-height:1.4;font-weight:700;color:rgba(59,36,16,.72)}
 #sfine:empty{display:none}
 /* first-play tour: dimmed screen, a rounded cutout on one element, a card with a pointer notch beside it */
-#tour{position:absolute;inset:0;z-index:20;display:none}
+#tour{position:absolute;inset:0;z-index:20;display:none;pointer-events:none}
+#tcard{pointer-events:auto}
 #tour.on{display:block}
 #tsv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 #tsv rect{transition:x .3s ease,y .3s ease,width .3s ease,height .3s ease,rx .3s ease,ry .3s ease}
@@ -259,9 +327,9 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
  .hero .btn{margin-top:4px}
  #sfine:not(:empty){display:none}
 }
-@media (max-height:700px){#say{min-height:56px}#say .big{width:52px;height:52px}.card{gap:8px;padding:12px;--bw:min(100%,calc((100dvh - 215px)/1.17))}}
-@media (max-width:380px){.card header img{display:none}#key{gap:8px;font-size:12px}#key img,#key .ar.in{width:18px}#say .tx{font-size:18px}#say .tx small{font-size:14px}}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-height:700px){#game{padding-top:4px}.stage{gap:6px;--bw:min(100%,460px,calc(100dvh - 206px))}#say{min-height:44px}#say .big{width:38px;height:38px}#say .tx{font-size:17px}#say .tx small{font-size:13px;margin-top:1px}#instr{font-size:16px}.top{min-height:40px}.tbn{min-height:40px}}
+@media (max-width:380px){.tbn .lb{display:none}.tbn{padding:0 10px}#key{gap:6px 8px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.nest:hover,.btn:hover,.tbn:hover,.link:hover{transform:none!important;filter:none!important}}
 .tband{display:none!important}</style>
 </head>
 <body>
@@ -275,7 +343,7 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
     <div class="mid">
       <div class="wmw"><h1 class="wm out" id="wm" aria-label="Egg Thief"></h1></div>
       <div class="hero crack">
-        <p class="one">A thief hides on one of 36 nests. Post up to 5 guards. Each one says which way he is: up, down, left or right.</p>
+        <p class="one">A thief hides on one of 36 nests. Post up to 4 guards. Each one has an arrow that points to him.</p>
         <button class="btn" id="play">Play</button>
         <div id="dline"></div>
         <button class="link" id="howl">How to play</button>
@@ -285,29 +353,56 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
   </section>
 
   <section id="game">
-    <div class="card">
-      <header><img src="assets/mark.svg" alt=""><div class="nm">Egg Thief</div><button class="link hb" id="howb">How to play</button><div id="streak"></div></header>
-      <div id="posts" aria-label="Your guards"><img src="assets/guard.svg" alt="Guard"><div id="slots"></div></div>
+    <div class="top">
+      <div id="timer" aria-label="Time"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="#3b2410"/><path d="M12 6.2v6.3l4.2 2.5" stroke="#ffb92e" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="tm">00:00</span></div>
+      <div class="tb">
+        <button class="tbn" id="howb" aria-label="How to play"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="#3b2410"/><path d="M9.2 9.6c0-1.7 1.2-2.8 2.9-2.8s2.9 1 2.9 2.6c0 2.2-2.9 2.1-2.9 4.2" stroke="#ffb92e" stroke-width="2.3" fill="none" stroke-linecap="round"/><circle cx="12.1" cy="17.4" r="1.4" fill="#ffb92e"/></svg><span class="lb">How to play</span></button>
+        <button class="tbn" id="scb" aria-label="Scores"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="12" width="5.6" height="9.5" rx="1.4" fill="#3b2410"/><rect x="9.2" y="3" width="5.6" height="18.5" rx="1.4" fill="#3b2410"/><rect x="15.9" y="8" width="5.6" height="13.5" rx="1.4" fill="#3b2410"/></svg><span class="lb">Scores</span></button>
+        <div id="streak" aria-label="Streak"></div>
+      </div>
+    </div>
+    <div class="stage">
+      <p id="instr">Find the thief.</p>
       <div id="grid" aria-label="Nests"></div>
+      <div id="posts" aria-label="Guards left"><span>Guards left</span><div id="slots"></div></div>
       <div id="say"></div>
+      <button class="link" id="seeres">See result</button>
       <div id="key" aria-label="Key"></div>
     </div>
   </section>
 
   <section id="end" class="gnd">
-    <h2 class="wm out sm" id="wm2" style="margin-top:36px" aria-label="Egg Thief"></h2>
-    <div class="bb" id="verdict"></div>
-    <div class="res crack">
-      <div class="head"><img src="assets/thief.svg" alt=""><div><div id="cdate"></div><div id="ctitle"></div></div><div class="score"><b id="cscore"></b><span>/ 5</span></div></div>
-      <div class="hist" id="rtiles" aria-label="Result"></div>
-      <div class="rr"><div class="route" id="route" aria-label="His route"></div><p id="par"></p></div>
-      </div>
-    <div class="act"><button class="btn" id="copy">Copy result</button><div id="cfine"></div><button class="link" id="prac">Practice case</button></div>
+    <div class="rt"><button id="bk" aria-label="Back to puzzle"><span>Back to puzzle</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5L19 19M19 5L5 19" stroke="#3b2410" stroke-width="3" stroke-linecap="round" fill="none"/></svg></button></div>
+    <div class="bdg" id="bdg" aria-hidden="true"></div>
+    <h2 id="hl"></h2>
+    <div id="sub"></div>
+    <div class="recap"><div class="mini" id="mini" role="img" aria-label="His route"></div><div class="rcol"><div class="hist" id="rtiles" aria-label="Result"></div><p id="par"></p></div></div>
+    <div class="sec"><h3>Statistics</h3><div class="sg" id="stg"></div></div>
+    <div class="sec"><h3>Guard distribution</h3><div class="sd" id="dst"></div></div>
+    <button id="cmp"><img src="assets/thief.svg" alt=""><div><b>How do you compare?</b><span id="cmpt"></span></div><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4.5L16.5 12L9 19.5" stroke="#fff6e3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></button>
+    <button class="btn" id="copy"><span id="cplb">Share</span><svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="#fff6e3" stroke-width="2" stroke-linecap="round"><circle cx="18" cy="5" r="2.8"/><circle cx="6" cy="12" r="2.8"/><circle cx="18" cy="19" r="2.8"/><path d="M8.5 10.6L15.5 6.4M8.5 13.4L15.5 17.6"/></g></svg></button>
+    <div id="nxt"></div><div id="cfine"></div>
+    <button class="link" id="prac">Practice case</button>
   </section>
   <div id="tour" role="dialog" aria-label="Quick tour">
     <div id="tblk"></div>
     <svg id="tsv" aria-hidden="true" focusable="false"><defs><mask id="tmk" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%"><rect x="0" y="0" width="100%" height="100%" fill="#fff"/><rect id="tcr" fill="#000"/></mask></defs><rect x="0" y="0" width="100%" height="100%" fill="rgba(30,16,8,.6)" mask="url(#tmk)"/><rect id="tring" fill="none" stroke="rgba(255,246,227,.7)" stroke-width="2.5"/></svg>
     <div id="tcard"><div class="tband"></div><div class="tin"><div class="trow"><span id="tlab"></span><button class="tlink" id="tskip">Skip tour</button></div><div id="tttl"></div><p id="tbody"></p><div class="tft"><div id="tdots"></div><button class="tlink" id="tback">Back</button><button class="btn tbtn" id="tnext">Next</button></div></div><i id="tnotch"></i></div>
+  </div>
+  <div id="scores" role="dialog" aria-modal="true" aria-label="Scores">
+    <div class="hcard">
+      <div class="hh">Scores</div>
+      <div id="sbody"></div>
+      <button class="btn" id="sgot">Close</button>
+    </div>
+  </div>
+  <div id="parsheet" role="dialog" aria-modal="true" aria-label="Par">
+    <div class="hcard">
+      <div class="hh">What is par?</div>
+      <p>Par is the fewest guards a perfect solver needs for today's case. It reads the same arrows you saw and, every turn, posts the guard that leaves him the fewest hiding nests.</p>
+      <p>Match par and you played as well as the solver. Beat it and you got a lucky read. There are no community numbers yet, so this is the only comparison.</p>
+      <button class="btn" id="pgot">Close</button>
+    </div>
   </div>
   <div id="howto" role="dialog" aria-modal="true" aria-label="How to play">
     <div class="hcard">
@@ -336,23 +431,29 @@ let ac;function tone(f,d,type,vol,slide){try{ac=ac||new (window.AudioContext||wi
 function buzz(p){try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}}
 
 // ---------- the board ----------
-// Rules: each guard reports a distance band (hot 1, warm 2, cold 3+, caught 0; Manhattan) and the compass direction from the
-// guard to the thief. After every miss the thief runs one nest straight away from that guard. A cracked shell marks the
-// nest he stood on one guard ago. Everything is deterministic, so a day is just his starting nest.
-const N=6,MAXG=5,CELLS=N*N;
+// Rules (v5): 6x6 nests, 4 guards. Each guard shows an arrow toward the thief: N, E, S or W for the axis where he is farther away,
+// and (DIAG on) a diagonal arrow only when he is exactly diagonal. Live rule: DIAG off, ties read as the vertical arrow. After every miss he runs two nests straight away from that guard. No shell clue.
+// Everything is deterministic, so a day is just his starting nest.
+const N=6,MAXG=4,CELLS=N*N,FLEE=2,DIAG=false;
 const R_=i=>Math.floor(i/N),C_=i=>i%N;
 const dist=(a,b)=>Math.abs(R_(a)-R_(b))+Math.abs(C_(a)-C_(b));
 function nbrs(i){const r=R_(i),c=C_(i),o=[];if(r>0)o.push(i-N);if(r<N-1)o.push(i+N);if(c>0)o.push(i-1);if(c<N-1)o.push(i+1);return o}
-// 4-way arrow: the axis where he is farther from the guard (vertical if equal). Index 0 north, 2 east, 4 south, 6 west.
-const SHELL_FROM=3; // the shell shows from the 3rd guard on
-const DIRN=['north','','east','','south','','west',''];
-const DIRE=['⬆️','','➡️','','⬇️','','⬅️',''];
-const dirOf=(g,t)=>{const dr=R_(t)-R_(g),dc=C_(t)-C_(g);return Math.abs(dr)>=Math.abs(dc)?(dr<0?0:4):(dc>0?2:6)};
+// Report: an arrow index 0..7 = N, NE, E, SE, S, SW, W, NW (rows grow downward, so S is down). Dominant axis wins; a tie is a diagonal arrow
+// (or, with DIAG off, the vertical arrow: that is the live rule, so a perfect diagonal reads N, S, E or W by the vertical-first tie-break).
+const CMP=['north','northeast','east','southeast','south','southwest','west','northwest'];
+const DIRE=['⬆️','↗️','➡️','↘️','⬇️','↙️','⬅️','↖️'];
+const dirOf=(g,t)=>{const dr=R_(t)-R_(g),dc=C_(t)-C_(g),a=Math.abs(dr),b=Math.abs(dc);
+  if(a>b||(a===b&&!DIAG))return dr<0?0:4;
+  if(a<b)return dc>0?2:6;
+  return dr<0?(dc>0?1:7):(dc>0?3:5)};
+const SHELL_FROM=99; // no shell clue (the code path stays, it just never turns on)
+const dirSay=d=>'He is '+CMP[d]+' of that guard.';
+const dirAria=d=>'he is '+CMP[d];
 const cmpK=(a,b)=>{for(let i=0;i<a.length;i++)if(a[i]!==b[i])return a[i]-b[i];return 0};
-// Flee rule: one nest up, down, left or right, whichever is farthest from the guard. Tie: the axis where he is already
+// Flee rule (one step, run FLEE times): one nest up, down, left or right, whichever is farthest from the guard. Tie: the axis where he is already
 // farther from the guard (vertical if equal). Still tied at a wall: toward the middle, then lowest nest number.
 // If no neighbour is farther away he is cornered and stays put.
-function flee(g,t){
+function flee1(g,t){
   const d0=dist(g,t),vFirst=Math.abs(R_(t)-R_(g))>=Math.abs(C_(t)-C_(g));
   let best=t,bk=null;
   for(const n of nbrs(t)){const d=dist(g,n);if(d<=d0)continue;
@@ -360,9 +461,10 @@ function flee(g,t){
     if(!bk||cmpK(k,bk)>0){best=n;bk=k}}
   return best;
 }
+function flee(g,t){let a=t;for(let i=0;i<FLEE;i++)a=flee1(g,a);return a}
 // positions of the thief when each guard is posted: p[j] is where he stands when guard j lands
 function simPos(s0,gs){const p=[s0];for(let j=0;j<gs.length;j++)p.push(p[j]===gs[j]?p[j]:flee(gs[j],p[j]));return p}
-// one report as the player sees it: the 4-way arrow only (plus the shell from the third guard on)
+// one report as the player sees it: the axis chip only
 const fkey=(g,t)=>g===t?'win':''+dirOf(g,t);
 // Belief-set players. Each tracks every starting nest still consistent with all reports so far under the flee rule.
 // optPick posts the guard that leaves the fewest survivors (sum of squared class sizes).
@@ -371,7 +473,10 @@ const optPick=(cur,k)=>{let bg=-1,bs=1e9;
     cur.forEach(p=>{if(p[k]===g){ca++;return}const key=fkey(g,p[k])+'|'+(k>=SHELL_FROM-1?p[k-1]:'-');m[key]=(m[key]||0)+1});
     let s=0;for(const q in m)s+=m[q]*m[q];s-=ca*.01;if(s<bs-1e-9){bs=s;bg=g}}
   return bg};
-// Greedy player: ignores that he runs. Taps the middle of the nests that fit the latest arrow only.
+// Careful tracker: keeps every start still consistent with the reports, then posts a random consistent nest (not the optimal pick). Seeded, so the check is repeatable.
+let trkR=mulberry32(4242);
+const trkPick=(cur,k)=>{const pos=[...new Set(cur.map(p=>p[k]))].sort((a,b)=>a-b);return pos[Math.floor(trkR()*pos.length)]};
+// Greedy player: ignores that he runs. Taps the middle of the nests that fit the latest report only.
 function greedyPlay(s0){let t=s0,last=null;
   for(let k=0;k<MAXG;k++){
     const cand=Array.from({length:CELLS},(_,i)=>i).filter(c=>!last||(c!==last[0]&&dirOf(last[0],c)===last[1]));
@@ -394,20 +499,20 @@ function playOut(s0,pick){
 }
 const solve=s0=>playOut(s0,optPick);
 const PARS=Array.from({length:CELLS},(_,s)=>solve(s));
-// A day is a seeded pick of starting nest. Preference: solver par 3 or 4, then 5, then 2. Never par 1 (a freebie).
+// A day is a seeded pick of starting nest. Preference: solver par 4, then 3, then 2. Never par 1 (a freebie).
 function genDay(seed){
-  const r=mulberry32(hashStr(seed+'#v3')),order=Array.from({length:CELLS},(_,i)=>i);
+  const r=mulberry32(hashStr(seed+'#v5')),order=Array.from({length:CELLS},(_,i)=>i);
   for(let i=CELLS-1;i>0;i--){const j=Math.floor(r()*(i+1));[order[i],order[j]]=[order[j],order[i]]}
-  for(const tier of [[3,4],[5],[2]]){const s=order.find(x=>tier.includes(PARS[x].par));if(s!==undefined)return {start:s,par:PARS[s].par,solver:PARS[s].guesses}}
+  for(const tier of [[4],[3],[2]]){const s=order.find(x=>tier.includes(PARS[x].par));if(s!==undefined)return {start:s,par:PARS[s].par,solver:PARS[s].guesses}}
   const s=order.find(x=>PARS[x].par>0);return {start:s,par:PARS[s].par,solver:PARS[s].guesses};
 }
 function check(){
-  let bad=0;const hist={},gh={},byStart={},bel=[0,0,0],beln=[0,0,0];
-  for(let g=0;g<CELLS;g++)for(let t=0;t<CELLS;t++){if(g===t)continue;const n=flee(g,t),moved=n!==t;
+  let bad=0,uns=0;const hist={},gh={},byStart={},bel=[0,0,0],beln=[0,0,0];let tk=0,tkN=0,tkAll=0;
+  for(let g=0;g<CELLS;g++)for(let t=0;t<CELLS;t++){if(g===t)continue;const n=flee1(g,t),moved=n!==t;
     if(moved&&(!nbrs(t).includes(n)||dist(g,n)<=dist(g,t)))bad++;
     if(!moved&&nbrs(t).some(x=>dist(g,x)>dist(g,t)))bad++;
     if(moved&&nbrs(t).some(x=>dist(g,x)>dist(g,n)))bad++}
-  PARS.forEach((p,s)=>{byStart[p.par]=(byStart[p.par]||0)+1;if(!p.ok||p.par<1||p.par>MAXG)bad++;p.sizes.forEach((z,i)=>{if(i<3){bel[i]+=z;beln[i]++}})});
+  PARS.forEach((p,s)=>{byStart[p.par]=(byStart[p.par]||0)+1;if(!p.ok||p.par>MAXG)bad++;if(p.par<1)uns++;p.sizes.forEach((z,i)=>{if(i<3){bel[i]+=z;beln[i]++}})});
   for(let d=1;d<=60;d++){
     const s='2026-12-'+String(d).padStart(2,'0'),day=genDay(s);
     if(JSON.stringify(genDay(s))!==JSON.stringify(day))bad++;
@@ -417,9 +522,11 @@ function check(){
     const p=simPos(day.start,day.solver);let caught=0;day.solver.forEach((g,k)=>{if(!caught&&g===p[k])caught=k+1});
     if(caught!==sol.par)bad++;
     hist[sol.par]=(hist[sol.par]||0)+1;
+    for(let r=0;r<20;r++){tkN++;if(playOut(day.start,trkPick).par>0)tk++}
     const gp=greedyPlay(day.start);gh[gp||'fail']=(gh[gp||'fail']||0)+1;
   }
-  console.log('Egg Thief self-check, 60 days, solver par spread',JSON.stringify(hist),'| greedy middle-tapper (ignores his running)',JSON.stringify(gh),'| par over all 36 starts',JSON.stringify(byStart),'| avg nests left after clue 1/2/3',(bel[0]/beln[0]).toFixed(1),(bel[1]/Math.max(1,beln[1])).toFixed(1),(bel[2]/Math.max(1,beln[2])).toFixed(1),'| problems:',bad);
+  for(let s=0;s<CELLS;s++)for(let r=0;r<20;r++)if(playOut(s,trkPick).par>0)tkAll++;
+  console.log('Egg Thief self-check, 60 days, solver par spread',JSON.stringify(hist),'| greedy middle-tapper (ignores his running)',JSON.stringify(gh),'| par over all 36 starts',JSON.stringify(byStart),'| avg nests left after clue 1/2/3',(bel[0]/beln[0]).toFixed(1),(bel[1]/Math.max(1,beln[1])).toFixed(1),beln[2]?(bel[2]/beln[2]).toFixed(1):'n/a','| careful tracker success on the 60 days',Math.round(tk/tkN*100)+'%','(all 36 starts',Math.round(tkAll/(CELLS*20)*100)+'%)','| starts the solver cannot catch in 4 (never picked):',uns,'| problems:',bad);
 }
 check();
 
@@ -438,38 +545,45 @@ function wmHTML(){
   return L('E',cr,crS,-6,.03)+L('G',pk,pkS,4,-.03)+L('G',bl,blS,-4,.03)+'<span class="gap"></span>'+L('T',cr,crS,5,-.02)+L('H',or,orS,-5,.03)
    +'<span class="o" style="--r:5deg;--y:-.02em"><img src="assets/thief.svg" alt=""></span>'+L('E',pk,pkS,-4,.02)+L('F',bl,blS,6,-.03);
 }
-$('wm').innerHTML=wmHTML();$('wm2').innerHTML=wmHTML();
+$('wm').innerHTML=wmHTML();
 const sImg=(won,cls)=>`<img class="${cls||''}" src="assets/${won?'badge-caught':'badge-clue'}.svg" alt="">`;
-const arrowSVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.4L19.6 14.3L14.4 13.5L14.9 20.5L9.3 20.7L9.7 13.3L4.5 14.2Z" fill="#3b2410"/></svg>';
+const arrowSVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.4L20 11.4H14.4V21.6H9.6V11.4H4Z" fill="#3b2410" stroke="#3b2410" stroke-width="1.2" stroke-linejoin="round"/></svg>';
 const arrow=(dir,cls)=>`<span class="ar${cls?' '+cls:''}" style="--a:${dir*45}deg">${arrowSVG}</span>`;
 const NESTS=['nest','nest-b','nest-c'];
-$('key').innerHTML='<span class="k">'+arrow(2,'in')+'Which way he is</span><span class="k"><img src="assets/crack.svg" alt="">He stood here</span><span class="k">'+sImg(true)+'Caught</span>';
-const RULE='After each miss he runs one nest straight away from your guard.';
+$('key').innerHTML='<span class="k">'+arrow(2,'in')+'Points to him</span><span class="k">'+arrow(0,'in')+'North is up</span><span class="k">'+sImg(true)+'Caught</span>';
+const RULE='After each miss he runs two nests straight away from your guard.';
 
 // ---------- game ----------
 let seed,practice,day,guesses=[],locked=false,P=[0];
+let t0=0,tEnd=0,elapsed=0,viewing=false;
+const FLAME='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.4 1.6c.6 3.6 5.6 6 5.6 11.4a6 6 0 0 1-12 0c0-2.3 1-3.9 2.3-5 .1 1.8.9 2.8 1.9 3.1C9.7 7.6 10.6 4 12.4 1.6z" fill="#e5400f"/><path d="M12 22a3.3 3.3 0 0 1-3.3-3.3c0-1.8 1.4-2.6 2-4 .9 1 2.2 1.8 3.1 2.5.4 2.5-.7 4.8-1.8 4.8z" fill="#ffb92e"/></svg>';
+const fmt=sec=>String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');
+const fmt1=sec=>Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0');
+function tick(){const sec=t0?Math.max(0,Math.round(((tEnd||Date.now())-t0)/1000)):(viewing?elapsed:0);$('tm').textContent=fmt(sec);return sec}
+setInterval(tick,500);
 const sync=()=>{P=simPos(day.start,guesses)};
 const won_=k=>guesses[k]===P[k];
 const dirAt=k=>guesses[k]===P[k]?-1:dirOf(guesses[k],P[k]);
 const hasWon=()=>guesses.some((g,k)=>g===P[k]);
 const isOver=()=>hasWon()||guesses.length>=MAXG;
 function begin(s,p,force){
-  seed=s;practice=p;locked=false;day=genDay(s);
-  const done=!p&&load('et3_'+s,null);
-  if(done){guesses=done.g;sync();return showCard()}
-  guesses=p?[]:load('et3_p_'+s,[]);sync();
+  seed=s;practice=p;locked=false;viewing=false;day=genDay(s);
+  const done=!p&&load('et5_'+s,null);
+  if(done){guesses=done.g;sync();elapsed=done.t||0;return showCard()}
+  guesses=p?[]:load('et5_p_'+seed,[]);sync();
+  t0=!p&&guesses.length?load('et5_t_'+s,0):0;tEnd=0;elapsed=0;tick();
   show('game');render(-1);
   tourOn=false;tourDemo=false;tourHide();
   if(!guesses.length&&(force||(!load('et_hints',false)&&!/[?&]demo=/.test(location.search)))){tourOn=true;tourStep=1;tourT=setTimeout(tourShow,250)}
 }
 function sayHTML(){
   const n=guesses.length;
-  if(!n)return '<div class="tx">Tap a nest to post a guard.<small>Guard 1 of 5. He then runs a nest away.</small></div>';
+  if(!n)return '<div class="tx">Tap a nest to post a guard.<small>After a miss he runs two nests.</small></div>';
   const w=won_(n-1),big=w?sImg(w,'big'):'<span class="ht big">'+sImg(w)+arrow(dirAt(n-1))+'</span>';
-  if(w)return '<div class="tx">Caught him!<small>Guard '+n+' of 5. Cuffs on.</small></div>'+big;
+  if(w)return '<div class="tx">Caught him!<small>Guard '+n+' of 4. Cuffs on.</small></div>'+big;
   if(n>=MAXG)return '<div class="tx">He got away.<small>The thief was never where you looked.</small></div>'+big;
-  const msg='He is '+DIRN[dirAt(n-1)]+' of that guard.';
-  return '<div class="tx">'+msg+'<small>'+'Guard '+(n+1)+' of 5. He then runs a nest away.</small></div>'+big;
+  const msg=dirSay(dirAt(n-1));
+  return '<div class="tx">'+msg+'<small>He then runs two nests.</small></div>'+big;
 }
 const DEBUG=false; // TEMP: set true to show where the thief is
 function dbg(i){
@@ -480,18 +594,19 @@ function dbg(i){
   return s;
 }
 function render(flip){
-  $('streak').textContent=load('et_streak',0)?'Streak '+load('et_streak',0):'';
+  $('streak').innerHTML=FLAME+'<b>'+load('et5_streak',0)+'</b>';
+  $('game').classList.toggle('view',viewing);$('instr').textContent=viewing?(practice?'Practice board.':"Today's board."):'Find the thief.';
+  const ta={};if(viewing)P.slice(0,guesses.length).forEach((q,k)=>{(ta[q]=ta[q]||[]).push(k+1)});
   const over=isOver(),n=guesses.length,shell=n>=SHELL_FROM?P[n-2]:-1;
-  $('slots').innerHTML=Array.from({length:MAXG},(_,i)=>{
-    if(i<n){const w=won_(i);return `<div class="slot${i===flip?' stamp':''}" role="img" aria-label="Guard ${i+1}: ${w?'Caught':'he is to the '+DIRN[dirAt(i)]}">${sImg(w,'bd')}${w?'':arrow(dirAt(i))}<span class="nc">${i+1}</span></div>`}
-    return `<div class="slot ${i===n&&!over?'now':''}"><span class="nc" style="background:none;color:var(--ink)">${i+1}</span></div>`}).join('');
+  $('slots').innerHTML=Array.from({length:MAXG},(_,i)=>'<i class="gd'+(i<n?' used':'')+'"></i>').join('');
+  $('posts').setAttribute('aria-label',(MAXG-n)+' guards left');
   let h='';
   for(let i=0;i<CELLS;i++){
     const ks=[];guesses.forEach((g,k)=>{if(g===i)ks.push(k)});
-    const r=Math.floor(i/4)+1,c=i%4+1,sh=shell===i?'<img class="shell" src="assets/crack.svg" alt="">':'',shA=shell===i?', cracked shell, he stood here a guard ago':'';
-    if(!ks.length){h+=`<button class="nest" data-i="${i}" aria-label="Nest row ${r} column ${c}${shA}"><img class="n" src="assets/${NESTS[(i+(i>>2))%3]}.svg" alt="">${sh}${dbg(i)}</button>`;continue}
+    const r=Math.floor(i/N)+1,c=i%N+1,tl=((i*37+(i>>2)*11)%7)-3,sh=shell===i?'<img class="shell" src="assets/crack.svg" alt="">':'',shA=shell===i?', cracked shell, he stood here a guard ago':'';
+    if(!ks.length){h+=`<button class="nest" style="--tilt:${tl}deg" data-i="${i}" aria-label="Nest row ${r} column ${c}${shA}"><img class="n" src="assets/${NESTS[(i+(i>>2))%3]}.svg" alt="">${ta[i]?'<img class="cth" src="assets/thief.svg" alt=""><span class="rn">'+ta[i].join('·')+'</span>':''}${sh}${dbg(i)}</button>`;continue}
     const last=ks[ks.length-1],w=won_(last);
-    h+=`<button class="nest${last===flip?' new':''}" data-i="${i}" aria-label="Nest row ${r} column ${c}, guard ${ks.map(k=>k+1).join(' and ')}, ${w?'Caught':'he is to the '+DIRN[dirAt(last)]}${shA}">${sImg(w,'bd')}${w?'':arrow(dirAt(last))}<img class="gc" src="assets/guard.svg" alt=""><span class="nc">${ks.map(k=>k+1).join('·')}</span>${w?'<img class="cth" src="assets/thief.svg" alt="">':''}${sh}${dbg(i)}</button>`;
+    h+=`<button class="nest${last===flip?' new':''}" style="--tilt:${tl}deg" data-i="${i}" aria-label="Nest row ${r} column ${c}, guard ${ks.map(k=>k+1).join(' and ')}, ${w?'Caught':dirAria(dirAt(last))}${shA}">${sImg(w,'bd')}${w?'':arrow(dirAt(last))}<img class="gc" src="assets/guard.svg" alt=""><span class="nc">${ks.map(k=>k+1).join('·')}</span>${w||ta[i]?'<img class="cth" src="assets/thief.svg" alt="">':''}${ta[i]?'<span class="rn">'+ta[i].join('·')+'</span>':''}${sh}${dbg(i)}</button>`;
   }
   $('grid').innerHTML=h;$('grid').classList.toggle('mv',flip>=0);
   $('say').innerHTML=sayHTML()+(DEBUG?'<div class="tx" style="color:#c00">DEBUG ON: the thief is shown on his current nest.</div>':'');
@@ -500,59 +615,88 @@ function tap(i){
   if(locked||isOver())return;
   if(tourOn&&!(tourStep===2&&i===TOUR_NEST))return;
   guesses.push(i);sync();
+  if(!t0){t0=Date.now();if(!practice)save('et5_t_'+seed,t0)}
   const k=guesses.length-1,w=won_(k);
   render(k);
   if(w){[523,659,784,1047].forEach((q,j)=>setTimeout(()=>tone(q,.18,'triangle',.1),j*90));buzz([40,40,80])}
   else{tone(260,.2,'triangle',.07,420);buzz([25])}
-  if(!practice)save('et3_p_'+seed,guesses);
+  if(!practice)save('et5_p_'+seed,guesses);
   if(tourOn&&tourStep===2){if(isOver())tourEnd();else tourWait(3)}
-  if(isOver()){locked=true;setTimeout(finishAll,1000)}
+  if(isOver()){locked=true;tEnd=Date.now();elapsed=Math.max(0,Math.round((tEnd-t0)/1000));tick();setTimeout(finishAll,1000)}
 }
 function finishAll(){
   const won=hasWon();
   if(!practice){
-    save('et3_'+seed,{g:guesses});
-    const days=load('et_days',[]);
-    if(!days.includes(seed)){days.push(seed);save('et_days',days);
-      if(won){const last=load('et_last',''),y=ds(new Date(Date.now()-864e5));save('et_streak',last===y?load('et_streak',0)+1:1);save('et_last',seed)}
-      else save('et_streak',0)}
+    save('et5_'+seed,{g:guesses,t:elapsed});
+    const days=load('et5_days',[]);
+    if(!days.includes(seed)){days.push(seed);save('et5_days',days);
+      if(won){const last=load('et5_last',''),y=ds(new Date(Date.now()-864e5));save('et5_streak',last===y?load('et5_streak',0)+1:1);save('et5_last',seed)}
+      else save('et5_streak',0)
+      try{save('et5_best',Math.max(load('et5_best',0),load('et5_streak',0)))}catch(e){}}
   }
   showCard();
 }
 function puzNum(sd){const m=/^(\d+)-(\d+)-(\d+)$/.exec(sd);if(!m)return 1;return Math.max(1,Math.round((Date.UTC(+m[1],+m[2]-1,+m[3])-Date.UTC(2026,10,22))/864e5)+1)}
-function showCard(){
-  const n=guesses.length,won=hasWon(),score=won?n:'X';
-  const strip=guesses.map((g,k)=>won_(k)?'🟩':DIRE[dirAt(k)]).join('');
-  show('end');
-  $('verdict').innerHTML=won?bub('CAUGHT',{k:3})+'<br>'+bub('HIM!',{k:1}):bub('HE GOT',{k:0})+'<br>'+bub('AWAY!',{k:4});
-  $('cdate').textContent=practice?'Practice case':'Puzzle #'+puzNum(seed);
-  $('ctitle').textContent=won?['','Pure luck','Master thief catcher','Good read','Close call','Last guard'][n]:'He got away';
-  $('cscore').textContent=score;
-  $('rtiles').innerHTML=guesses.map((g,k)=>{const w=won_(k);return `<span class="ht">${sImg(w)}${w?'':arrow(dirAt(k))}</span>`}).join('');
-  $('par').innerHTML='His route. A shell marks each nest he left. Solver par '+day.par+'.';
-  const rp=P.slice(0,n),rs=rp.map(R_),cs=rp.map(C_);
-  let r0=Math.max(0,Math.min(...rs)-1),r1=Math.min(N-1,Math.max(...rs)+1),c0=Math.max(0,Math.min(...cs)-1),c1=Math.min(N-1,Math.max(...cs)+1);
-  while(r1-r0<2){if(r0>0)r0--;else r1++}
-  while(c1-c0<2){if(c0>0)c0--;else c1++}
-  const rcols=c1-c0+1,rcell=Math.min(48,Math.floor(240/rcols));
-  $('route').style.cssText='grid-template-columns:repeat('+rcols+',1fr);width:'+(rcols*rcell+(rcols-1)*3)+'px';
-  if(r1-r0+1<N||rcols<N)$('par').innerHTML+=' Zoomed in on his route.';
-  $('route').innerHTML=Array.from({length:CELLS},(_,i)=>{const ks=[];P.slice(0,n).forEach((p,k)=>{if(p===i)ks.push(k+1)});
-    if(R_(i)<r0||R_(i)>r1||C_(i)<c0||C_(i)>c1)return '';
-    if(!ks.length)return '<i></i>';
-    const end=won&&ks.includes(n);
-    return `<i><img src="assets/${end?'thief':'crack'}.svg" alt=""><u>${ks.map(k=>`<b>${k}</b>`).join('')}</u></i>`}).join('');
-  $('cfine').textContent=practice?'Practice does not count':'Streak '+load('et_streak',0)+' · same thief start for everyone today';
-  window._share='Egg Thief '+(practice?'(practice)':'#'+puzNum(seed))+'\n'+strip+' '+score+'/5';
+const HEAD=['','First guard!','Caught in 2!','Caught in 3!','Just in time!'];
+function miniHTML(){
+  const n=guesses.length,won=hasWon(),ta={};
+  P.slice(0,n).forEach((q,k)=>{(ta[q]=ta[q]||[]).push(k+1)});
+  const fin=won?P[n-1]:P[n];
+  let h='';
+  for(let i=0;i<CELLS;i++){
+    const ks=[];guesses.forEach((g,k)=>{if(g===i)ks.push(k)});
+    const cls='mc'+(i===fin?(won?' fin':' fin esc'):''),th=ta[i]?'<img class="cth" src="assets/thief.svg" alt=""><span class="rn">'+ta[i].join('\u00b7')+'</span>':(i===fin&&!won?'<img class="cth" src="assets/thief.svg" alt="">':'');
+    const run=i===fin&&!won?'<svg class="run" viewBox="0 0 24 14" aria-hidden="true"><path d="M2 2H14M0 7H18M4 12H14" stroke="#ff5a36" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg>':'';
+    if(!ks.length){h+='<div class="'+cls+'"><img class="n" src="assets/'+NESTS[(i+(i>>2))%3]+'.svg" alt="">'+th+run+'</div>';continue}
+    const last=ks[ks.length-1],w=won_(last);
+    h+='<div class="'+cls+'">'+sImg(w,'bd')+(w?'':arrow(dirAt(last)))+'<img class="gc" src="assets/guard.svg" alt=""><span class="nc">'+ks.map(k=>k+1).join('\u00b7')+'</span>'+(w?'<img class="cth" src="assets/thief.svg" alt=""><span class="rn">'+(ta[i]||[]).join('\u00b7')+'</span>':th)+'</div>';
+  }
+  const pts=[];P.slice(0,won?n:n+1).forEach(q=>{if(!pts.length||pts[pts.length-1]!==q)pts.push(q)});
+  const line=pts.length>1?'<svg class="rp" viewBox="0 0 6 6" aria-hidden="true"><polyline points="'+pts.map(q=>(C_(q)+.5)+','+(R_(q)+.5)).join(' ')+'"/></svg>':'';
+  return h+line;
 }
+function distHTML(st,hit){
+  const mx=Math.max(1,...st.dist),bar=(v,lab,cls,j)=>'<div class="sr"><i>'+lab+'</i><em><u class="'+(v?'':'zero')+cls+'" style="width:'+Math.max(8,Math.round(v/mx*100))+'%;--d:'+(j*.07)+'s">'+v+'</u></em></div>';
+  let h='';for(let i=1;i<=MAXG;i++)h+=bar(st.dist[i],i,hit===i?' hit':'',i-1);
+  return h+bar(st.dist[0],'Failed',hit==='X'?' hit fail':'',MAXG);
+}
+function nextIn(){const d=new Date(),n=new Date(d.getFullYear(),d.getMonth(),d.getDate()+1),sec=Math.max(0,Math.floor((n-d)/1000)),z=v=>String(v).padStart(2,'0');return 'Next puzzle in '+z(Math.floor(sec/3600))+':'+z(Math.floor(sec/60)%60)+':'+z(sec%60)}
+setInterval(()=>{if($('end').classList.contains('on'))$('nxt').textContent=nextIn()},1000);
+function showCard(){
+  viewing=false;
+  const n=guesses.length,won=hasWon(),score=won?n:'X';
+  const strip=guesses.map((g,k)=>won_(k)?'\ud83d\udfe9':DIRE[dirAt(k)]).join('');
+  show('end');
+  $('bdg').className='bdg'+(won?'':' lose');
+  $('bdg').innerHTML=won?'<img class="bn" src="assets/nest.svg" alt=""><img class="bt" src="assets/thief.svg" alt=""><img class="bg" src="assets/guard.svg" alt="">':'<img class="bn" src="assets/nest-b.svg" alt=""><img class="bt" src="assets/thief.svg" alt=""><svg viewBox="0 0 24 14" aria-hidden="true"><path d="M2 2H14M0 7H18M4 12H14" stroke="#ff5a36" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg>';
+  $('hl').textContent=won?HEAD[n]:'He got away';
+  $('sub').innerHTML=(practice?'Practice case':'Puzzle #'+puzNum(seed))+' \u00b7 Time '+fmt1(elapsed)+'<br>'+(won?n+' / '+MAXG+' guards used':'Not caught \u00b7 '+MAXG+' / '+MAXG+' guards used');
+  $('rtiles').innerHTML=guesses.map((g,k)=>{const w=won_(k);return '<span class="ht">'+sImg(w)+(w?'':arrow(dirAt(k)))+'</span>'}).join('');
+  $('par').textContent='His route. Best possible today: '+day.par+' guard'+(day.par>1?'s':'')+'.';
+  $('mini').innerHTML=miniHTML();
+  $('mini').setAttribute('aria-label','His route: '+P.slice(0,n).map(q=>'row '+(R_(q)+1)+' column '+(C_(q)+1)).join(', then ')+(won?', caught':', then he got away'));
+  const st=stats(),hit=(practice&&!demoStats)?null:(won?n:'X');
+  $('stg').innerHTML='<div><b>'+st.played+'</b><span>Played</span></div><div><b>'+(st.played?Math.round(st.wins/st.played*100):0)+'</b><span>Win %</span></div><div><b>'+st.cur+'</b><span>Current streak</span></div><div><b>'+st.best+'</b><span>Max streak</span></div>';
+  $('dst').innerHTML=distHTML(st,hit);
+  $('cmpt').textContent='Best possible today: '+day.par+'. You: '+(won?n:'missed')+'.';
+  $('nxt').textContent=nextIn();
+  $('cfine').textContent=practice?'Practice does not count':'';
+  $('cplb').textContent='Share';
+  window._share='Egg Thief '+(practice?'(practice)':'#'+puzNum(seed))+'\n'+strip+' '+score+'/'+MAXG;
+}
+function viewBoard(){viewing=true;show('game');render(-1);tick()}
+$('bk').onclick=viewBoard;$('seeres').onclick=()=>showCard();
+$('cmp').onclick=()=>{$('parsheet').classList.add('on');try{$('pgot').focus({preventScroll:true})}catch(e){}};
+$('pgot').onclick=()=>$('parsheet').classList.remove('on');
+$('parsheet').addEventListener('click',e=>{if(e.target===$('parsheet'))$('parsheet').classList.remove('on')});
 // ---------- first-play tour: 1 the board, 2 tap a nest, 3 the arrow, 4 he runs. Seen flag: et_hints ----------
 let tourStep=0,tourOn=false,tourDemo=false,tourT=0;
 const TOUR_NEST=14;
 const TOUR=[
- {t:'Find the thief',b:'He hides in one of these 36 nests. You have 5 guards.'},
+ {t:'Find the thief',b:'He hides in one of these 36 nests. You have 4 guards.'},
  {t:'Post a guard',b:'Tap a nest. If he is there, you caught him.',act:true},
- {t:'Follow the arrow',b:'It points to the thief: up, down, left or right.'},
- {t:'He runs after a miss',b:'He moves one nest away from your guard. Close in.'}];
+ {t:'Read the arrow',b:'It points to the thief.'},
+ {t:'He runs after a miss',b:'He runs two nests away from your guard. Close in.'}];
 $('tdots').innerHTML=TOUR.map(()=>'<i class="td"></i>').join('');
 function tourHide(){clearTimeout(tourT);$('tour').classList.remove('on','wait')}
 function tourEnd(){tourOn=false;tourStep=0;tourHide();if(!tourDemo)save('et_hints',true)}
@@ -605,24 +749,45 @@ $('tskip').onclick=()=>tourEnd();
 $('tback').onclick=()=>{if(tourStep===4)tourGo(3);else if(tourStep===2)tourGo(1)};
 $('tnext').onclick=()=>{if(tourStep===1)tourGo(2);else if(tourStep===3)tourGo(4);else if(tourStep===4)tourEnd()};
 addEventListener('resize',()=>{if(tourOn)tourPlace()});
+// scores sheet: played, win %, streak, best streak, and a bar per number of guards used. All from this device.
+let demoStats=null;
+function stats(){
+  if(demoStats)return demoStats;
+  const days=load('et5_days',[]).slice().sort(),dist=[0,0,0,0,0];let played=0,wins=0,run=0,best=0,prevWin='';
+  days.forEach(sd=>{const r=load('et5_'+sd,null);if(!r)return;played++;
+    const p=simPos(genDay(sd).start,r.g),k=r.g.findIndex((g,i)=>g===p[i]);
+    if(k>=0){wins++;dist[k+1]++;run=prevWin&&puzNum(sd)-puzNum(prevWin)===1?run+1:1;prevWin=sd;best=Math.max(best,run)}else{dist[0]++;run=0;prevWin=''}});
+  const cur=load('et5_streak',0);
+  return {played,wins,cur,best:Math.max(best,cur,load('et5_best',0)),dist};
+}
+function scoresHTML(st,hit){
+  const mx=Math.max(1,...st.dist.slice(1));
+  const rows=Array.from({length:MAXG},(_,i)=>{const v=st.dist[i+1];return '<div class="sr"><i>'+(i+1)+'</i><em><u class="'+(v?'':'zero')+(hit===i+1?' hit':'')+'" style="width:'+Math.max(8,Math.round(v/mx*100))+'%">'+v+'</u></em></div>'}).join('');
+  return '<div class="sg"><div><b>'+st.played+'</b><span>Played</span></div><div><b>'+(st.played?Math.round(st.wins/st.played*100):0)+'</b><span>Win %</span></div><div><b>'+st.cur+'</b><span>Streak</span></div><div><b>'+st.best+'</b><span>Best</span></div></div>'+
+   '<div class="sd"><h3>Guards used</h3>'+rows+'<div class="sr"><i>X</i><em><u class="'+(st.dist[0]?'':'zero')+'" style="width:'+Math.max(8,Math.round(st.dist[0]/mx*100))+'%">'+st.dist[0]+'</u></em></div></div>';
+}
+function openScores(){tourHide();$('sbody').innerHTML=scoresHTML(stats());$('scores').classList.add('on');dispatchEvent(new Event('resize'));try{$('sgot').focus({preventScroll:true})}catch(e){}}
+function closeScores(){$('scores').classList.remove('on');if(tourOn)tourShow()}
+$('scb').onclick=openScores;$('sgot').onclick=closeScores;
+$('scores').addEventListener('click',e=>{if(e.target===$('scores'))closeScores()});
 // landing line: date, puzzle number, compact stats
 (function(){
   const d=new Date(),n=Math.max(1,Math.round((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-Date.UTC(2026,10,22))/864e5)+1);
   let h=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()]+' '+d.getDate()+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]+' · #'+n;
-  const days=load('et_days',[]);
+  const days=load('et5_days',[]);
   if(days.length){let best=0;
-    days.forEach(s=>{try{const r=load('et3_'+s,null);if(!r)return;const p=simPos(genDay(s).start,r.g),k=r.g.findIndex((g,i)=>g===p[i]);if(k>=0&&(!best||k+1<best))best=k+1}catch(e){}});
-    h+='<br>Streak '+load('et_streak',0)+' · Played '+days.length+(best?' · Best '+best:'')}
+    days.forEach(s=>{try{const r=load('et5_'+s,null);if(!r)return;const p=simPos(genDay(s).start,r.g),k=r.g.findIndex((g,i)=>g===p[i]);if(k>=0&&(!best||k+1<best))best=k+1}catch(e){}});
+    h+='<br>Streak '+load('et5_streak',0)+' · Played '+days.length+(best?' · Best '+best:'')}
   $('dline').innerHTML=h;
 })();
 $('play').onclick=()=>begin(today(),false);
 $('grid').onclick=e=>{const b=e.target&&e.target.closest&&e.target.closest('button');if(b&&b.dataset&&b.dataset.i!==undefined)tap(+b.dataset.i)};
-$('copy').onclick=()=>{(navigator.clipboard?navigator.clipboard.writeText(window._share):Promise.reject()).then(()=>$('copy').textContent='Copied!',()=>prompt('Copy:',window._share))};
-$('prac').onclick=()=>{$('copy').textContent='Copy result';begin('practice-'+Math.random().toString(36).slice(2,7),true)};
+$('copy').onclick=()=>{(navigator.clipboard?navigator.clipboard.writeText(window._share):Promise.reject()).then(()=>$('cplb').textContent='Copied!',()=>prompt('Copy:',window._share))};
+$('prac').onclick=()=>{$('cplb').textContent='Share';begin('practice-'+Math.random().toString(36).slice(2,7),true)};
 addEventListener('error',e=>{const s=$('say');if(s)s.textContent='Error: '+e.message});
-$('sfine').textContent=load('et3_'+today(),null)?'You have played today. See your result.':'';
+$('sfine').textContent=load('et5_'+today(),null)?'You have played today. See your result.':'';
 // ---------- how to play: a little live board that plays the three steps ----------
-const HOW=['Tap a nest to guard it','The arrow points to him','He runs away. Close in.'];
+const HOW=['Tap a nest to guard it','The arrow points to him','He runs two nests. Close in.'];
 function demoHTML(s,id){
   let c='';for(let i=0;i<16;i++)c+=`<i class="dc"><img src="assets/${NESTS[(i+(i>>2))%3]}.svg" alt=""></i>`;
   return `<div class="dm"${id?' id="'+id+'"':''} data-s="${s}" aria-hidden="true"><div class="dg">${c}</div><div class="dl"><i class="hl"></i><div class="th"><img src="assets/thief.svg" alt=""></div>`+
@@ -653,7 +818,7 @@ $('howto').addEventListener('click',e=>{
 $('gotit').onclick=closeHow;
 $('replay').onclick=()=>{closeHow();if($('game').classList.contains('on')&&!guesses.length&&!isOver()){tourOn=true;tourStep=1;tourT=setTimeout(tourShow,200)}else begin('practice-'+Math.random().toString(36).slice(2,7),true,true)};
 $('howb').onclick=()=>openHow();$('howl').onclick=()=>openHow();
-addEventListener('keydown',e=>{if(e.key==='Escape'&&$('howto').classList.contains('on'))closeHow()});
+addEventListener('keydown',e=>{if(e.key!=='Escape')return;if($('howto').classList.contains('on'))closeHow();if($('scores').classList.contains('on'))closeScores();$('parsheet').classList.remove('on')});
 // test hooks: ?demo=start | game | end | lose | howto | tour1..tour4  (never touches saved progress)
 (function(){
   const m=/[?&]demo=(\w+)/.exec(location.search);if(!m)return;
@@ -662,9 +827,11 @@ addEventListener('keydown',e=>{if(e.key==='Escape'&&$('howto').classList.contain
   const miss=()=>{sync();const t=P[guesses.length];let g=(t+5)%CELLS;if(g===t)g=(t+6)%CELLS;return g};
   if(m[1]==='howto'){guesses=[];sync();show('game');render(-1);openHow(true)}
   else if(/^tour[1-4]$/.test(m[1])){const st=+m[1].slice(4);guesses=[];sync();if(st>2){guesses.push(P[0]===TOUR_NEST?day.solver[0]:TOUR_NEST);sync()}show('game');render(st>2?0:-1);tourDemo=true;tourOn=true;tourStep=st;tourT=setTimeout(tourShow,300)}
-  else if(m[1]==='game'){guesses=[day.solver[0]];sync();guesses.push(miss());sync();guesses.push(miss());sync();show('game');render(2)}
-  else if(m[1]==='end'){guesses=day.solver.slice(0,day.par);sync();showCard()}
-  else if(m[1]==='lose'){guesses=[];for(let k=0;k<MAXG;k++){guesses.push(miss())}sync();showCard()}
+  else if(m[1]==='game'){guesses=[day.solver[0]];sync();guesses.push(miss());sync();guesses.push(miss());sync();t0=Date.now()-42000;show('game');render(2);tick()}
+  else if(m[1]==='scores'){guesses=[day.solver[0]];sync();t0=Date.now()-42000;show('game');render(0);tick();demoStats={played:12,wins:10,cur:4,best:6,dist:[2,1,2,5,2]};openScores()}
+  else if(m[1]==='end'){demoStats={played:12,wins:10,cur:4,best:6,dist:[2,1,2,5,2]};guesses=day.solver.slice(0,day.par);sync();elapsed=84;showCard()}
+  else if(m[1]==='view'){guesses=day.solver.slice(0,day.par);sync();elapsed=84;viewBoard()}
+  else if(m[1]==='lose'){guesses=[];for(let k=0;k<MAXG;k++){guesses.push(miss())}sync();demoStats={played:12,wins:9,cur:0,best:6,dist:[3,1,2,4,2]};elapsed=97;showCard()}
 })();
 </script>
 <script>
