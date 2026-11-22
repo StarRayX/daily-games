@@ -209,18 +209,32 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
 .sf p{margin:6px 0 0;font-size:14px;line-height:1.2;font-weight:800}
 #dline{margin:-2px 0 0;font-size:14px;line-height:1.4;font-weight:700;color:rgba(59,36,16,.72)}
 #sfine:empty{display:none}
-/* first-play hints: a soft pointer on the thing to act on, a cream caption bubble beside it */
-#hint{position:absolute;inset:0;z-index:20;pointer-events:none;display:none}
-#hint.on{display:block}
-.hhalo{position:absolute;border-radius:50%;background:rgba(59,36,16,.17);animation:hpulse 1.5s ease-out infinite}
-.hdot{position:absolute;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:var(--ink);animation:hbeat 1.5s ease-in-out infinite}
-.hbub{position:absolute;pointer-events:auto;cursor:pointer;background:var(--card);color:var(--ink);border-radius:14px;padding:9px 14px 3px;max-width:calc(100% - 16px);box-shadow:0 5px 16px rgba(59,36,16,.3);font-weight:900;font-size:17px;line-height:1.15;font-variation-settings:"ROND" 100;animation:hin .2s ease-out}
-.hbub span{display:block}
-.htl{position:absolute;width:12px;height:12px;border-radius:3px;background:var(--card);transform:rotate(45deg)}
-.hskip{display:block;margin:2px 0 0 -4px;padding:7px 4px 8px;background:none;border:0;color:var(--ink);opacity:.68;font-weight:800;font-size:13px;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
-@keyframes hpulse{0%{transform:scale(.55);opacity:1}100%{transform:scale(1.2);opacity:0}}
-@keyframes hbeat{0%,100%{transform:scale(1)}50%{transform:scale(.8)}}
-@keyframes hin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+/* first-play tour: dimmed screen, a rounded cutout on one element, a card with a pointer notch beside it */
+#tour{position:absolute;inset:0;z-index:20;display:none}
+#tour.on{display:block}
+#tsv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#tsv rect{transition:x .3s ease,y .3s ease,width .3s ease,height .3s ease,rx .3s ease,ry .3s ease}
+#tblk{position:absolute;inset:0;pointer-events:auto}
+#tour.wait #tblk{clip-path:none!important}
+#tour.nt *{transition:none!important}
+#tcard{position:absolute;left:0;top:0;width:300px;background:var(--card);color:var(--ink);border-radius:14px;box-shadow:0 10px 30px rgba(20,10,5,.45);transition:left .3s ease,top .3s ease,opacity .2s}
+#tour.wait #tcard{opacity:0;pointer-events:none}
+.tband{height:14px;border-radius:14px 14px 0 0;background:repeating-linear-gradient(-45deg,var(--yolk) 0 7px,var(--ink) 7px 14px)}
+.tin{padding:11px 16px 12px}
+.trow{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#tlab{font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:rgba(59,36,16,.7)}
+.tlink{background:none;border:0;padding:6px 2px;min-height:32px;font-weight:800;font-size:14px;text-decoration:underline;text-underline-offset:3px;cursor:pointer;color:var(--ink)}
+#tttl{margin-top:4px;font-weight:900;font-size:21px;line-height:1.1;font-variation-settings:"ROND" 100}
+#tbody{margin:6px 0 10px;font-size:15px;line-height:1.35;font-weight:600;color:rgba(59,36,16,.85)}
+.tft{display:flex;align-items:center;gap:8px}
+#tdots{display:flex;gap:6px;flex:1;align-items:center}
+.td{display:block;width:10px;height:10px;border-radius:5px;background:rgba(59,36,16,.22)}
+.td.on{width:24px;background:var(--ink)}
+.tbtn{min-height:44px;padding:8px 24px;font-size:18px}
+.tbtn:disabled{opacity:.32;cursor:default}
+#tnotch{position:absolute;display:block}
+#replay{display:block;margin:-4px auto 0}
+@media (max-height:700px){.tband{height:8px}.tin{padding:5px 14px 6px}#tlab{font-size:11px}#tttl{font-size:17px;margin-top:0}#tbody{font-size:14px;line-height:1.25;margin:2px 0 4px}.tbtn{min-height:36px;padding:4px 20px;font-size:16px}.tlink{min-height:24px;padding:2px;font-size:13px}}
 @media (max-width:400px){.one{font-size:18px}.btn{padding:12px 36px}}
 /* feed card: landing must fit 288x320 up to 880x512 with no scrolling */
 #app:has(#start.on){max-width:none}
@@ -248,7 +262,7 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
 @media (max-height:700px){#say{min-height:56px}#say .big{width:52px;height:52px}.card{gap:8px;padding:12px;--bw:min(100%,calc((100dvh - 215px)/1.17))}}
 @media (max-width:380px){.card header img{display:none}#key{gap:8px;font-size:12px}#key img,#key .ar.in{width:18px}#say .tx{font-size:18px}#say .tx small{font-size:14px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-</style>
+.tband{display:none!important}</style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -259,7 +273,7 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
 <div id="app">
   <section id="start" class="on gnd">
     <div class="mid">
-      <div class="wmw"><h1 class="wm out" id="wm" aria-label="Egg Thief. Catch him!"></h1><div class="tagline" aria-hidden="true">Catch him!</div></div>
+      <div class="wmw"><h1 class="wm out" id="wm" aria-label="Egg Thief"></h1></div>
       <div class="hero crack">
         <p class="one">A thief hides on one of 36 nests. Post up to 5 guards. Each one says which way he is: up, down, left or right.</p>
         <button class="btn" id="play">Play</button>
@@ -290,12 +304,17 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
       </div>
     <div class="act"><button class="btn" id="copy">Copy result</button><div id="cfine"></div><button class="link" id="prac">Practice case</button></div>
   </section>
-  <div id="hint" aria-live="polite"><i class="hhalo" id="hhalo"></i><i class="hdot" id="hdot"></i><div class="hbub" id="hbub"><span id="hcap"></span><button class="hskip" id="hskip">Skip tips</button><i class="htl" id="htl"></i></div></div>
+  <div id="tour" role="dialog" aria-label="Quick tour">
+    <div id="tblk"></div>
+    <svg id="tsv" aria-hidden="true" focusable="false"><defs><mask id="tmk" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%"><rect x="0" y="0" width="100%" height="100%" fill="#fff"/><rect id="tcr" fill="#000"/></mask></defs><rect x="0" y="0" width="100%" height="100%" fill="rgba(30,16,8,.6)" mask="url(#tmk)"/><rect id="tring" fill="none" stroke="rgba(255,246,227,.7)" stroke-width="2.5"/></svg>
+    <div id="tcard"><div class="tband"></div><div class="tin"><div class="trow"><span id="tlab"></span><button class="tlink" id="tskip">Skip tour</button></div><div id="tttl"></div><p id="tbody"></p><div class="tft"><div id="tdots"></div><button class="tlink" id="tback">Back</button><button class="btn tbtn" id="tnext">Next</button></div></div><i id="tnotch"></i></div>
+  </div>
   <div id="howto" role="dialog" aria-modal="true" aria-label="How to play">
     <div class="hcard">
       <div class="hh">How to play</div>
       <div id="hbody"></div>
       <button class="btn" id="gotit">Got it</button>
+      <button class="link" id="replay">Replay tour</button>
     </div>
   </div>
 </div>
@@ -312,7 +331,7 @@ function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 const svg=`<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150'><g fill='#8a5a2b'>${f.join('')}</g></svg>`;document.documentElement.style.setProperty('--speck','url("data:image/svg+xml,'+encodeURIComponent(svg)+'")')})();
 /* ground pattern patches: 5 soft spots, random per page load, edges favoured so the pattern fades behind text and card */
 (function(){const R=Math.random,e=document.querySelectorAll(".gnd"),v={};for(let i=0;i<5;i++){const left=i%2===0;v["--p"+i+"x"]=Math.round(left?R()*28:72+R()*28)+"%";v["--p"+i+"y"]=Math.round(i*22+R()*14-2)+"%";v["--p"+i+"a"]=(.7+R()*.3).toFixed(2);v["--p"+i+"r"]=Math.round(26+R()*16)+"%"}e.forEach(n=>{for(const k in v)n.style.setProperty(k,v[k])})})();
-function show(id){['start','game','end'].forEach(s=>$(s).classList.toggle('on',s===id));if(id!=='game')hintHide()}
+function show(id){['start','game','end'].forEach(s=>$(s).classList.toggle('on',s===id));if(id!=='game')tourHide()}
 let ac;function tone(f,d,type,vol,slide){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f,ac.currentTime);if(slide)o.frequency.exponentialRampToValueAtTime(slide,ac.currentTime+d);g.gain.setValueAtTime(vol||.08,ac.currentTime);g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+d);o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+d)}catch(e){}}
 function buzz(p){try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}}
 
@@ -434,14 +453,14 @@ const won_=k=>guesses[k]===P[k];
 const dirAt=k=>guesses[k]===P[k]?-1:dirOf(guesses[k],P[k]);
 const hasWon=()=>guesses.some((g,k)=>g===P[k]);
 const isOver=()=>hasWon()||guesses.length>=MAXG;
-function begin(s,p){
+function begin(s,p,force){
   seed=s;practice=p;locked=false;day=genDay(s);
   const done=!p&&load('et3_'+s,null);
   if(done){guesses=done.g;sync();return showCard()}
   guesses=p?[]:load('et3_p_'+s,[]);sync();
   show('game');render(-1);
-  hintOn=false;hintDemo=false;hintHide();
-  if(!guesses.length&&!load('et_hints',false)&&!/[?&]demo=/.test(location.search)){hintOn=true;hintStep=1;hintT=setTimeout(hintShow,250)}
+  tourOn=false;tourDemo=false;tourHide();
+  if(!guesses.length&&(force||(!load('et_hints',false)&&!/[?&]demo=/.test(location.search)))){tourOn=true;tourStep=1;tourT=setTimeout(tourShow,250)}
 }
 function sayHTML(){
   const n=guesses.length;
@@ -479,13 +498,14 @@ function render(flip){
 }
 function tap(i){
   if(locked||isOver())return;
+  if(tourOn&&!(tourStep===2&&i===TOUR_NEST))return;
   guesses.push(i);sync();
   const k=guesses.length-1,w=won_(k);
   render(k);
   if(w){[523,659,784,1047].forEach((q,j)=>setTimeout(()=>tone(q,.18,'triangle',.1),j*90));buzz([40,40,80])}
   else{tone(260,.2,'triangle',.07,420);buzz([25])}
   if(!practice)save('et3_p_'+seed,guesses);
-  if(hintOn){hintHide();if(isOver())hintEnd();else{hintStep++;if(hintStep>3)hintEnd();else hintT=setTimeout(hintShow,520)}}
+  if(tourOn&&tourStep===2){if(isOver())tourEnd();else tourWait(3)}
   if(isOver()){locked=true;setTimeout(finishAll,1000)}
 }
 function finishAll(){
@@ -525,54 +545,66 @@ function showCard(){
   $('cfine').textContent=practice?'Practice does not count':'Streak '+load('et_streak',0)+' · same thief start for everyone today';
   window._share='Egg Thief '+(practice?'(practice)':'#'+puzNum(seed))+'\n'+strip+' '+score+'/5';
 }
-// ---------- first-play hints: 1 tap a nest, 2 the arrow, 3 he runs. Seen flag: et_hints ----------
-let hintStep=0,hintOn=false,hintDemo=false,hintT=0;
-const HINTS=['Tap a nest to post a guard','The arrow points to him','He runs from your guard'];
-function hintHide(){clearTimeout(hintT);$('hint').classList.remove('on')}
-function hintEnd(){hintOn=false;hintStep=0;hintHide();if(!hintDemo)save('et_hints',true)}
-function hintTarget(step){
-  if(step===1)return {i:14,fx:.5,fy:.5,sz:.9,ox:0,oy:0,pref:'any'};
-  const n=guesses.length,g=guesses[n-1];
-  if(step===2)return {i:g,fx:.5,fy:.52,sz:.58,ox:.5,oy:.5,pref:'any'};
-  const d=dirAt(n-1),V={0:[-1,0],2:[0,1],4:[1,0],6:[0,-1]}[d]||[0,1];
-  let r=R_(g)+V[0],c=C_(g)+V[1];
-  if(r<0||r>=N||c<0||c>=N){V[0]*=-1;V[1]*=-1;r=R_(g)+V[0];c=C_(g)+V[1]}
-  return {i:r*N+c,fx:.5,fy:.5,sz:.9,ox:0,oy:0,pref:V[0]<0?'above':V[0]>0?'below':'any'};
+// ---------- first-play tour: 1 the board, 2 tap a nest, 3 the arrow, 4 he runs. Seen flag: et_hints ----------
+let tourStep=0,tourOn=false,tourDemo=false,tourT=0;
+const TOUR_NEST=14;
+const TOUR=[
+ {t:'Find the thief',b:'He hides in one of these 36 nests. You have 5 guards.'},
+ {t:'Post a guard',b:'Tap a nest. If he is there, you caught him.',act:true},
+ {t:'Follow the arrow',b:'It points to the thief: up, down, left or right.'},
+ {t:'He runs after a miss',b:'He moves one nest away from your guard. Close in.'}];
+$('tdots').innerHTML=TOUR.map(()=>'<i class="td"></i>').join('');
+function tourHide(){clearTimeout(tourT);$('tour').classList.remove('on','wait')}
+function tourEnd(){tourOn=false;tourStep=0;tourHide();if(!tourDemo)save('et_hints',true)}
+const tpad=(r,p,rd)=>({x:r.x-p,y:r.y-p,w:r.w+2*p,h:r.h+2*p,r:rd});
+function tourTarget(s){
+  const A=$('app').getBoundingClientRect(),rel=r=>({x:r.left-A.left,y:r.top-A.top,w:r.width,h:r.height});
+  if(s===1)return tpad(rel($('grid').getBoundingClientRect()),6,18);
+  if(s===2){const nb=$('grid').querySelector('[data-i="'+TOUR_NEST+'"]');if(!nb)return null;const r=rel(nb.getBoundingClientRect()),t=tpad(r,4,14);t.hole=r;return t}
+  if(s===3){const n=guesses.length,nb=n&&$('grid').querySelector('[data-i="'+guesses[n-1]+'"]');if(!nb)return null;return tpad(rel(nb.getBoundingClientRect()),4,14)}
+  return tpad(rel($('posts').getBoundingClientRect()),6,16);
 }
-function hintPlace(){
-  const el=$('hint');if(!hintOn||!hintStep||!el.classList.contains('on'))return;
-  const tg=hintTarget(hintStep),nb=$('grid').querySelector('[data-i="'+tg.i+'"]');if(!nb)return;
-  const A=$('app').getBoundingClientRect(),r=nb.getBoundingClientRect(),G=$('grid').getBoundingClientRect();
-  const cx=r.left-A.left+r.width*tg.fx,cy=r.top-A.top+r.height*tg.fy,sz=r.width*tg.sz,hs=sz*1.25;
-  $('hhalo').style.cssText='left:'+cx+'px;top:'+cy+'px;width:'+hs+'px;height:'+hs+'px;margin:'+(-hs/2)+'px 0 0 '+(-hs/2)+'px';
-  $('hdot').style.left=(cx+tg.ox*sz)+'px';$('hdot').style.top=(cy+tg.oy*sz)+'px';
-  $('hcap').textContent=HINTS[hintStep-1];
-  const b=$('hbub');b.style.left='0px';b.style.top='0px';
-  const bw=b.offsetWidth,bh=b.offsetHeight,gt=G.top-A.top,gb=G.bottom-A.top,half=sz/2+12;
-  const fitB=cy+half+bh<=gb+4,fitA=cy-half-bh>=gt-4;
-  let below=tg.pref!=='above',side=false;
-  if(tg.pref==='any')below=fitB||!fitA;
-  else if(tg.pref==='below'){if(!fitB)side=true}
-  else if(!fitA)side=true;
-  const tl=$('htl');tl.style.cssText='';
-  if(side){
-    // beside the target, so it never lands on the guard above or below it
-    const w2=sz/2+12,toR=cx+w2+bw<=A.width-8,left=toR?cx+w2:Math.max(8,cx-w2-bw),top=Math.max(gt,Math.min(gb-bh,cy-bh/2));
-    b.style.left=left+'px';b.style.top=top+'px';
-    tl.style.top=(Math.max(14,Math.min(bh-18,cy-top))-6)+'px';if(toR)tl.style.left='-5px';else tl.style.right='-5px';
-    return;
-  }
-  const left=Math.max(8,Math.min(A.width-bw-8,cx-bw/2));
-  b.style.left=left+'px';b.style.top=(below?cy+half:cy-half-bh)+'px';
-  tl.style.left=(Math.max(18,Math.min(bw-18,cx-left))-6)+'px';if(below)tl.style.top='-5px';else tl.style.bottom='-5px';
+function tourPlace(){
+  const el=$('tour');if(!tourOn||!tourStep||!el.classList.contains('on')||el.classList.contains('wait'))return;
+  const S=TOUR[tourStep-1],T=tourTarget(tourStep);if(!T)return tourEnd();
+  const A=$('app').getBoundingClientRect(),W=A.width,H=A.height,c=$('tcard'),cw=Math.min(H<=700?400:300,W-24);
+  $('tlab').textContent='Step '+tourStep+' of '+TOUR.length;$('tttl').textContent=S.t;$('tbody').textContent=S.b;
+  $('tnext').textContent=tourStep===TOUR.length?'Play':'Next';$('tnext').disabled=!!S.act;
+  $('tback').style.visibility=(tourStep===2||tourStep===4)?'visible':'hidden';
+  document.querySelectorAll('#tdots .td').forEach((d,i)=>d.classList.toggle('on',i===tourStep-1));
+  c.style.width=cw+'px';const ch=c.offsetHeight,g=H<=700?8:14,M=H<=700?6:8,cx=T.x+T.w/2,cy=T.y+T.h/2;
+  const cl=v=>Math.max(M,Math.min(W-cw-M,v)),ct=v=>Math.max(M,Math.min(H-ch-M,v));
+  const C={right:{x:T.x+T.w+g,y:ct(cy-ch/2)},left:{x:T.x-g-cw,y:ct(cy-ch/2)},below:{x:cl(cx-cw/2),y:T.y+T.h+g},above:{x:cl(cx-cw/2),y:T.y-g-ch}};
+  const order=T.w<130?['right','left','below','above']:['below','above','right','left'];
+  const fits=k=>{const p=C[k];return p.x>=M&&p.y>=M&&p.x+cw<=W-M&&p.y+ch<=H-M};
+  const ov=p=>Math.max(0,Math.min(p.x+cw,T.x+T.w)-Math.max(p.x,T.x))*Math.max(0,Math.min(p.y+ch,T.y+T.h)-Math.max(p.y,T.y));
+  let k=order.find(fits),near=false;
+  if(!k){near=true;let bo=1e12;order.forEach(q=>{const p=C[q];p.x=cl(p.x);p.y=ct(p.y);const o=ov(p);if(o<bo){bo=o;k=q}})}
+  const p=C[k];c.style.left=p.x+'px';c.style.top=p.y+'px';
+  const n=$('tnotch'),nx=Math.max(26,Math.min(cw-26,cx-p.x))-11,ny=Math.max(34,Math.min(ch-20,cy-p.y))-11;
+  const NS={below:'left:'+nx+'px;top:-10px;width:22px;height:10px;background:var(--yolk);clip-path:polygon(50% 0,100% 100%,0 100%)',
+    above:'left:'+nx+'px;bottom:-10px;width:22px;height:10px;background:var(--card);clip-path:polygon(0 0,100% 0,50% 100%)',
+    right:'left:-10px;top:'+ny+'px;width:10px;height:22px;background:var(--card);clip-path:polygon(100% 0,100% 100%,0 50%)',
+    left:'right:-10px;top:'+ny+'px;width:10px;height:22px;background:var(--card);clip-path:polygon(0 0,100% 50%,0 100%)'};
+  n.style.cssText=NS[k]+(near&&ov(p)>0?';visibility:hidden':'');
+  const f=(a,b)=>'x:'+a+'px;y:'+b+'px;width:'+T.w+'px;height:'+T.h+'px;rx:'+T.r+'px;ry:'+T.r+'px';
+  $('tcr').style.cssText=f(T.x,T.y);$('tring').style.cssText=f(T.x,T.y);
+  const h=T.hole,bl=$('tblk');
+  bl.style.clipPath=S.act&&h?'polygon(evenodd,0 0,'+W+'px 0,'+W+'px '+H+'px,0 '+H+'px,0 0,'+h.x+'px '+h.y+'px,'+h.x+'px '+(h.y+h.h)+'px,'+(h.x+h.w)+'px '+(h.y+h.h)+'px,'+(h.x+h.w)+'px '+h.y+'px,'+h.x+'px '+h.y+'px)':'none';
 }
-function hintShow(){
-  if(!hintOn||$('howto').classList.contains('on')||!$('game').classList.contains('on'))return;
-  const el=$('hint');el.classList.remove('on');void el.offsetWidth;el.classList.add('on');hintPlace();
+function tourShow(){
+  if(!tourOn||$('howto').classList.contains('on')||!$('game').classList.contains('on'))return;
+  const el=$('tour');
+  if(!el.classList.contains('on')){el.classList.add('nt','on');tourPlace();void el.offsetWidth;requestAnimationFrame(()=>el.classList.remove('nt'))}
+  else tourPlace();
 }
-$('hbub').onclick=()=>hintHide();
-$('hskip').onclick=e=>{e.stopPropagation();hintEnd()};
-addEventListener('resize',()=>{if(hintOn)hintPlace()});
+// after the real tap: hold the screen dim while the guard lands, then slide to the arrow
+function tourWait(n){tourStep=n;const el=$('tour');el.classList.add('wait');clearTimeout(tourT);tourT=setTimeout(()=>{el.classList.remove('wait');tourPlace()},650)}
+function tourGo(n){tourStep=n;tourPlace()}
+$('tskip').onclick=()=>tourEnd();
+$('tback').onclick=()=>{if(tourStep===4)tourGo(3);else if(tourStep===2)tourGo(1)};
+$('tnext').onclick=()=>{if(tourStep===1)tourGo(2);else if(tourStep===3)tourGo(4);else if(tourStep===4)tourEnd()};
+addEventListener('resize',()=>{if(tourOn)tourPlace()});
 // landing line: date, puzzle number, compact stats
 (function(){
   const d=new Date(),n=Math.max(1,Math.round((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-Date.UTC(2026,10,22))/864e5)+1);
@@ -608,26 +640,28 @@ function hGo(n){
   hTimer=setTimeout(()=>hGo(n%3+1),3200);
 }
 function openHow(fromDemo){
-  hDemo=!!fromDemo;const h=$('howto');h.classList.add('on');hintHide();
+  hDemo=!!fromDemo;const h=$('howto');h.classList.add('on');tourHide();
   if(reduced()){$('hbody').innerHTML='<div class="strip">'+[1,2,3].map(i=>`<div class="sf"><div class="dmw">${demoHTML(i)}</div><p>${i}. ${HOW[i-1]}</p></div>`).join('')+'</div>'}
   else{$('hbody').innerHTML=`<div class="dmw" id="dmw">${demoHTML(1,'dm')}</div><div class="cap" id="cap" aria-live="polite"></div><div class="dots" id="dots">${[1,2,3].map(i=>`<button class="dt" data-n="${i}" aria-label="Step ${i}"></button>`).join('')}</div>`;hGo(1)}
   dispatchEvent(new Event('resize'));
   try{$('gotit').focus({preventScroll:true})}catch(e){}
 }
-function closeHow(){clearTimeout(hTimer);$('howto').classList.remove('on');if(!hDemo)save('et_howto',true);if(hintOn)hintShow()}
+function closeHow(){clearTimeout(hTimer);$('howto').classList.remove('on');if(!hDemo)save('et_howto',true);if(tourOn)tourShow()}
 $('howto').addEventListener('click',e=>{
   const d=e.target.closest&&e.target.closest('.dt');if(d)return hGo(+d.dataset.n);
   if(e.target.closest&&e.target.closest('#dmw'))hGo(hStep%3+1)});
-$('gotit').onclick=closeHow;$('howb').onclick=()=>openHow();$('howl').onclick=()=>openHow();
+$('gotit').onclick=closeHow;
+$('replay').onclick=()=>{closeHow();if($('game').classList.contains('on')&&!guesses.length&&!isOver()){tourOn=true;tourStep=1;tourT=setTimeout(tourShow,200)}else begin('practice-'+Math.random().toString(36).slice(2,7),true,true)};
+$('howb').onclick=()=>openHow();$('howl').onclick=()=>openHow();
 addEventListener('keydown',e=>{if(e.key==='Escape'&&$('howto').classList.contains('on'))closeHow()});
-// test hooks: ?demo=start | game | end | lose | howto  (never touches saved progress)
+// test hooks: ?demo=start | game | end | lose | howto | tour1..tour4  (never touches saved progress)
 (function(){
   const m=/[?&]demo=(\w+)/.exec(location.search);if(!m)return;
   seed='demo-day';practice=true;day=genDay(seed);
   // a guard that is guaranteed to miss given the guards already posted
   const miss=()=>{sync();const t=P[guesses.length];let g=(t+5)%CELLS;if(g===t)g=(t+6)%CELLS;return g};
   if(m[1]==='howto'){guesses=[];sync();show('game');render(-1);openHow(true)}
-  else if(/^firstplay[23]?$/.test(m[1])){const st=+(m[1].slice(9)||1);guesses=[];if(st>1){guesses.push(day.solver[0]);sync();if(st>2)guesses.push(miss())}sync();show('game');render(-1);hintDemo=true;hintOn=true;hintStep=st;hintT=setTimeout(hintShow,300)}
+  else if(/^tour[1-4]$/.test(m[1])){const st=+m[1].slice(4);guesses=[];sync();if(st>2){guesses.push(P[0]===TOUR_NEST?day.solver[0]:TOUR_NEST);sync()}show('game');render(st>2?0:-1);tourDemo=true;tourOn=true;tourStep=st;tourT=setTimeout(tourShow,300)}
   else if(m[1]==='game'){guesses=[day.solver[0]];sync();guesses.push(miss());sync();guesses.push(miss());sync();show('game');render(2)}
   else if(m[1]==='end'){guesses=day.solver.slice(0,day.par);sync();showCard()}
   else if(m[1]==='lose'){guesses=[];for(let k=0;k<MAXG;k++){guesses.push(miss())}sync();showCard()}
@@ -636,11 +670,11 @@ addEventListener('keydown',e=>{if(e.key==='Escape'&&$('howto').classList.contain
 <script>
 /* Hand-cut corners v2: rough, hand-torn edges drawn as a vector clip-path outline (crisp at any pixel density, no filters). */
 (function(){
-  var st=document.createElement("style");st.textContent="[data-hp=b]::before{clip-path:var(--hcp);-webkit-clip-path:var(--hcp)}[data-hp=a]::after{clip-path:var(--hcp);-webkit-clip-path:var(--hcp)}";document.head.appendChild(st);
-  var n=0;
+  var st=document.createElement("style");st.textContent="[data-hp=b]::before{clip-path:var(--hcp)!important;-webkit-clip-path:var(--hcp)!important;filter:none!important;border-radius:0!important}[data-hp=a]::after{clip-path:var(--hcp)!important;-webkit-clip-path:var(--hcp)!important;filter:none!important;border-radius:0!important}";document.head.appendChild(st);
+  var n=0,timer=0,OWN=["backgroundColor","backgroundImage","backgroundSize","backgroundRepeat","borderRadius","borderColor","boxShadow","filter"];
   function R(seed){var x=Math.sin(seed*12.9898+78.233)*43758.5453;return x-Math.floor(x)}
   function outline(w,h,r,seed){
-    // walk the perimeter of a rounded rectangle, sampling about every 5px, pushing each point in or out a little
+    // walk the perimeter of a rounded rectangle, sampling about every 5px, pushing each point inward a little (never outward, so the box cannot cut a bump off)
     r=Math.min(r,w/2-1,h/2-1);
     var pts=[],step=5,amp=Math.max(1.6,Math.min(3.6,Math.min(w,h)*.055));
     var segs=[[r,0,w-r,0],[w,r,w,h-r],[w-r,h,r,h],[0,h-r,0,r]];
@@ -650,45 +684,77 @@ addEventListener('keydown',e=>{if(e.key==='Escape'&&$('howto').classList.contain
       var a=segs[s],len=Math.hypot(a[2]-a[0],a[3]-a[1]),m=Math.max(2,Math.round(len/step));
       var nx=[0,1,0,-1][s],ny=[-1,0,1,0][s];
       for(var i=0;i<m;i++){var t=i/m,x=a[0]+(a[2]-a[0])*t,y=a[1]+(a[3]-a[1])*t;
-        var d=(Math.sin(k*.7+seed)*.45+ (R(seed*31+k)-.5)*1.1)*amp;k++;
+        var d=((Math.sin(k*.7+seed)*.45+(R(seed*31+k)-.5)*1.1)*amp-amp)/2;k++;
         pts.push([x+nx*d,y+ny*d])}
       var c=corners[s],cm=Math.max(3,Math.round(r*1.57/step));
-      for(var j=0;j<cm;j++){var an=c[2]+(Math.PI/2)*(j/cm),d2=(R(seed*17+k)-.5)*1.1*amp;k++;
+      for(var j=0;j<cm;j++){var an=c[2]+(Math.PI/2)*(j/cm),d2=(R(seed*17+k)-1)*1.1*amp;k++;
         pts.push([c[0]+Math.cos(an)*(r+d2),c[1]+Math.sin(an)*(r+d2)])}
     }
-    // smooth through midpoints so the wobble reads as a cut edge, not a zigzag
     var p='M'+((pts[0][0]+pts[1][0])/2).toFixed(1)+' '+((pts[0][1]+pts[1][1])/2).toFixed(1);
     for(var q=1;q<=pts.length;q++){var A=pts[q%pts.length],B=pts[(q+1)%pts.length];
       p+=' Q'+A[0].toFixed(1)+' '+A[1].toFixed(1)+' '+((A[0]+B[0])/2).toFixed(1)+' '+((A[1]+B[1])/2).toFixed(1)}
     return p+'Z';
   }
+  function radius(cs){
+    var best=0,ks=["borderTopLeftRadius","borderTopRightRadius","borderBottomRightRadius","borderBottomLeftRadius"];
+    for(var i=0;i<4;i++){var v=cs[ks[i]];if(/%/.test(v))return 999;var f=parseFloat(v)||0;if(f>best)best=f}
+    return best}
+  function opaque(c){if(!c||c==="transparent")return false;var m=c.match(/rgba\(([^)]*)\)/);if(m){var p=m[1].split(",");if(p.length>3&&parseFloat(p[3])===0)return false}return true}
+  function unshape(el){
+    if(el.dataset.hbg){OWN.forEach(function(k){el.style[k]=""});delete el.dataset.hbg}
+    delete el.dataset.hc;delete el.dataset.hp;el.style.removeProperty("--hcp")}
+  function pseudoLayer(el,w,h){
+    var ps=["b","a"];
+    for(var i=0;i<2;i++){
+      var pc=getComputedStyle(el,i?"::after":"::before");
+      if(!pc.content||pc.content==="none"||pc.position!=="absolute")continue;
+      if(pc.clipPath&&pc.clipPath!=="none"&&el.dataset.hp!==ps[i])continue;
+      if(!opaque(pc.backgroundColor))continue;
+      var pw=parseFloat(pc.width)||0,ph=parseFloat(pc.height)||0,r=radius(pc);
+      if(el.dataset.hp===ps[i]&&el.dataset.hr)r=+el.dataset.hr;
+      if(r<4||r>=999||pw<w*.6||ph<h*.6)continue;
+      return {p:ps[i],w:pw,h:ph,r:r}}
+    return null}
   function shape(el){
-    if(!el.dataset)return;var cs=getComputedStyle(el);
-    var r=parseFloat(cs.borderTopLeftRadius)||0;
-    var pseudo="";
-    if(r<4){var pb=getComputedStyle(el,"::before"),pa=getComputedStyle(el,"::after");
-      if(pb.content&&pb.content!=="none"&&pb.position==="absolute"&&(parseFloat(pb.borderTopLeftRadius)||0)>=4){r=parseFloat(pb.borderTopLeftRadius);pseudo="b"}
-      else if(pa.content&&pa.content!=="none"&&pa.position==="absolute"&&(parseFloat(pa.borderTopLeftRadius)||0)>=4){r=parseFloat(pa.borderTopLeftRadius);pseudo="a"}}
-    if(r<4||r>=999)return;
-    var w=el.offsetWidth,h=el.offsetHeight;if(!w||!h)return;
-    if(r>=Math.min(w,h)/2-1)return; // circles stay circles
-    var key=w+'x'+h;if(el.dataset.hc===key)return;
+    if(!el.dataset||el.closest("svg")||el.id==="tsvg")return;
+    var cs=getComputedStyle(el),w=el.offsetWidth,h=el.offsetHeight;if(!w||!h)return;
+    var r=radius(cs),lay=null;
+    var own=r>=4&&r<999&&(opaque(el.dataset.hbg||cs.backgroundColor));
+    if(!own){lay=pseudoLayer(el,w,h);if(!lay)return;r=lay.r;w=lay.w;h=lay.h;el.dataset.hr=r}
+    if(r<4||r>=999||r>=Math.min(w,h)/2-1)return; // circles and pills stay as they are
+    var key=w+"x"+h+(lay?lay.p:"o");if(el.dataset.hc===key)return;
     if(!el.dataset.hs){n++;el.dataset.hs=n}
-    el.dataset.hc=key;
     var path=outline(w,h,r,+el.dataset.hs);
-    var cp="path('"+path+"')";
-    if(pseudo){el.dataset.hp=pseudo;el.style.setProperty("--hcp",cp);return}
-    // never clip something that has a badge or chip hanging over its edge: leave those smooth
-    var b=el.getBoundingClientRect(),over=false;el.querySelectorAll("*").forEach(function(c){var q=c.getBoundingClientRect();if(q.width&&(q.left<b.left-1||q.top<b.top-1||q.right>b.right+1||q.bottom>b.bottom+1))over=true});
-    if(over)return;
-    el.style.clipPath=cp;el.style.webkitClipPath=cp;
-  }
-  function all(root){if(root.querySelectorAll)root.querySelectorAll('*').forEach(shape)}
+    if(lay){el.dataset.hc=key;el.dataset.hp=lay.p;el.style.setProperty("--hcp","path('"+path+"')");watch(el);return}
+    // own background: draw the rough shape as the element's own background, so children (badges, chips, text) are never clipped
+    var bg=el.dataset.hbg||cs.backgroundColor,bi=cs.backgroundImage;
+    if(bi&&bi!=="none"&&!el.dataset.hbg)return;
+    el.dataset.hbg=bg;el.dataset.hc=key;
+    var bw=parseFloat(cs.borderTopWidth)||0,line="";
+    if(bw>0&&cs.borderTopStyle!=="none"&&opaque(cs.borderTopColor)){line=" stroke='"+cs.borderTopColor+"' stroke-width='"+(bw*1.6)+"'";el.style.borderColor="transparent"}
+    var svg="<svg xmlns='http://www.w3.org/2000/svg' width='"+w+"' height='"+h+"' viewBox='0 0 "+w+" "+h+"'><path d='"+path+"' fill='"+bg+"'"+line+"/></svg>";
+    el.style.backgroundColor="transparent";el.style.backgroundImage="url(\"data:image/svg+xml,"+encodeURIComponent(svg)+"\")";el.style.backgroundSize="100% 100%";el.style.backgroundRepeat="no-repeat";el.style.borderRadius="0";
+    var bs=cs.boxShadow;
+    if(bs&&bs!=="none"&&!/inset/.test(bs)&&(!cs.filter||cs.filter==="none")){var m=bs.match(/^(rgba?\([^)]*\))\s+(-?[\d.]+)px\s+(-?[\d.]+)px\s+([\d.]+)px/);
+      if(m){el.style.filter="drop-shadow("+m[2]+"px "+m[3]+"px "+(m[4]/2)+"px "+m[1]+")";el.style.boxShadow="none"}}
+    watch(el)}
+  var ro=window.ResizeObserver?new ResizeObserver(function(){sched()}):null;
+  function watch(el){if(ro&&!el._hw){el._hw=1;ro.observe(el)}}
+  function all(root){if(root.querySelectorAll){shape(root);root.querySelectorAll("*").forEach(shape)}}
+  function sched(){if(timer)return;timer=setTimeout(function(){timer=0;all(document.body)},70)}
   function go(){all(document.body);
-    new MutationObserver(function(ms){ms.forEach(function(m){m.addedNodes.forEach(function(nd){if(nd.nodeType===1){shape(nd);all(nd)}})})}).observe(document.body,{childList:true,subtree:true});
-    document.addEventListener('click',function(){setTimeout(function(){all(document.body)},60)},true);
-    addEventListener('resize',function(){all(document.body)})}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();
+    new MutationObserver(function(ms){
+      ms.forEach(function(m){
+        if(m.type==="childList"){m.addedNodes.forEach(function(nd){if(nd.nodeType===1)all(nd)})}
+        else if(m.type==="attributes"&&m.attributeName.indexOf("data-h")!==0&&m.attributeName!=="style"){
+          var t=m.target;if(t.dataset&&t.dataset.hbg)unshape(t);
+          if(m.attributeName==="class"&&t.querySelectorAll)t.querySelectorAll("[data-hbg]").forEach(unshape)}});
+      sched()}).observe(document.body,{childList:true,subtree:true,attributes:true});
+    document.addEventListener("click",function(){setTimeout(function(){all(document.body)},60)},true);
+    addEventListener("resize",function(){all(document.body)});
+    if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){all(document.body)});
+    setTimeout(function(){all(document.body)},400);setTimeout(function(){all(document.body)},1500)}
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",go);else go();
 })();
 </script>
 <script>/* thumb mode: ?thumb shows only the landing wordmark on its ground, used to render the gallery card */(function(){if(!/[?&]thumb\b/.test(location.search))return;function go(){var s=document.getElementById("start");if(!s)return;var wm=s.querySelector(".wm");if(!wm)return;var w=wm.parentElement===s?wm:wm.parentElement;s.querySelectorAll("*").forEach(function(e){if(!e.contains(w)&&!w.contains(e)&&e!==w)e.style.display="none"});w.style.transform="scale(1.25)";for(var a=s;a&&a!==document.documentElement;a=a.parentElement){a.style.maxWidth="none";a.style.width="100%";a.style.marginLeft="0";a.style.marginRight="0"}}if(document.readyState==="loading")addEventListener("DOMContentLoaded",function(){setTimeout(go,50)});else setTimeout(go,50)})();</script></body>

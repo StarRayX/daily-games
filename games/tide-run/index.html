@@ -697,11 +697,11 @@ try{document.fonts&&document.fonts.ready.then(()=>{if(HS.on&&HS.cur)placeHint(HS
 <script>
 /* Hand-cut corners v2: rough, hand-torn edges drawn as a vector clip-path outline (crisp at any pixel density, no filters). */
 (function(){
-  var st=document.createElement("style");st.textContent="[data-hp=b]::before{clip-path:var(--hcp);-webkit-clip-path:var(--hcp)}[data-hp=a]::after{clip-path:var(--hcp);-webkit-clip-path:var(--hcp)}";document.head.appendChild(st);
-  var n=0;
+  var st=document.createElement("style");st.textContent="[data-hp=b]::before{clip-path:var(--hcp)!important;-webkit-clip-path:var(--hcp)!important;filter:none!important;border-radius:0!important}[data-hp=a]::after{clip-path:var(--hcp)!important;-webkit-clip-path:var(--hcp)!important;filter:none!important;border-radius:0!important}";document.head.appendChild(st);
+  var n=0,timer=0,OWN=["backgroundColor","backgroundImage","backgroundSize","backgroundRepeat","borderRadius","borderColor","boxShadow","filter"];
   function R(seed){var x=Math.sin(seed*12.9898+78.233)*43758.5453;return x-Math.floor(x)}
   function outline(w,h,r,seed){
-    // walk the perimeter of a rounded rectangle, sampling about every 5px, pushing each point in or out a little
+    // walk the perimeter of a rounded rectangle, sampling about every 5px, pushing each point inward a little (never outward, so the box cannot cut a bump off)
     r=Math.min(r,w/2-1,h/2-1);
     var pts=[],step=5,amp=Math.max(1.6,Math.min(3.6,Math.min(w,h)*.055));
     var segs=[[r,0,w-r,0],[w,r,w,h-r],[w-r,h,r,h],[0,h-r,0,r]];
@@ -711,45 +711,77 @@ try{document.fonts&&document.fonts.ready.then(()=>{if(HS.on&&HS.cur)placeHint(HS
       var a=segs[s],len=Math.hypot(a[2]-a[0],a[3]-a[1]),m=Math.max(2,Math.round(len/step));
       var nx=[0,1,0,-1][s],ny=[-1,0,1,0][s];
       for(var i=0;i<m;i++){var t=i/m,x=a[0]+(a[2]-a[0])*t,y=a[1]+(a[3]-a[1])*t;
-        var d=(Math.sin(k*.7+seed)*.45+ (R(seed*31+k)-.5)*1.1)*amp;k++;
+        var d=((Math.sin(k*.7+seed)*.45+(R(seed*31+k)-.5)*1.1)*amp-amp)/2;k++;
         pts.push([x+nx*d,y+ny*d])}
       var c=corners[s],cm=Math.max(3,Math.round(r*1.57/step));
-      for(var j=0;j<cm;j++){var an=c[2]+(Math.PI/2)*(j/cm),d2=(R(seed*17+k)-.5)*1.1*amp;k++;
+      for(var j=0;j<cm;j++){var an=c[2]+(Math.PI/2)*(j/cm),d2=(R(seed*17+k)-1)*1.1*amp;k++;
         pts.push([c[0]+Math.cos(an)*(r+d2),c[1]+Math.sin(an)*(r+d2)])}
     }
-    // smooth through midpoints so the wobble reads as a cut edge, not a zigzag
     var p='M'+((pts[0][0]+pts[1][0])/2).toFixed(1)+' '+((pts[0][1]+pts[1][1])/2).toFixed(1);
     for(var q=1;q<=pts.length;q++){var A=pts[q%pts.length],B=pts[(q+1)%pts.length];
       p+=' Q'+A[0].toFixed(1)+' '+A[1].toFixed(1)+' '+((A[0]+B[0])/2).toFixed(1)+' '+((A[1]+B[1])/2).toFixed(1)}
     return p+'Z';
   }
+  function radius(cs){
+    var best=0,ks=["borderTopLeftRadius","borderTopRightRadius","borderBottomRightRadius","borderBottomLeftRadius"];
+    for(var i=0;i<4;i++){var v=cs[ks[i]];if(/%/.test(v))return 999;var f=parseFloat(v)||0;if(f>best)best=f}
+    return best}
+  function opaque(c){if(!c||c==="transparent")return false;var m=c.match(/rgba\(([^)]*)\)/);if(m){var p=m[1].split(",");if(p.length>3&&parseFloat(p[3])===0)return false}return true}
+  function unshape(el){
+    if(el.dataset.hbg){OWN.forEach(function(k){el.style[k]=""});delete el.dataset.hbg}
+    delete el.dataset.hc;delete el.dataset.hp;el.style.removeProperty("--hcp")}
+  function pseudoLayer(el,w,h){
+    var ps=["b","a"];
+    for(var i=0;i<2;i++){
+      var pc=getComputedStyle(el,i?"::after":"::before");
+      if(!pc.content||pc.content==="none"||pc.position!=="absolute")continue;
+      if(pc.clipPath&&pc.clipPath!=="none"&&el.dataset.hp!==ps[i])continue;
+      if(!opaque(pc.backgroundColor))continue;
+      var pw=parseFloat(pc.width)||0,ph=parseFloat(pc.height)||0,r=radius(pc);
+      if(el.dataset.hp===ps[i]&&el.dataset.hr)r=+el.dataset.hr;
+      if(r<4||r>=999||pw<w*.6||ph<h*.6)continue;
+      return {p:ps[i],w:pw,h:ph,r:r}}
+    return null}
   function shape(el){
-    if(!el.dataset)return;var cs=getComputedStyle(el);
-    var r=parseFloat(cs.borderTopLeftRadius)||0;
-    var pseudo="";
-    if(r<4){var pb=getComputedStyle(el,"::before"),pa=getComputedStyle(el,"::after");
-      if(pb.content&&pb.content!=="none"&&pb.position==="absolute"&&(parseFloat(pb.borderTopLeftRadius)||0)>=4){r=parseFloat(pb.borderTopLeftRadius);pseudo="b"}
-      else if(pa.content&&pa.content!=="none"&&pa.position==="absolute"&&(parseFloat(pa.borderTopLeftRadius)||0)>=4){r=parseFloat(pa.borderTopLeftRadius);pseudo="a"}}
-    if(r<4||r>=999)return;
-    var w=el.offsetWidth,h=el.offsetHeight;if(!w||!h)return;
-    if(r>=Math.min(w,h)/2-1)return; // circles stay circles
-    var key=w+'x'+h;if(el.dataset.hc===key)return;
+    if(!el.dataset||el.closest("svg")||el.id==="tsvg")return;
+    var cs=getComputedStyle(el),w=el.offsetWidth,h=el.offsetHeight;if(!w||!h)return;
+    var r=radius(cs),lay=null;
+    var own=r>=4&&r<999&&(opaque(el.dataset.hbg||cs.backgroundColor));
+    if(!own){lay=pseudoLayer(el,w,h);if(!lay)return;r=lay.r;w=lay.w;h=lay.h;el.dataset.hr=r}
+    if(r<4||r>=999||r>=Math.min(w,h)/2-1)return; // circles and pills stay as they are
+    var key=w+"x"+h+(lay?lay.p:"o");if(el.dataset.hc===key)return;
     if(!el.dataset.hs){n++;el.dataset.hs=n}
-    el.dataset.hc=key;
     var path=outline(w,h,r,+el.dataset.hs);
-    var cp="path('"+path+"')";
-    if(pseudo){el.dataset.hp=pseudo;el.style.setProperty("--hcp",cp);return}
-    // never clip something that has a badge or chip hanging over its edge: leave those smooth
-    var b=el.getBoundingClientRect(),over=false;el.querySelectorAll("*").forEach(function(c){var q=c.getBoundingClientRect();if(q.width&&(q.left<b.left-1||q.top<b.top-1||q.right>b.right+1||q.bottom>b.bottom+1))over=true});
-    if(over)return;
-    el.style.clipPath=cp;el.style.webkitClipPath=cp;
-  }
-  function all(root){if(root.querySelectorAll)root.querySelectorAll('*').forEach(shape)}
+    if(lay){el.dataset.hc=key;el.dataset.hp=lay.p;el.style.setProperty("--hcp","path('"+path+"')");watch(el);return}
+    // own background: draw the rough shape as the element's own background, so children (badges, chips, text) are never clipped
+    var bg=el.dataset.hbg||cs.backgroundColor,bi=cs.backgroundImage;
+    if(bi&&bi!=="none"&&!el.dataset.hbg)return;
+    el.dataset.hbg=bg;el.dataset.hc=key;
+    var bw=parseFloat(cs.borderTopWidth)||0,line="";
+    if(bw>0&&cs.borderTopStyle!=="none"&&opaque(cs.borderTopColor)){line=" stroke='"+cs.borderTopColor+"' stroke-width='"+(bw*1.6)+"'";el.style.borderColor="transparent"}
+    var svg="<svg xmlns='http://www.w3.org/2000/svg' width='"+w+"' height='"+h+"' viewBox='0 0 "+w+" "+h+"'><path d='"+path+"' fill='"+bg+"'"+line+"/></svg>";
+    el.style.backgroundColor="transparent";el.style.backgroundImage="url(\"data:image/svg+xml,"+encodeURIComponent(svg)+"\")";el.style.backgroundSize="100% 100%";el.style.backgroundRepeat="no-repeat";el.style.borderRadius="0";
+    var bs=cs.boxShadow;
+    if(bs&&bs!=="none"&&!/inset/.test(bs)&&(!cs.filter||cs.filter==="none")){var m=bs.match(/^(rgba?\([^)]*\))\s+(-?[\d.]+)px\s+(-?[\d.]+)px\s+([\d.]+)px/);
+      if(m){el.style.filter="drop-shadow("+m[2]+"px "+m[3]+"px "+(m[4]/2)+"px "+m[1]+")";el.style.boxShadow="none"}}
+    watch(el)}
+  var ro=window.ResizeObserver?new ResizeObserver(function(){sched()}):null;
+  function watch(el){if(ro&&!el._hw){el._hw=1;ro.observe(el)}}
+  function all(root){if(root.querySelectorAll){shape(root);root.querySelectorAll("*").forEach(shape)}}
+  function sched(){if(timer)return;timer=setTimeout(function(){timer=0;all(document.body)},70)}
   function go(){all(document.body);
-    new MutationObserver(function(ms){ms.forEach(function(m){m.addedNodes.forEach(function(nd){if(nd.nodeType===1){shape(nd);all(nd)}})})}).observe(document.body,{childList:true,subtree:true});
-    document.addEventListener('click',function(){setTimeout(function(){all(document.body)},60)},true);
-    addEventListener('resize',function(){all(document.body)})}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();
+    new MutationObserver(function(ms){
+      ms.forEach(function(m){
+        if(m.type==="childList"){m.addedNodes.forEach(function(nd){if(nd.nodeType===1)all(nd)})}
+        else if(m.type==="attributes"&&m.attributeName.indexOf("data-h")!==0&&m.attributeName!=="style"){
+          var t=m.target;if(t.dataset&&t.dataset.hbg)unshape(t);
+          if(m.attributeName==="class"&&t.querySelectorAll)t.querySelectorAll("[data-hbg]").forEach(unshape)}});
+      sched()}).observe(document.body,{childList:true,subtree:true,attributes:true});
+    document.addEventListener("click",function(){setTimeout(function(){all(document.body)},60)},true);
+    addEventListener("resize",function(){all(document.body)});
+    if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){all(document.body)});
+    setTimeout(function(){all(document.body)},400);setTimeout(function(){all(document.body)},1500)}
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",go);else go();
 })();
 </script>
 <script>/* thumb mode: ?thumb shows only the landing wordmark on its ground, used to render the gallery card */(function(){if(!/[?&]thumb\b/.test(location.search))return;function go(){var s=document.getElementById("start");if(!s)return;var wm=s.querySelector(".wm");if(!wm)return;var w=wm.parentElement===s?wm:wm.parentElement;s.querySelectorAll("*").forEach(function(e){if(!e.contains(w)&&!w.contains(e)&&e!==w)e.style.display="none"});w.style.transform="scale(1.25)";for(var a=s;a&&a!==document.documentElement;a=a.parentElement){a.style.maxWidth="none";a.style.width="100%";a.style.marginLeft="0";a.style.marginRight="0"}}if(document.readyState==="loading")addEventListener("DOMContentLoaded",function(){setTimeout(go,50)});else setTimeout(go,50)})();</script></body>
